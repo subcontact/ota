@@ -1,0 +1,212 @@
+    html, body {
+        width : 100%;
+        height: 100%;
+    }
+    a, input, button {
+        -ms-touch-action: none !important;
+    }
+    .centerize {
+        display: block;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .full {
+        height: 100%;
+        width:100%;
+    }
+    .larger {
+        width: 80%;
+        height: 20%;
+        text-align: center;
+        color: #ffffff;
+        margin: 6px;
+        font-size: 40pt;
+        font-weight: 900;
+    }
+
+    .touchable {
+
+    }
+/*
+    li:active {
+        background-color: #98011f;
+        -webkit-box-shadow: inset 0 1px rgba(0, 0, 0, 0.12);
+        box-shadow: inset 0 1px rgba(0, 0, 0, 0.12);
+    }
+*/
+    .activeButton {
+        /* background-color: #1976c3; */
+        background-color: #98011f;
+        -webkit-box-shadow: inset 0 1px rgba(0, 0, 0, 0.12);
+        box-shadow: inset 0 1px rgba(0, 0, 0, 0.12);
+    }
+    .activeButton:hover {
+        background-color: #98011f;
+    }
+    .show {
+        display : block;
+    }
+    .hide {
+        display : none;
+    }
+    #overlay-content {
+        position: absolute;
+        /* makes the div go into a position that’s absolute to the browser viewing area */
+        left: 25%;
+        /* positions the div half way horizontally */
+        top: 25%;
+        /* positions the div half way vertically */
+        padding: 25px;
+        border: 2px solid black;
+        background-color: #ffffff;
+        width: 50%;
+        height: 50%;
+        z-index: 100;
+        /* makes the div the top layer, so it’ll lay on top of the other content */
+        width: 50%;
+        height: auto;
+        overflow: hidden;
+        /*
+        margin: 20%;
+        padding: 20px 10px;
+        */
+        border-radius: 6px;
+        background-color: #e5e9e8;
+        border: 1px solid #a5a8a8;
+        text-align: center;
+    }
+    #overlay {
+        position: absolute;
+        /* makes the div go into a position that’s absolute to the browser viewing area */
+        left: 0%;
+        /* makes the div span all the way across the viewing area */
+        top: 0%;
+        /* makes the div span all the way across the viewing area */
+        background-color: black;
+        -moz-opacity: 0.5;
+        /* makes the div transparent, so you have a cool overlay effect */
+        opacity: .50;
+        filter: alpha(opacity=50);
+        width: 100%;
+        height: 100%;
+        z-index: 90;
+        /* makes the div the second most top layer, so it’ll lay on top of everything else EXCEPT for divs with a higher z-index (meaning the #overlay ruleset) */
+        box-shadow: inset 0px 0px 115px 0px #000;
+    }
+    #overlay-content h1 {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #d3d7d7;
+    }
+    .incorrect {
+        background: #e74c3c;
+    }
+    .lockChoice {
+        background: #1976c3;
+    }
+    .correct {
+        background: #50863B;
+    }
+    .md-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 50%;
+        max-width: 630px;
+        min-width: 320px;
+        height: auto;
+        z-index: 2000;
+        visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
+    }
+    .md-blocker {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        background-color: black;
+        -moz-opacity: 0.5;
+        /* makes the div transparent, so you have a cool overlay effect */
+        opacity: .50;
+        filter: alpha(opacity=50);
+        width: 100%;
+        height: 100%;
+        box-shadow: inset 0px 0px 115px 0px #000;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+    .md-show {
+        visibility: visible;
+    }
+    .md-show ~ .md-overlay {
+        opacity: 1;
+        visibility: visible;
+    }
+    /* Content styles */
+    .md-content {
+        color: #fff;
+        position: relative;
+        border-radius: 3px;
+        margin: 0 auto;
+    }
+    .md-content h3 {
+        margin: 0;
+        padding: 0.4em;
+        text-align: center;
+        font-size: 2.4em;
+        font-weight: 300;
+        opacity: 0.8;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 3px 3px 0 0;
+    }
+    .md-content > div {
+        padding: 15px 40px 30px;
+        margin: 0;
+        font-weight: 300;
+        font-size: 1.15em;
+    }
+    .md-content > div p {
+        margin: 0;
+        padding: 10px 0;
+        text-align: center;
+    }
+    .md-content button {
+        display: block;
+        margin: 0 auto;
+        font-size: 0.8em;
+    }
+    /* Effect 8: 3D flip horizontal */
+    .md-effect-spin.md-modal {
+        -webkit-perspective: 1300px;
+        -moz-perspective: 1300px;
+        perspective: 1300px;
+    }
+    .md-effect-spin .md-content {
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -webkit-transform: rotateY(-70deg);
+        -moz-transform: rotateY(-70deg);
+        -ms-transform: rotateY(-70deg);
+        transform: rotateY(-70deg);
+        -webkit-transition: all 0.2s;
+        -moz-transition: all 0.2s;
+        transition: all 0.4s;
+        opacity: 0;
+    }
+    .md-show.md-effect-spin .md-content {
+        -webkit-transform: rotateY(0deg);
+        -moz-transform: rotateY(0deg);
+        -ms-transform: rotateY(0deg);
+        transform: rotateY(0deg);
+        opacity: 1;
+    }
