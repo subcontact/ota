@@ -1,19 +1,19 @@
-define(["angular", "controllers/BuildListController", "directives/directives", "services/BuildServices"], function(angular){
-	
-	var app = angular.module('main', ['BuildServices', 'BuildListController', 'directives']);
+define(["angular", "controllers/BuildListController", "directives/directives", "services/BuildServices"], function(angular) {
 
-app.config(['$routeProvider', function($routeProvider) {
-    
-    $routeProvider.when('/phones', {
-        templateUrl: 'partials/phone-list.html',
-        controller: 'PhoneListCtrl'
+    var app = angular.module('main', ['ngRoute', 'ngAnimate', 'ngTouch', 'BuildServices', 'BuildListController', 'directives']);
+
+    app.config(['$routeProvider', function($routeProvider) {
+
+      $routeProvider.when('/builds', {
+          templateUrl: 'partials/build-list.html',
+          controller: 'BuildListController'
       }).
-      when('/phones/:phoneId', {
-        templateUrl: 'partials/phone-detail.html',
-        controller: 'PhoneDetailCtrl'
+      when('/builds/:buildId', {
+          templateUrl: 'partials/build-detail.html',
+          controller: 'BuildDetailController'
       }).
       otherwise({
-        redirectTo: '/phones'
+          redirectTo: '/builds'
       });
-  }]);
+    }]);
 });

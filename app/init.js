@@ -12,18 +12,13 @@ require.config({
 		"angular" : {
 			exports : "angular",
 			deps : ["jquery"]
-		},
-
-		"angular-animate" : {
-
-			deps : ["angular"]
 		}
 	}
 });
 
-require(['angular', 'fastclick', 'main',], function(angular, fastclick, main){
+require(['angular', 'main',], function(angular, main){
 	angular.element().ready(function() {
-		fastclick.attach(document.body);
+		//fastclick.attach(document.body);
         angular.bootstrap(document, ['main']);
 	});
 });
