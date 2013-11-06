@@ -16,9 +16,9 @@ require.config({
 	}
 });
 
-require(['angular', 'main',], function(angular, main){
+require(['angular', 'fastclick', 'main',], function(angular, fastclick, main){
 	angular.element().ready(function() {
-		//fastclick.attach(document.body);
+		fastclick.attach(document.body);
         angular.bootstrap(document, ['main']);
 	});
 });

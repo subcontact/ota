@@ -1,6 +1,6 @@
 define(["angular", "controllers/BuildListController", "directives/directives", "services/BuildServices"], function(angular) {
 
-    var app = angular.module('main', ['ngRoute', 'ngAnimate', 'ngTouch', 'BuildServices', 'BuildListController', 'directives']);
+    var app = angular.module('main', ['ngRoute', 'ngAnimate', /* 'ngTouch', */ 'BuildServices', 'BuildListController', 'directives']);
 
     app.config(['$routeProvider', function($routeProvider) {
 

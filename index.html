@@ -2,43 +2,14 @@
 <html>
 	<head>
 	    <meta charset="utf-8" />
-	    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+	    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	    <meta name="apple-mobile-web-app-capable" content="yes" />
 	    <title>Westpac</title>
 	    <link rel="stylesheet" type="text/css" href="css/topcoat-mobile-dark.min.css">
-	    <link rel="stylesheet" type="text/css" href="css/app.css">
+	    <link rel="stylesheet" type="text/css" href="css/styles.css">
 	</head>
 
 	<body>
-		<script type="text/ng-template" id="quiz-main-choice.html"> 
-		    <div class="full">
-		    
-		        <div class="topcoat-navigation-bar">
-		            <div class="topcoat-navigation-bar__item center full">
-		                <h1 class="topcoat-navigation-bar__title">Quiz</h1>
-		            </div>
-		        </div>
-		        <div class="topcoat-button-list centerize">
-		            <p><button class="topcoat-button--large larger" ng-class="{activeButton : choiceState == 'A'}" ng-click="setChoiceState('A')">A</button></p>
-		            <p><button class="topcoat-button--large larger" ng-class="{activeButton : choiceState == 'B'}" ng-click="setChoiceState('B')">B</button></p>
-		            <p><button class="topcoat-button--large larger" ng-class="{activeButton : choiceState == 'C'}" ng-click="setChoiceState('C')">C</button></p>
-		            <p><button class="topcoat-button--large larger" ng-class="{activeButton : choiceState == 'D'}" ng-click="setChoiceState('D')">D</button></p>
-		            <p><button class="topcoat-button--large larger" ng-click="fireLockResponseDebug()">Trigger</button></p>
-		            <p><button class="topcoat-button--large larger" ng-click="setChoiceState(choiceStateList.NULL)">Reset Choice</button></p>
-		        </div>
-		        <div class="md-blocker"></div>
-		        <dialog dialog-state="dialogState" dialog-state-list="dialogStateList" class="md-modal md-effect-spin">
-		            <div class="md-content">
-		                <h3>{{$parent.dialogMessage}}</h3>
-		                <div>
-		                    <p>{{$parent.dialogComment}}</p>
-		                    <!-- <button ng-click="$parent.setResult(null)" class="topcoat-button--cta">Close</button> -->
-		                </div>
-		            </div>
-		        </dialog>
-		    </div>
-		</script> 
-		<!-- <ng-include src="'partials/appList.html'"></ng-include> -->
 		<ng-view />
 		<script src="lib/require-2.1.9.min.js" data-main="app/init"></script>
 	</body>

@@ -66,19 +66,27 @@ define(['angular', '_'], function(angular, _) {
     		}
     	];
 
-	    this.getBuildList = function() {
+	    this.getBuildList = function(filter) {
+            //{ 'platform': 'iOS' }
 
+            var result = null;
+            if (filter) {
+
+                result = _.where(data, filter);
+            } else {
+
+                result = data;
+            }
 	    	return {
 
 	    		status : 0,
-	    		//data : _.where(data, { 'platform': 'iOS' })
-	    		data : data
+	    		data : result
 	    	}
 	    }
 
 	    this.getBuildDetailById = function(id) {
 
-	    	var buildDetail = _.find(this.getBuildList().data, { 'id': parseInt(id) });
+	    	var buildDetail = _.find(this.getBuildList({ appName : 'WBC Banking Tablet'}).data, { 'id': parseInt(id) });
 
 	    	return {
 
