@@ -41,14 +41,16 @@ define(['angular'], function(angular) {
 		$scope.dialogMessage 	= '';
 		$scope.dialogComment 	= '';
 
-	    $scope.dialogStateList = {
+	    $scope.platformFilterEnum = {
 
-	    	NULL 		: null,
-	        CORRECT 	: 'correct',
-	        INCORRECT 	: 'incorrect',
-	        LOCKED	  	: 'lockChoice'
+	        ALL 		: 'all',
+	        IOS_MOBILE 	: 'iosm',
+	        IOS_TABLET  : 'iost',
+	        ANDROID  	: 'android',
+	        WIN_MOBILE  : 'winm',
+	        WIN_TABLET  : 'wint'
 	    };
-	    $scope.dialogState = $scope.dialogStateList.NULL;
+	    $scope.platformFilterState = $scope.platformFilterEnum.ALL;
 
 	    $scope.appStateList = {
 
