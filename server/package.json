@@ -1,0 +1,14 @@
+{
+  "name": "ota-server",
+  "private": true,
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "3.4.x",
+    "lodash": "2.0.x",
+    "q": "0.9.7",
+    "async": "0.2.x",
+    "q-io": "~1.10.4",
+    "suspend" : "0.3.x",
+    "streamline" : "0.10.x"
+  }
+}
