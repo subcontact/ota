@@ -9,6 +9,9 @@
     "async": "0.2.x",
     "q-io": "~1.10.4",
     "suspend" : "0.3.x",
-    "streamline" : "0.10.x"
+    "streamline" : "0.10.x",
+    "async" : "0.2.9",
+    "bluebird" : "0.10.x",
+    "co" : "2.3.x"
   }
 }
