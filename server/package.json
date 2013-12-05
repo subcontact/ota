@@ -4,14 +4,14 @@
   "version": "0.0.1",
   "dependencies": {
     "express": "3.4.x",
-    "lodash": "2.0.x",
+    "lodash": "~2.0.0",
     "q": "0.9.7",
-    "async": "0.2.x",
+    "async": "0.2.9",
     "q-io": "~1.10.4",
-    "suspend" : "0.3.x",
-    "streamline" : "0.10.x",
-    "async" : "0.2.9",
-    "bluebird" : "0.10.x",
-    "co" : "2.3.x"
+    "suspend": "0.3.x",
+    "streamline": "0.10.x",
+    "bluebird": "0.10.x",
+    "co": "2.3.x",
+    "galaxy": "~0.1.3"
   }
 }

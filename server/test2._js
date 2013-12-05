@@ -1,14 +1,24 @@
 
 "use strict";
 
-var fs = require('fs');
-var path = require('path');
+var fs      = require('fs');
+var path    = require('path');
+var lodash  = require('lodash');
 
-function getFolders(_, dirPath) {
+const BUILD_DIR = "builds";
 
-  var stat    = null;
+/* --------------- */
+/* --------------- */
+
+function getFolders(dirPath, filters, _) {
+
+  var stat, folderFilter  = null;
   var folders = [];
   var files   = fs.readdir(dirPath, _);
+  if (filters && filters.folderName) {
+
+    folderFilter = filters.folderName; // expecting native regex syntax rather than creating a regex object off a string
+  }
 
   for (var i=0; i< files.length; i++) {
 
@@ -16,19 +26,119 @@ function getFolders(_, dirPath) {
     stat = fs.stat(fullFile, _);
     if (stat.isDirectory()) {
 
-      folders.push(fullFile);
+      if (folderFilter) {
+
+        if (folderFilter.test(path.basename(fullFile))) {
+
+          folders.push(fullFile);
+        }
+      }
+      else {
+
+        folders.push(fullFile);
+      }
     }
   }
   return folders;
+}
+/* --------------- */
+/* --------------- */
+
+function getFiles(dirPath, filters, _) {
+
+  var stat, fileFilter  = null;
+  var realFiles = [];
+  var files   = fs.readdir(dirPath, _);
+  if (filters && filters.folderName) {
+
+    fileFilter = filters.fileName; // expecting native regex syntax rather than creating a regex object off a string
+  }
+
+  for (var i=0; i< files.length; i++) {
+
+    var fullFile = path.normalize(dirPath + '/' + files[i]);
+    stat = fs.stat(fullFile, _);
+    if (stat.isFile()) {
+
+      if (fileFilter) {
+
+        if (fileFilter.test(path.basename(fullFile))) {
+
+          realFiles.push(fullFile);
+        }
+      }
+      else {
+
+        realFiles.push(fullFile);
+      }
+    }
+  }
+  return realFiles;
+}
+
+/* --------------- */
+/* --------------- */
+
+// the initial path representing each jenkins build profile
+function getBuildProjects(rootPath, _) {
+
+  var buildProjects = getFolders(rootPath, null, _);
+  return buildProjects;
+}
+
+/* --------------- */
+/* --------------- */
+
+// exists workaround as it doesnt have the usual callback signature
+// see https://github.com/Sage/streamline-fs
+var fileExists = _(function(path, cb) {
+        fs.exists(path, function(result) {
+                cb(null, result);
+        });
+}, 1);
+
+/* --------------- */
+/* --------------- */
+
+// retreives a list of build folders for a build profile
+// expects a folder named "build" with a list of folders matching a time format
+function getBuildProjectList(buildProfilePath, _) {
+
+    var fullFile = path.normalize(buildProfilePath + '/' + BUILD_DIR);
+    if (fileExists(fullFile, _)) {
+
+      var stat = fs.stat(fullFile, _);
+      if (stat.isDirectory()) {
+
+        var buildList = getFolders(fullFile, { folderName : /^\d{14}$/i }, _); // using direct regex syntax rather than a string 
+      }
+    }
+    return buildList;
+}
+
+function getBuildFile() {
+
+}
+
+function getBuildInfo() {
+
+}
+
+function findAppType() {
+
 }
 
 try {
 
   var p = process.argv.length > 2 ? process.argv[2] : ".";
   var t0 = Date.now();
-  var folders = getFolders(_, p);
-  console.log(folders);
-  console.log("length : " + folders.length);
+  
+  var buildProjects = getBuildProjects(p, _);
+
+  console.log(getBuildProjectList(buildProjects[0], _));
+
+  //console.log(buildProjects);
+  //console.log("length : " + buildProjects.length);
   console.log("completed in " + (Date.now() - t0) + " ms");
 } 
 catch (ex) {
