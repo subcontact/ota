@@ -12,29 +12,22 @@ const BUILD_DIR = "builds";
 
 function getFolders(dirPath, filters, _) {
 
-  var stat, folderFilter  = null;
+  var stat, nameFilter  = null;
   var folders = [];
   var files   = fs.readdir(dirPath, _);
-  if (filters && filters.folderName) {
-
-    folderFilter = filters.folderName; // expecting native regex syntax rather than creating a regex object off a string
+  if (filters && filters.name) {
+    nameFilter = filters.name; // expecting native regex syntax rather than creating a regex object off a string
   }
-
   for (var i=0; i< files.length; i++) {
-
     var fullFile = path.normalize(dirPath + '/' + files[i]);
     stat = fs.stat(fullFile, _);
     if (stat.isDirectory()) {
-
-      if (folderFilter) {
-
-        if (folderFilter.test(path.basename(fullFile))) {
-
+      if (nameFilter) {
+        if (nameFilter.test(path.basename(fullFile))) {
           folders.push(fullFile);
         }
       }
       else {
-
         folders.push(fullFile);
       }
     }
@@ -43,32 +36,25 @@ function getFolders(dirPath, filters, _) {
 }
 /* --------------- */
 /* --------------- */
-
+// TODO - merge these two functions getFiles and getFolders
 function getFiles(dirPath, filters, _) {
 
-  var stat, fileFilter  = null;
+  var stat, nameFilter  = null;
   var realFiles = [];
   var files   = fs.readdir(dirPath, _);
-  if (filters && filters.folderName) {
-
-    fileFilter = filters.fileName; // expecting native regex syntax rather than creating a regex object off a string
+  if (filters && filters.name) {
+    nameFilter = filters.name; // expecting native regex syntax rather than creating a regex object off a string
   }
-
   for (var i=0; i< files.length; i++) {
-
     var fullFile = path.normalize(dirPath + '/' + files[i]);
     stat = fs.stat(fullFile, _);
     if (stat.isFile()) {
-
-      if (fileFilter) {
-
-        if (fileFilter.test(path.basename(fullFile))) {
-
+      if (nameFilter) {
+        if (nameFilter.test(path.basename(fullFile))) {
           realFiles.push(fullFile);
         }
       }
       else {
-
         realFiles.push(fullFile);
       }
     }
@@ -106,11 +92,9 @@ function getBuildProjectList(buildProfilePath, _) {
 
     var fullFile = path.normalize(buildProfilePath + '/' + BUILD_DIR);
     if (fileExists(fullFile, _)) {
-
       var stat = fs.stat(fullFile, _);
       if (stat.isDirectory()) {
-
-        var buildList = getFolders(fullFile, { folderName : /^\d{14}$/i }, _); // using direct regex syntax rather than a string 
+        var buildList = getFolders(fullFile, { name : /^\d{14}$/i }, _); // using direct regex syntax rather than a string 
       }
     }
     return buildList;
@@ -132,11 +116,8 @@ try {
 
   var p = process.argv.length > 2 ? process.argv[2] : ".";
   var t0 = Date.now();
-  
   var buildProjects = getBuildProjects(p, _);
-
   console.log(getBuildProjectList(buildProjects[0], _));
-
   //console.log(buildProjects);
   //console.log("length : " + buildProjects.length);
   console.log("completed in " + (Date.now() - t0) + " ms");
