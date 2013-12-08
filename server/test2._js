@@ -4,8 +4,33 @@
 var fs      = require('fs');
 var path    = require('path');
 var lodash  = require('lodash');
+var util    = require('util');
 
 const BUILD_DIR = "builds";
+const iOS_FILE  = /^.*\.ipa$/i;
+const AND_FILE  = /^.*\.apk$/i;
+const WIN_FILE  = /^.*\.exe$/i;
+
+var meta_template = {
+  buildProjects : [
+    {
+      name : null,
+      buildList : [
+        {
+          name : null,
+          file : null,
+
+        }
+      ]
+    }
+  ]
+};
+
+var meta = {
+
+  buildProjects : []
+};
+
 
 /* --------------- */
 /* --------------- */
@@ -108,16 +133,58 @@ function getBuildInfo() {
 
 }
 
-function findAppType() {
+function findAppType(dirPath, _) {
 
+  var files = getFiles(dirPath, null, _);
+  var i,a,w = false;
+
+  for (var k=0; k<files.length; k++) {
+    //fullFile = path.normalize(dirPath + '/' + files[k]);
+
+    if (iOS_FILE.test(files[k])) {
+      i = true;
+    }
+    else if (AND_FILE.test(files[k])) {
+      a = true;
+    }
+    else if (WIN_FILE.test(files[k])) {
+      w = true
+    }
+  }
+  return {i:i, a:a, w:w};
 }
 
 try {
 
   var p = process.argv.length > 2 ? process.argv[2] : ".";
   var t0 = Date.now();
-  var buildProjects = getBuildProjects(p, _);
-  console.log(getBuildProjectList(buildProjects[0], _));
+
+  var buildProjects   = getBuildProjects(p, _);
+  meta.buildProjects  = buildProjects.map(function(data) {
+    return {
+      name : path.basename(data),
+      path : data
+    };
+  });
+  var list, files, dirPath, fullFile, buildInfo;
+  for (var i=0; i<meta.buildProjects.length; i++) {
+    list = getBuildProjectList(meta.buildProjects[i].path, _);
+    meta.buildProjects[i].list = list.map(function(data) {
+      return {
+        name : path.basename(data),
+        path : data
+      };
+    });
+    for (var j=0; j<meta.buildProjects[i].list.length; j++) {
+      dirPath = meta.buildProjects[i].list[j].path;
+      buildInfo = findAppType(dirPath, _);
+      console.log(dirPath);
+      console.log(buildInfo);
+    }
+  }
+  //console.log(JSON.stringify(meta));
+
+  //console.log(getBuildProjectList(buildProjects[0], _));
   //console.log(buildProjects);
   //console.log("length : " + buildProjects.length);
   console.log("completed in " + (Date.now() - t0) + " ms");
