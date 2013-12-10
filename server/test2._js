@@ -7,19 +7,23 @@ var lodash  = require('lodash');
 var util    = require('util');
 
 const BUILD_DIR = "builds";
-const iOS_FILE  = /^.*\.ipa$/i;
-const AND_FILE  = /^.*\.apk$/i;
-const WIN_FILE  = /^.*\.exe$/i;
+const iOS_FILE  = /\.ipa$/i;
+const AND_FILE  = /\.apk$/i;
+const WIN_FILE  = /\.exe$/i;
+const TYPE_IOS  = 1;
+const TYPE_AND  = 2;
+const TYPE_WIN  = 3;
 
 var meta_template = {
   buildProjects : [
     {
       name : null,
-      buildList : [
+      type : null,
+      list : [
         {
           name : null,
           file : null,
-
+          type : null
         }
       ]
     }
@@ -100,12 +104,12 @@ function getBuildProjects(rootPath, _) {
 /* --------------- */
 /* --------------- */
 
-// exists workaround as it doesnt have the usual callback signature
+// exists workaround for streamlinejs as it doesnt have the usual callback signature
 // see https://github.com/Sage/streamline-fs
 var fileExists = _(function(path, cb) {
-        fs.exists(path, function(result) {
-                cb(null, result);
-        });
+  fs.exists(path, function(result) {
+    cb(null, result);
+  });
 }, 1);
 
 /* --------------- */
@@ -129,6 +133,18 @@ function getBuildFile() {
 
 }
 
+function getBuildInfoIOS() {
+  
+}
+
+function getBuildInfoAND() {
+  
+}
+
+function getBuildInfoWIN() {
+  
+}
+
 function getBuildInfo() {
 
 }
@@ -136,22 +152,36 @@ function getBuildInfo() {
 function findAppType(dirPath, _) {
 
   var files = getFiles(dirPath, null, _);
-  var i,a,w = false;
+  var i,a,w, error, found = false;
+  var data = null;
 
   for (var k=0; k<files.length; k++) {
-    //fullFile = path.normalize(dirPath + '/' + files[k]);
-
     if (iOS_FILE.test(files[k])) {
-      i = true;
+      data = {
+        type : TYPE_IOS,
+        name : path.basename(files[k]).replace(iOS_FILE, ""),
+        path : files[k]
+      };
+      break;
     }
     else if (AND_FILE.test(files[k])) {
-      a = true;
+      data = {
+        type : TYPE_AND,
+        name : path.basename(files[k]).replace(AND_FILE, ""),
+        path : files[k]
+      };
+      break;
     }
     else if (WIN_FILE.test(files[k])) {
-      w = true
+      data = {
+        type : TYPE_WIN,
+        name : path.basename(files[k]).replace(TYPE_WIN, ""),
+        path : files[k]
+      };
+      break;
     }
   }
-  return {i:i, a:a, w:w};
+  return data;
 }
 
 try {
@@ -178,10 +208,15 @@ try {
     for (var j=0; j<meta.buildProjects[i].list.length; j++) {
       dirPath = meta.buildProjects[i].list[j].path;
       buildInfo = findAppType(dirPath, _);
-      console.log(dirPath);
-      console.log(buildInfo);
+      if (buildInfo) {
+        meta.buildProjects[i].list[j].buildInfo = buildInfo;
+        meta.buildProjects[i].type = buildInfo.type; // pretty ugly but will do for now
+      }
+      //console.log(dirPath);
+      //console.log(buildInfo);
     }
   }
+  console.log(util.inspect(meta, { showHidden: true, depth: null }));
   //console.log(JSON.stringify(meta));
 
   //console.log(getBuildProjectList(buildProjects[0], _));
