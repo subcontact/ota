@@ -175,7 +175,7 @@ function findAppType(dirPath, _) {
     else if (WIN_FILE.test(files[k])) {
       data = {
         type : TYPE_WIN,
-        name : path.basename(files[k]).replace(TYPE_WIN, ""),
+        name : path.basename(files[k]).replace(WIN_FILE, ""),
         path : files[k]
       };
       break;
