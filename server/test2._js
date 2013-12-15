@@ -5,8 +5,10 @@ var fs      = require('fs');
 var path    = require('path');
 var lodash  = require('lodash');
 var util    = require('util');
+var find    = require('findit');
 
 const BUILD_DIR = "builds";
+const BUILD_LIST_PATTERN = /^\d{14}$/i;
 const iOS_FILE  = /\.ipa$/i;
 const AND_FILE  = /\.apk$/i;
 const WIN_FILE  = /\.exe$/i;
@@ -123,7 +125,7 @@ function getBuildProjectList(buildProfilePath, _) {
     if (fileExists(fullFile, _)) {
       var stat = fs.stat(fullFile, _);
       if (stat.isDirectory()) {
-        var buildList = getFolders(fullFile, { name : /^\d{14}$/i }, _); // using direct regex syntax rather than a string 
+        var buildList = getFolders(fullFile, { name : BUILD_LIST_PATTERN }, _); // using direct regex syntax rather than a string 
       }
     }
     return buildList;
@@ -148,7 +150,7 @@ function getBuildInfoWIN() {
 function getBuildInfo() {
 
 }
-
+/*
 function findAppType(dirPath, _) {
 
   var files = getFiles(dirPath, null, _);
@@ -183,6 +185,57 @@ function findAppType(dirPath, _) {
   }
   return data;
 }
+*/
+function findBuildFile(dirPath, cb) {
+
+  var finder = find(dirPath);
+  var found = false;
+  var data = null;
+
+  var doEnd = function() {
+
+    cb(null, data);
+  }
+
+  finder.on('end', doEnd);
+
+  finder.on('stop', doEnd);
+
+  finder.on('directory', function (dir, stat, stop) {
+      if (found) { stop() }
+  });
+
+  finder.on('file', function (file, stat) {
+
+    if (found) { return; }
+
+    if (iOS_FILE.test(file)) {
+      data = {
+        type : TYPE_IOS,
+        name : path.basename(file).replace(iOS_FILE, ""),
+        path : file
+      };
+      found = true;
+    }
+    else if (AND_FILE.test(file)) {
+      data = {
+        type : TYPE_AND,
+        name : path.basename(file).replace(AND_FILE, ""),
+        path : file
+      };
+      found = true;
+    }
+    else if (WIN_FILE.test(file)) {
+      data = {
+        type : TYPE_WIN,
+        name : path.basename(file).replace(WIN_FILE, ""),
+        path : file
+      };
+      found = true;
+    }
+  });
+}
+
 
 try {
 
@@ -207,7 +260,7 @@ try {
     });
     for (var j=0; j<meta.buildProjects[i].list.length; j++) {
       dirPath = meta.buildProjects[i].list[j].path;
-      buildInfo = findAppType(dirPath, _);
+      buildInfo = findBuildFile(dirPath, _);
       if (buildInfo) {
         meta.buildProjects[i].list[j].buildInfo = buildInfo;
         meta.buildProjects[i].type = buildInfo.type; // pretty ugly but will do for now

@@ -19,6 +19,7 @@
     "directory-cache": "~1.0.4",
     "mime": "~1.2.11",
     "mu2": "~0.5.20",
-    "proto-typer": "~0.2.2"
+    "proto-typer": "~0.2.2",
+    "findit": "~1.1.0"
   }
 }
