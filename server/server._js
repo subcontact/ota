@@ -16,22 +16,27 @@ const TYPE_IOS  = 1;
 const TYPE_AND  = 2;
 const TYPE_WIN  = 3;
 
-var meta_template = {
-  buildProjects : [
-    {
-      name : null,
-      type : null,
-      list : [
-        {
-          name : null,
-          file : null,
-          type : null
-        }
-      ]
-    }
-  ]
+const TYPE_IPHONE         = 4;
+const TYPE_IPAD           = 5;
+const TYPE_ANDROID_PHONE  = 6;
+const TYPE_ANDROID_TABLET = 7;
+const TYPE_WINDOWS_PHONE  = 8;
+const TYPE_WINDOWS_TABLET = 9;
+
+const TYPE_LABELS = {
+  1 : "iOS",
+  2 : "Android",
+  3 : "Windows",
+
+  4 : "iPhone",
+  5 : "iPad",
+  6 : "Android Phone",
+  7 : "Android Tablet",
+  8 : "Windows Phone",
+  9 : "Windows Tablet"
 };
 
+//TODO : Turn this into a cache
 var meta = {
 
   buildProjects : []
@@ -135,62 +140,36 @@ function getBuildFile() {
 
 }
 
-function getBuildInfoIOS() {
-  
+function getBuildInfoIOS(file) {//, _) {
+
+  return {
+
+    commitHash : "12345A",
+    version    : "1.54",
+    icon       : "data:image/png;base64,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"
+  };  
 }
 
-function getBuildInfoAND() {
+function getBuildInfoAND(file) {//, _) {
   
+  return {};
 }
 
-function getBuildInfoWIN() {
+function getBuildInfoWIN(file) {//, _) {
   
+  return {};
 }
 
 function getBuildInfo() {
 
 }
-/*
-function findAppType(dirPath, _) {
 
-  var files = getFiles(dirPath, null, _);
-  var i,a,w, error, found = false;
-  var data = null;
-
-  for (var k=0; k<files.length; k++) {
-    if (iOS_FILE.test(files[k])) {
-      data = {
-        type : TYPE_IOS,
-        name : path.basename(files[k]).replace(iOS_FILE, ""),
-        path : files[k]
-      };
-      break;
-    }
-    else if (AND_FILE.test(files[k])) {
-      data = {
-        type : TYPE_AND,
-        name : path.basename(files[k]).replace(AND_FILE, ""),
-        path : files[k]
-      };
-      break;
-    }
-    else if (WIN_FILE.test(files[k])) {
-      data = {
-        type : TYPE_WIN,
-        name : path.basename(files[k]).replace(WIN_FILE, ""),
-        path : files[k]
-      };
-      break;
-    }
-  }
-  return data;
-}
-*/
 function findBuildFile(dirPath, cb) {
 
   var finder = find(dirPath);
   var found = false;
   var data = null;
+  var buildData = null;
 
   var doEnd = function() {
 
@@ -206,82 +185,113 @@ function findBuildFile(dirPath, cb) {
   });
 
   finder.on('file', function (file, stat) {
-
     if (found) { return; }
-
     if (iOS_FILE.test(file)) {
+      //buildData = getBuildInfoIOS(file);//, _);
       data = {
         type : TYPE_IOS,
-        name : path.basename(file).replace(iOS_FILE, ""),
-        path : file
+        buildName : path.basename(file).replace(iOS_FILE, ""),
+        buildFile : file
       };
       found = true;
     }
     else if (AND_FILE.test(file)) {
+      //buildData = getBuildInfoAND(file);//, _);
       data = {
         type : TYPE_AND,
-        name : path.basename(file).replace(AND_FILE, ""),
-        path : file
+        buildName : path.basename(file).replace(AND_FILE, ""),
+        buildFile : file
       };
       found = true;
     }
     else if (WIN_FILE.test(file)) {
+      //buildData = getBuildInfoWIN(file);//, _);
       data = {
         type : TYPE_WIN,
-        name : path.basename(file).replace(WIN_FILE, ""),
-        path : file
+        buildName : path.basename(file).replace(WIN_FILE, ""),
+        buildFile : file
       };
       found = true;
     }
   });
 }
 
+function getProjectsService(meta, p, _) {
+
+  var buildProjects   = getBuildProjects(p, _);
+  // get the names at the root level
+  meta.buildProjects  = buildProjects.map(function(data) {
+    return {
+      name  : path.basename(data),
+      _id   : data,
+      path  : data,
+    };
+  });
+  meta.timeStamp = Date.now();
+  var list, files, dirPath, fullFile, buildInfo;
+  // loop through and get the builds for each project. 
+  // We need one to work out the type of project (EG TYPE);
+  for (var i=0; i<meta.buildProjects.length; i++) {
+    list = getBuildProjectList(meta.buildProjects[i].path, _);
+    if (list.length > 0) {
+      dirPath = list[0];
+      buildInfo = findBuildFile(dirPath, _);
+      if (buildInfo) {
+        meta.buildProjects[i].type  = buildInfo.type;
+        meta.buildProjects[i].label = TYPE_LABELS[buildInfo.type];
+        meta.buildProjects[i].icon  = "TODO//ICON";
+      }
+    }
+  }  
+}
+
+function getProjectBuildListService(project, _) {
+
+  var list, files, dirPath, fullFile, buildMeta, buildData;
+  list = getBuildProjectList(project.path, _);
+  project.list = [];
+  for (var i=0; i<list.length; i++) {
+    project.list[i] = {
+      instanceName  : path.basename(list[i]),
+      _id   : list[i],
+      instancePath  : list[i],
+    };
+    buildMeta = findBuildFile(list[i], _);
+    if (buildMeta) {
+      lodash.extend(project.list[i], buildMeta);
+    }
+  }
+}
+
+function getProjectBuildDataService(projectBuild, _) {
+
+  var buildData;
+  if (projectBuild.type === TYPE_IOS) {
+    buildData = getBuildInfoIOS(projectBuild.buildFile);//, _);
+  }
+  else if (projectBuild.type === TYPE_AND) {
+    buildData = getBuildInfoAND(projectBuild.buildFile);//, _);
+  }    
+  else if (projectBuild.type === TYPE_WIN) {
+    buildData = getBuildInfoWIN(projectBuild.buildFile);//, _);
+  }
+  if (buildData) {
+    projectBuild.buildData = buildData;
+  }
+}
 
 try {
 
   var p = process.argv.length > 2 ? process.argv[2] : ".";
   var t0 = Date.now();
 
-  var buildProjects   = getBuildProjects(p, _);
-  meta.buildProjects  = buildProjects.map(function(data) {
-    return {
-      name  : path.basename(data),
-      _id   : data,
-      path  : data,
+  getProjectsService(meta, p, _);
 
-    };
-  });
-  meta.timeStamp = Date.now();
-  
-  /*
-  var list, files, dirPath, fullFile, buildInfo;
-  for (var i=0; i<meta.buildProjects.length; i++) {
-    list = getBuildProjectList(meta.buildProjects[i].path, _);
-    meta.buildProjects[i].list = list.map(function(data) {
-      return {
-        name : path.basename(data),
-        path : data
-      };
-    });
-    for (var j=0; j<meta.buildProjects[i].list.length; j++) {
-      dirPath = meta.buildProjects[i].list[j].path;
-      buildInfo = findBuildFile(dirPath, _);
-      if (buildInfo) {
-        meta.buildProjects[i].list[j].buildInfo = buildInfo;
-        meta.buildProjects[i].type = buildInfo.type; // pretty ugly but will do for now
-      }
-      //console.log(dirPath);
-      //console.log(buildInfo);
-    }
-  }
-  */
-  console.log(util.inspect(meta, { showHidden: true, depth: null }));
-  //console.log(JSON.stringify(meta));
+  getProjectBuildListService(meta.buildProjects[0], _);
+  getProjectBuildDataService(meta.buildProjects[0].list[0], _);
 
-  //console.log(getBuildProjectList(buildProjects[0], _));
-  //console.log(buildProjects);
-  //console.log("length : " + buildProjects.length);
-  console.log("completed in " + (Date.now() - t0) + " ms");
+  console.log(util.inspect(meta.buildProjects, { showHidden: true, depth: null }));
+    console.log("completed in " + (Date.now() - t0) + " ms");
 } 
 catch (ex) {
   console.error(ex.stack);
