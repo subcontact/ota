@@ -6,15 +6,6 @@ var path    = require('path');
 var lodash  = require('lodash');
 var util    = require('util');
 var find    = require('findit');
-/*
-var streamline = require('streamline').register({
-        fibers: false,
-        generators: true,
-        cache: false,
-        verbose: true,
-});
-var otadata = require('./lib/otadata');
-*/
 
 const BUILD_DIR = "builds";
 const BUILD_LIST_PATTERN = /^\d{14}$/i;
@@ -315,13 +306,14 @@ function getProjectBuildDataService(projectBuild, _) {
   }
   return projectBuild.buildData;
 }
-/*
+
 exports.meta = meta;
 exports.buildProjects = meta.buildProjects;
 exports.getProjectsService = getProjectsService;
 exports.getProjectBuildListService = getProjectBuildListService;
 exports.getProjectBuildDataService = getProjectBuildDataService;
-*/
+
+
 // main //
 function main(_) {
   try {
@@ -364,4 +356,4 @@ function main(_) {
     console.error(ex.stack);
   }
 }
-main(_);
+//main(_);
