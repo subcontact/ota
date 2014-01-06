@@ -5,13 +5,13 @@
   "dependencies": {
     "express": "3.4.7",
     "lodash": "~2.0.0",
-    "q": "0.9.7",
+    "q": "~0.9.7",
     "async": "0.2.9",
     "q-io": "~1.10.4",
     "suspend": "0.3.x",
     "streamline": "0.10.x",
     "bluebird": "0.10.x",
-    "co": "2.3.x",
+    "co": "~2.3.0",
     "galaxy": "~0.1.3",
     "apk-parser": "~0.1.0",
     "im-cache": "0.0.2",
@@ -26,6 +26,11 @@
     "expect.js": "~0.2.0",
     "superagent": "~0.15.7",
     "mocha": "~1.16.2",
-    "koa": "~0.2.1"
+    "koa": "~0.2.1",
+    "koa-router": "~2.2.0",
+    "koa-route": "~1.0.2",
+    "sutro": "~1.0.0",
+    "thunkify": "0.0.1",
+    "co-fs": "~1.1.1"
   }
 }
