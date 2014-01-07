@@ -175,53 +175,64 @@ function getBuildInfoWIN(file) {//, _) {
   };  
 }
 
-function findBuildFile(dirPath, cb) {
+function findBuildFile(dirPath) {
+  
+  return function(done) {
 
-  var finder = find(dirPath);
-  var found = false;
-  var data = null;
-  var buildData = null;
+    var finder = find(dirPath);
+    var found = false;
+    var data = null;
+    var buildData = null;
 
-  var doEnd = function() {
+    finder.on('directory', onDirectory);
+    finder.on('file', onFile);
+    finder.on('end', onEnd);
+    finder.on('stop', onEnd);
 
-    cb(null, data);
+    function onDirectory(dir, stat, stop) {
+        if (found) { stop(); }
+    }
+
+    function onFile(file, stat) {
+      if (found) { return; }
+      if (iOS_FILE.test(file)) {
+        data = {
+          type : TYPE_IOS,
+          buildName : path.basename(file).replace(iOS_FILE, ""),
+          buildFile : file
+        };
+        found = true;
+      }
+      else if (AND_FILE.test(file)) {
+        data = {
+          type : TYPE_AND,
+          buildName : path.basename(file).replace(AND_FILE, ""),
+          buildFile : file
+        };
+        found = true;
+      }
+      else if (WIN_FILE.test(file)) {
+        data = {
+          type : TYPE_WIN,
+          buildName : path.basename(file).replace(WIN_FILE, ""),
+          buildFile : file
+        };
+        found = true;
+      }
+    }
+
+    function onEnd() {
+      cleanup();
+      done(null, data);
+    }
+
+    function cleanup() {
+      finder.removeListener('directory', onDirectory);
+      finder.removeListener('file', onFile);
+      finder.removeListener('end', onEnd);
+      finder.removeListener('stop', onEnd);
+    }
   };
-
-  finder.on('end', doEnd);
-
-  finder.on('stop', doEnd);
-
-  finder.on('directory', function (dir, stat, stop) {
-      if (found) { stop(); }
-  });
-
-  finder.on('file', function (file, stat) {
-    if (found) { return; }
-    if (iOS_FILE.test(file)) {
-      data = {
-        type : TYPE_IOS,
-        buildName : path.basename(file).replace(iOS_FILE, ""),
-        buildFile : file
-      };
-      found = true;
-    }
-    else if (AND_FILE.test(file)) {
-      data = {
-        type : TYPE_AND,
-        buildName : path.basename(file).replace(AND_FILE, ""),
-        buildFile : file
-      };
-      found = true;
-    }
-    else if (WIN_FILE.test(file)) {
-      data = {
-        type : TYPE_WIN,
-        buildName : path.basename(file).replace(WIN_FILE, ""),
-        buildFile : file
-      };
-      found = true;
-    }
-  });
 }
 
 function* getProjectsService(meta, p) {
@@ -246,7 +257,9 @@ function* getProjectsService(meta, p) {
     list = yield getBuildProjectList(meta.buildProjects[i].path);
     if (list.length > 0) {
       dirPath = list[0];
+      console.log(dirPath);
       buildInfo = yield findBuildFile(dirPath);
+      console.log(buildInfo);
       if (buildInfo) {
         meta.buildProjects[i].type  = buildInfo.type;
         meta.buildProjects[i].label = TYPE_LABELS[buildInfo.type];
