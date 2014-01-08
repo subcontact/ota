@@ -43,7 +43,8 @@ var meta = {
 };
 
 var app = koa();
-var buildFolderRoot = '/Users/jcuiuli/code/ota/server/build_server';
+var p = process.argv.length > 2 ? process.argv[2] : ".";
+var buildFolderRoot = p;
 
 function clone(value, excludeList) {
   var cloned;
