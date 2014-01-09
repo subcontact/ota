@@ -13,29 +13,29 @@ const BUILD_LIST_PATTERN = /^\d{14}$/i;
 const iOS_FILE  = /\.ipa$/i;
 const AND_FILE  = /\.apk$/i;
 const WIN_FILE  = /\.exe$/i;
-const TYPE_IOS  = 1;
-const TYPE_AND  = 2;
-const TYPE_WIN  = 3;
+const TYPE_IOS  = 0;
+const TYPE_AND  = 1;
+const TYPE_WIN  = 2;
 
-const TYPE_IPHONE         = 4;
-const TYPE_IPAD           = 5;
-const TYPE_ANDROID_PHONE  = 6;
-const TYPE_ANDROID_TABLET = 7;
-const TYPE_WINDOWS_PHONE  = 8;
-const TYPE_WINDOWS_TABLET = 9;
+const TYPE_IPHONE         = 3;
+const TYPE_IPAD           = 4;
+const TYPE_ANDROID_PHONE  = 5;
+const TYPE_ANDROID_TABLET = 6;
+const TYPE_WINDOWS_PHONE  = 7;
+const TYPE_WINDOWS_TABLET = 8;
 
-const TYPE_LABELS = {
-  1 : "iOS",
-  2 : "Android",
-  3 : "Windows",
+const TYPE_LABELS = [
+  "iOS",
+  "Android",
+  "Windows",
 
-  4 : "iPhone",
-  5 : "iPad",
-  6 : "Android Phone",
-  7 : "Android Tablet",
-  8 : "Windows Phone",
-  9 : "Windows Tablet"
-};
+  "iPhone",
+  "iPad",
+  "Android Phone",
+  "Android Tablet",
+  "Windows Phone",
+  "Windows Tablet"
+];
 
 //TODO : Turn this into a cache
 var meta = {
@@ -241,12 +241,12 @@ function* getProjectsService(meta, p) {
   if (meta.buildProjects) {
      return clone(meta.buildProjects, ['list']);
   }
-  var buildProjects   = yield getBuildProjects(p);
+  var buildProjects   = yield getFolders(p);
   // get the names at the root level
   meta.buildProjects  = buildProjects.map(function(data) {
     return {
       name  : path.basename(data),
-      _id   : data,
+      _id   : data.replace(/\//g, '_'),
       path  : data,
     };
   });
@@ -258,9 +258,7 @@ function* getProjectsService(meta, p) {
     list = yield getBuildProjectList(meta.buildProjects[i].path);
     if (list.length > 0) {
       dirPath = list[0];
-      console.log(dirPath);
       buildInfo = yield findBuildFile(dirPath);
-      console.log(buildInfo);
       if (buildInfo) {
         meta.buildProjects[i].type  = buildInfo.type;
         meta.buildProjects[i].label = TYPE_LABELS[buildInfo.type];
@@ -282,7 +280,7 @@ function* getProjectBuildListService(project) {
   for (var i=0; i<list.length; i++) {
     project.list[i] = {
       instanceName  : path.basename(list[i]),
-      _id   : list[i],
+      _id   : list[i].replace(/\//g, '_'),
       instancePath  : list[i],
     };
     buildMeta = yield findBuildFile(list[i]);
@@ -341,19 +339,34 @@ app.use(function *(next){
 });
 
 app.use(router(app));  
-// response
 
-/*
-app.use(function *(){
-  this.body = 'Hello World';
+app.get('/types', function *(next) {
+  this.body = TYPE_LABELS;
 });
-*/  
 
-app.get('/users/:id', function *(next) {
-  //var data = yield wait(3000);
-  //var data = yield getBuildProjects(buildFolderRoot);
+app.get('/projects', function *(next) {
   var data = yield getProjectsService(meta, buildFolderRoot);
   this.body = data;
+});
+
+app.get('/projects/:projectId', function *(next) {
+
+  var data = yield getProjectBuildListService(meta.buildProjects[0]);
+  //var data = yield getProjectsService(meta, buildFolderRoot);
+  this.body = data;
+});
+
+app.get('/projects/:projectId/builds/:buildId', function *(next) {
+  //var data = yield getProjectsService(meta, buildFolderRoot);
+  var projects = yield getProjectBuildListService(meta.buildProjects[0]);
+
+  var data = yield getProjectBuildDataService(meta.buildProjects[0].list[0]);
+  this.body = data;
+});
+
+app.get('/projects/search/:id', function *(next) {
+  var data = lodash.find(meta.buildProjects, {_id : this.params.id});
+  this.body = clone(data, ['list']); 
 });
 
 app.listen(3000);
