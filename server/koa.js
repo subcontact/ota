@@ -349,24 +349,20 @@ app.get('/projects', function *(next) {
   this.body = data;
 });
 
-app.get('/projects/:projectId', function *(next) {
-
-  var data = yield getProjectBuildListService(meta.buildProjects[0]);
-  //var data = yield getProjectsService(meta, buildFolderRoot);
-  this.body = data;
+app.get('/projects/:projectId/builds', function *(next) {
+  var projectList   = yield getProjectsService(meta, buildFolderRoot);
+  var project       = lodash.find(projectList, {_id : this.params.projectId});
+  var projectBuilds = yield getProjectBuildListService(project);
+  this.body = projectBuilds;
 });
 
 app.get('/projects/:projectId/builds/:buildId', function *(next) {
-  //var data = yield getProjectsService(meta, buildFolderRoot);
-  var projects = yield getProjectBuildListService(meta.buildProjects[0]);
-
-  var data = yield getProjectBuildDataService(meta.buildProjects[0].list[0]);
-  this.body = data;
-});
-
-app.get('/projects/search/:id', function *(next) {
-  var data = lodash.find(meta.buildProjects, {_id : this.params.id});
-  this.body = clone(data, ['list']); 
+  var projectList   = yield getProjectsService(meta, buildFolderRoot);
+  var project       = lodash.find(projectList, {_id : this.params.projectId});
+  var projectBuilds = yield getProjectBuildListService(project);
+  var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
+  var buildData     = yield getProjectBuildDataService(build);
+  this.body = build;
 });
 
 app.listen(3000);
