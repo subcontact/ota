@@ -294,7 +294,7 @@ function* getProjectBuildListService(project) {
 function getProjectBuildDataService(projectBuild) {
 
   if (projectBuild.buildData) {
-     //projectBuild.buildData;
+     return projectBuild.buildData;
   }
   var buildData;
   if (projectBuild.type === TYPE_IOS) {
@@ -312,25 +312,7 @@ function getProjectBuildDataService(projectBuild) {
   return projectBuild.buildData;
 }
 
-function wait(ms) {
-  var deferred = q.defer();
- 
-  setTimeout(function() { deferred.resolve("Wait Done") }, ms); 
- 
-  return deferred.promise;
-}
-
-// x-response-time
-
-app.use(function *(next){
-  var start = new Date;
-  yield next;
-  var ms = new Date - start;
-  this.set('X-Response-Time', ms + 'ms');
-});
-
 // logger
-
 app.use(function *(next){
   var start = new Date;
   yield next;
@@ -349,12 +331,15 @@ app.get('/projects', function *(next) {
   this.body = data;
 });
 
-app.get('/projects/:projectId/builds', function *(next) {
+var getProjectBuildsRoute = function *(next) {
   var projectList   = yield getProjectsService(meta, buildFolderRoot);
   var project       = lodash.find(projectList, {_id : this.params.projectId});
   var projectBuilds = yield getProjectBuildListService(project);
   this.body = projectBuilds;
-});
+};
+
+app.get('/projects/:projectId/builds', getProjectBuildsRoute);
+app.get('/projects/:projectId', getProjectBuildsRoute );
 
 app.get('/projects/:projectId/builds/:buildId', function *(next) {
   var projectList   = yield getProjectsService(meta, buildFolderRoot);
@@ -362,7 +347,7 @@ app.get('/projects/:projectId/builds/:buildId', function *(next) {
   var projectBuilds = yield getProjectBuildListService(project);
   var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
   var buildData     = yield getProjectBuildDataService(build);
-  this.body = build;
+  this.body = buildData;
 });
 
 app.listen(3000);
