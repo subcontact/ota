@@ -31,6 +31,9 @@
     "koa-route": "~1.0.2",
     "sutro": "~1.0.0",
     "thunkify": "0.0.1",
-    "co-fs": "~1.1.1"
+    "co-fs": "~1.1.1",
+    "adm-zip": "~0.4.3",
+    "plist": "~0.4.3",
+    "bplist-parser": "0.0.4"
   }
 }

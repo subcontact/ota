@@ -294,7 +294,7 @@ function* getProjectBuildListService(project) {
 function getProjectBuildDataService(projectBuild) {
 
   if (projectBuild.buildData) {
-     return projectBuild.buildData;
+     //projectBuild.buildData;
   }
   var buildData;
   if (projectBuild.type === TYPE_IOS) {
@@ -312,7 +312,25 @@ function getProjectBuildDataService(projectBuild) {
   return projectBuild.buildData;
 }
 
+function wait(ms) {
+  var deferred = q.defer();
+ 
+  setTimeout(function() { deferred.resolve("Wait Done") }, ms); 
+ 
+  return deferred.promise;
+}
+
+// x-response-time
+
+app.use(function *(next){
+  var start = new Date;
+  yield next;
+  var ms = new Date - start;
+  this.set('X-Response-Time', ms + 'ms');
+});
+
 // logger
+
 app.use(function *(next){
   var start = new Date;
   yield next;
@@ -331,15 +349,12 @@ app.get('/projects', function *(next) {
   this.body = data;
 });
 
-var getProjectBuildsRoute = function *(next) {
+app.get('/projects/:projectId/builds', function *(next) {
   var projectList   = yield getProjectsService(meta, buildFolderRoot);
   var project       = lodash.find(projectList, {_id : this.params.projectId});
   var projectBuilds = yield getProjectBuildListService(project);
   this.body = projectBuilds;
-};
-
-app.get('/projects/:projectId/builds', getProjectBuildsRoute);
-app.get('/projects/:projectId', getProjectBuildsRoute );
+});
 
 app.get('/projects/:projectId/builds/:buildId', function *(next) {
   var projectList   = yield getProjectsService(meta, buildFolderRoot);
@@ -347,7 +362,25 @@ app.get('/projects/:projectId/builds/:buildId', function *(next) {
   var projectBuilds = yield getProjectBuildListService(project);
   var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
   var buildData     = yield getProjectBuildDataService(build);
-  this.body = buildData;
+  this.body = build;
+});
+
+app.get('/projects/:projectId/builds/:buildId/install', function *(next) {
+  var projectList   = yield getProjectsService(meta, buildFolderRoot);
+  var project       = lodash.find(projectList, {_id : this.params.projectId});
+  var projectBuilds = yield getProjectBuildListService(project);
+  var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
+  var buildData     = yield getProjectBuildDataService(build);
+  this.body = build;
+});
+
+app.get('/projects/:projectId/builds/:buildId/download', function *(next) {
+  var projectList   = yield getProjectsService(meta, buildFolderRoot);
+  var project       = lodash.find(projectList, {_id : this.params.projectId});
+  var projectBuilds = yield getProjectBuildListService(project);
+  var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
+  var buildData     = yield getProjectBuildDataService(build);
+  this.body = build;
 });
 
 app.listen(3000);
