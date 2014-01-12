@@ -34,6 +34,8 @@
     "co-fs": "~1.1.1",
     "adm-zip": "~0.4.3",
     "plist": "~0.4.3",
-    "bplist-parser": "0.0.4"
+    "bplist-parser": "0.0.4",
+    "zip": "~1.1.1",
+    "mustache": "~0.8.1"
   }
 }

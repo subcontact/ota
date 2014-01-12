@@ -1,14 +1,32 @@
-var q       = require('q');
-var koa     = require('koa');
-var router  = require('koa-router');
-var co      = require('co');
-var fs      = require('co-fs');
-var path    = require('path');
-var lodash  = require('lodash');
-var util    = require('util');
-var find    = require('findit');
-var bplist  = require('bplist-parser');
+var q         = require('q');
+var koa       = require('koa');
+var router    = require('koa-router');
+var thunkify  = require('thunkify');
+var co        = require('co');
+var fs        = require('co-fs');
+var path      = require('path');
+var lodash    = require('lodash');
+var util      = require('util');
+var find      = require('findit');
+var bplist    = require('bplist-parser');
+var admZip    = require('adm-zip');
+var zip       = require('zip');
+var util      = require('util');
+var mustache  = require('mustache');
 var otaconsts = require('./ota-consts');
+
+// turn standard callback function into a single param callback function for use with co generator (via koa)
+//bplist.parseFile = thunkify(bplist.parseFile); 
+//admZip.prototype.readAsTextAsync = thunkify(admZip.prototype.readAsTextAsync);
+
+var zipReadAsTextAsyncThunk = function(object, entry) {
+  return function(done){
+    // for some reason the params are non standard (swapped) meaning I had to thunk this myself.
+    object.readAsTextAsync(entry, function(data, err) {
+      done(err, data);
+    });
+  }
+};
 
 var otafs = function() {
   var self = this;
@@ -111,19 +129,76 @@ var otafs = function() {
       return buildList;
   };
 
-  this.getBuildInfoIOS = function(file) {
-    return {
-      commitHash : "12345A",
-      version    : "1.54",
-      //icon       : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEMAAAA9CAMAAADBPCTwAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAwBQTFRF////wSctwCctzMzM/v7+siQqzXF14eHh7e3tpiwxvCAmvFVZ4K2v5eXl3t7exTU6+vr6tSQq6vHwwSgulBMYvyctxjg+5q6x0ZeZtyUqxrKzrCEmviYs3aqsuiYsr1te/ff3yD5DpzU5uUNHzlVawCQq8PDwzs7O6rW33ImNwzA2+eztzc3NyUFG4qKkwiwy9uHi+Pj4vSYsxaeppR4jtiUq0FxhvCYs8tLT1Wpu67q7/Pz8/f39ykRKykhN1tbWoyEmwiow9PT09vb21W1w0dDQmhwh+vHxuXp86Ojo02Rpvhwiy8PD6urq07m6xDI4uxgfvh4k1NTU2NjY+enpqxQbvyIo8vLy0drZwy4024GFx29yuSUr0tLSsSMovYuN4ebm0mBkwSYs7sTFxzpA2tratDQ5yU1S/fj4uyUrvycs//7+4ZiawikvnxogrBofvyYsriMowCIoqykv1m90sxkeuxQbvicsyD9Eti0z/vz9ykdM5OvrwCcs9d3eqyMosh0jxTY835CS2uDgzVFW5aap3o2Qu01RqR0i7sLEuoKE+u/wpxcc/fr64rS1u15i7sbIrjxByJCSxzxByUNIqRsh/vr6vyAm3eLh0Xl8rk9T9NjZ8tbX7L7A13V5456hvictvBogzczMuCUr2NzcsCQp8M3OzE1S9+XmrR0itiInwCYs3IWJ/PX12Xx/z1hcqB8krR8luyYr7MDC8vT0pRMZzEtQwSYt2Hd72cfH2szNpyIn///+y8vL/v//z8jIwSgtvCUs9efoyGtvzdDQqlVYpxEX9t/gqhEW8fn54b2+sicswFxguQ0StiMo5cHD+/Lz0oaJ8M/RuSIotiYqz8/P13J2xkxQ+/79vWBkv29zrxYc09XVzM3NoSswsyQqtiQp/f//8fHx8fLx+Ojo+OPkxF1hw0lOz9PT8tra8dzd6cbHyo6RuSgu2X2AuIaI4JSX19LS9+PjzE9UvScsuTI3vzg9oRMZoRUapBYc/fz80cPE5NHR1svM7MvN/vn4VeVs7AAABeFJREFUeNpiYBiUoHeCXpSLpWVJm/hs8gyo+tSUqNKyzQ4IlrestxRfm02yEdofPm+zq7bVBYEpttXb7MysFEj1hVl1tW3FZDF+fy0t/sYURV3bat13BqQYodBaraurKOafq6qfUlHRKKwa2ZhSYTvZbBnxRkzT01WsEOMX3r6tpEmjs7N1jdfkMKApuiktFkSbYTUlZXKjVphiGzw6rEr0Vf3FFMXMnhBpxPH1/in+WtNVJiCJZcxvDNNqnOwfZUNcYGjqi/lHFiXWoYhma/CHafGniHUSZcalyf78Wgcq6tDF9XKFtfj5E4lxiEKbML+W/nQrKHf2Go1pUO9cC9T35yfKIQbVkVr6YV7uUK5m2XJYOM5NUY30979GhBlzVbUiHReKQ3lP1osxzoUlPEtv/chI2wsEjchoUo3UV+WHxar4dCszFZiuNlXhSH2xZIJmdCcy6jtOV1kBTW3z7Nbm5M6Bymk0Junr+88naEbIFGHH3EAvbQjPIjLKfZnYmj0Q3oSKMEdH/XkEzXhalJsr7A0zo/Wsrtl6VX4ob4JiWG6uqgpBMz4tFBYW9k4MgXjMTGzHtWteSa0Quc2Tw4SFw5YTZ0aR7nEwJ9kb5Pn/FRBte1ojVYkyw2ChKCNTkjc4ryjMSwJn1HUBkLhY553ExMiVTtiMABlRJsYAzQwge21rK7jsqvsANmNFizcTkyhRZpjLiDKq+oPKrOz/0DK0qhdEzldNYhKVIcKMT6XmMrVMjNNdMErPS1MCmZiyzLmuEzTjybfLRgVMjIyqrWjleIiXNyPQGQdjZhIuz5+v2iQDNCMptxXFJU+ueScxMmUZZb7VJGjG2pkNmUaijECw2uXTf5johU7b6UAhJhnzxZXi+wiZ8Uvv9mJzYMwAwXT/tmUG2t3dIXVWLkWqICNEZTad+/qSiGIs/0FMOdgMRtWFgbZelpbrxQICk0B8oFdiVikTUd8ZKDcsPgj2DBAkhXl7ewcWQXlMBeaSgmxElEEX2G5LZi5gxAZEZWJMT/MQYUY2zwlBORkmbGasNl8cV9lNTLk+J61BEhqqqIBJJuZB3DOi6gb3w6GmckZYzCgwjxGU5iGunuPJj8PmEKYFmYJxad3EmfGqPd90UxamGeUx9zfO/EWcGdkXj91fbI5hhmim5NKp/4it91+nrcR0CNAZglPPXCDWjN7oHtbF6NHLZP4grqeP6PZHdl/xRnSHMH2Ruz9V+dA+GxYW4gxxPwN0CGr0Mm0yjdsq8djJydnQUMDahgiDZEEOKWdCDg051vyJOxP42Nl5PTnUnAwFCJqylnvqUknzWoQZteamhVsnJaQGBwfb2wfzsXuqGVoTdoi0YKYMLKExiRrFsPYo/9niCQTswUGusfZ8vk7WBJyS0d4RJ2lUAM8pcoLSU98IcTgJCAg4+bLbq6u7pvoaEmoSnS+Wvh8DDVYmUXPJpT2z/s5gfwS020bgEZ8rs04QuxMBM1hu9O8uFMwsgGXY+xvqJ9UEA+1mYWARCGd3ZWaOJWiGtbNfcf3SxTK14CLQ3HTpz5uP1HjZPZ0FBAzVeO3VmdXtPQ0JhIcAR6qHCdAhC5ggAdqhdGqfoZPaI6dHHLx8QVd11IPYHxGIXhYB31QfpQ1Lr5gzMTEVAAPU5NZJDg5fX19ePmCs6OhctWfnIJhCBNT4XOMd6lmBRTwwaSzdMPH3EnsQCLqqrsOsHpvKq0Y4kdk48QYvkv9ZKLhJBugT6d3vIxbpgAAzM7OOK9ARztaEUzsL0CF3jDk7lprKLRYsNJnFfBeom3kv2AQ+TycBojKejaHnkhceP+qX3r9fuJtT6ggzGKiDTHhkaENkAWDtxLvEZ9b3+vr63XldL0AG6FwFmQDMKCzEFiIsAo94lxjfy3NwyDvqAzJBPTaYnSQToIY0d7m5ud2TOrII6IlUdt9w0kwAGxJe8/GoiMj7I1djg/l4gRnOhkQTwIY4Cfkpye8PBjtBwIaBHMBibSjktyvBE+gEa2JNAAgwACwcuJWjZZ66AAAAAElFTkSuQmCC"
-    };  
+  this.parseIPA = function *(file) {
+    var fileBuffer  = yield fs.readFile(file);
+    var reader      = zip.Reader(fileBuffer);
+    var InfoFound   = false;
+    var ProvisionFound = false;
+    var iterator    = reader.iterator();
+    var entry, data;
+    while (true) {
+      try {
+          entry = iterator.next();
+      } catch (exception) {
+          if (exception === "stop-iteration")
+              break;
+          if (exception === "skip-iteration")
+              continue;
+          throw exception;
+      }
+/*
+      console.log("!" + entry.getName() + "!");
+      console.log(entry.getName().match(/\/Info\.plist$/));
+      console.log(entry.getName().match(/.*moblieprovision$/));
+*/
+      // !Payload/MultiG.app/embedded.mobileprovision!
+      // !Payload/MultiG.app/MultiMail.momd/VersionInfo.plist!
+
+      if (!InfoFound && entry.getName().match(/Info\.plist$/)) {
+        InfoFound = true;
+        data = entry.getData();
+        data = bplist.parseBuffer(data)[0];
+      }
+/*
+      if (entry.getName().match(/embedded\.moblieprovision$/)) {
+//      if (!ProvisionFound && entry.getName().match(/dist\.plist/)) {
+        //ProvisionFound = true;
+        //data = entry.getData();
+        //data = bplist.parseBuffer(data)[0];
+        console.log('!!!! mobileprovision !!!!');
+        //console.log(data);
+      }
+      */
+      //if (InfoFound && ProvisionFound) { break; }
+      if (InfoFound) { break; }
+    }
+    return data ? data : {}
   };
+
+  this.getBuildInfoIOS = function *(file) {
+    var data = yield self.parseIPA(file);
+    var results = {
+      commitHash : "12345A",
+    };  
+    results[otaconsts.IOS_NAME]     = data[otaconsts.IOS_NAME];
+    results[otaconsts.IOS_VERSION]  = data[otaconsts.IOS_VERSION];
+    results[otaconsts.IOS_ID]       = data[otaconsts.IOS_ID];
+    results[otaconsts.IOS_TEAM]     = data[otaconsts.IOS_TEAM];
+    results[otaconsts.IOS_ICON]     = data[otaconsts.IOS_ICON];
+    results['url'] = '/' + file;
+
+    var output = mustache.render(yield fs.readFile('manifest.plist.template', 'utf8'), results);
+    console.log(output);
+
+    return results;
+  };
+
+
 
   this.getBuildInfoAND = function(file) {
     return {
       commitHash : "12345A",
       version    : "1.54",
-      //icon       : "data:image/png;base64,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"
     };  
   };
 
@@ -131,7 +206,6 @@ var otafs = function() {
     return {
       commitHash : "12345A",
       version    : "1.54",
-      //icon       : "data:image/png;base64,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"
     };  
   };
 
@@ -157,7 +231,10 @@ var otafs = function() {
           data = {
             type : otaconsts.TYPE_IOS,
             buildName : path.basename(file).replace(otaconsts.iOS_FILE, ""),
-            buildFile : file
+            buildFile : file,
+            size      : stat.size,
+            timeStamp : stat.mtime.getTime(),
+            timeStamp2: stat.mtime.getTime() / 1000
           };
           found = true;
         }
@@ -165,7 +242,10 @@ var otafs = function() {
           data = {
             type : otaconsts.TYPE_AND,
             buildName : path.basename(file).replace(otaconsts.AND_FILE, ""),
-            buildFile : file
+            buildFile : file,
+            size      : stat.size,
+            timeStamp : stat.mtime.getTime(),
+            timeStamp2: stat.mtime.getTime() / 1000
           };
           found = true;
         }
@@ -173,7 +253,10 @@ var otafs = function() {
           data = {
             type : otaconsts.TYPE_WIN,
             buildName : path.basename(file).replace(otaconsts.WIN_FILE, ""),
-            buildFile : file
+            buildFile : file,
+            size      : stat.size,
+            timeStamp : stat.mtime.getTime(),
+            timeStamp2: stat.mtime.getTime() / 1000
           };
           found = true;
         }

@@ -8,11 +8,11 @@ var lodash  = require('lodash');
 var util    = require('util');
 var find    = require('findit');
 var bplist  = require('bplist-parser');
-var otafs   = require('./ota-fs');
+var ota     = require('./ota-fs');
 var otacontsts = require('./ota-consts');
 
 var app = koa();
-otafs.setBuildFolderRoot(process.argv.length > 2 ? process.argv[2] : ".");
+ota.setBuildFolderRoot(process.argv.length > 2 ? process.argv[2] : ".");
 
 // logger
 app.use(function *(next){
@@ -25,23 +25,23 @@ app.use(function *(next){
 app.use(router(app));  
 
 var getProjectsRoute = function *(next) {
-  var data = yield otafs.getProjectsService();
+  var data = yield ota.getProjectsService();
   this.body = data;
 };
 
 var getProjectBuildsRoute = function *(next) {
-  var projectList   = yield otafs.getProjectsService();
+  var projectList   = yield ota.getProjectsService();
   var project       = lodash.find(projectList, {_id : this.params.projectId});
-  var projectBuilds = yield otafs.getProjectBuildListService(project);
+  var projectBuilds = yield ota.getProjectBuildListService(project);
   this.body = projectBuilds;
 };
 
 var getProjectBuildDataRoute = function *(next) {
-  var projectList   = yield otafs.getProjectsService();
+  var projectList   = yield ota.getProjectsService();
   var project       = lodash.find(projectList, {_id : this.params.projectId});
-  var projectBuilds = yield otafs.getProjectBuildListService(project);
+  var projectBuilds = yield ota.getProjectBuildListService(project);
   var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
-  var buildData     = yield otafs.getProjectBuildDataService(build);
+  var buildData     = yield ota.getProjectBuildDataService(build);
   this.body = buildData;
 };
 

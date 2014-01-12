@@ -31,6 +31,12 @@ var otaconsts = function() {
     "Windows Tablet"
   ];
 
+  const IOS_NAME    = 'CFBundleDisplayName';
+  const IOS_VERSION = 'CFBundleVersion';
+  const IOS_ID      = 'CFBundleIdentifier';
+  const IOS_TEAM    = 'TeamName';
+  const IOS_ICON    = 'CFBundleIconFile';
+
   // must be a better way to export these!
   this.BUILD_DIR            = BUILD_DIR;
   this.BUILD_LIST_PATTERN   = BUILD_LIST_PATTERN;
@@ -46,6 +52,11 @@ var otaconsts = function() {
   this.TYPE_WINDOWS_PHONE   = TYPE_WINDOWS_PHONE;
   this.TYPE_WINDOWS_TABLET  = TYPE_WINDOWS_TABLET;
   this.TYPE_LABELS          = TYPE_LABELS;
+  this.IOS_NAME             = IOS_NAME;
+  this.IOS_VERSION          = IOS_VERSION;
+  this.IOS_ID               = IOS_ID;
+  this.IOS_TEAM             = IOS_TEAM;
+  this.IOS_ICON             = IOS_ICON;
 }
 
 module.exports = new otaconsts();
