@@ -188,6 +188,7 @@ var otafs = function() {
     results['url'] = '/' + file;
 
     var output = mustache.render(yield fs.readFile('manifest.plist.template', 'utf8'), results);
+    results['installerUrl'] = output;
     console.log(output);
 
     return results;

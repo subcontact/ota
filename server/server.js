@@ -9,7 +9,7 @@ var util    = require('util');
 var find    = require('findit');
 var bplist  = require('bplist-parser');
 var ota     = require('./ota-fs');
-var otacontsts = require('./ota-consts');
+var otaconsts = require('./ota-consts');
 
 var app = koa();
 ota.setBuildFolderRoot(process.argv.length > 2 ? process.argv[2] : ".");
@@ -45,6 +45,17 @@ var getProjectBuildDataRoute = function *(next) {
   this.body = buildData;
 };
 
+var getProjectBuildInstallerRoute = function *(next) {
+  var projectList   = yield ota.getProjectsService();
+  var project       = lodash.find(projectList, {_id : this.params.projectId});
+  var projectBuilds = yield ota.getProjectBuildListService(project);
+  var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
+  var buildData     = yield ota.getProjectBuildDataService(build);
+  var installer     = buildData.installerUrl;
+  this.body = installer;
+  this.set('Content-Type', 'application/xml');
+};
+
 app.get('/',          getProjectsRoute);
 app.get('/projects',  getProjectsRoute);
 
@@ -53,8 +64,9 @@ app.get('/types', function *(next) {
 });
 
 app.get('/projects/:projectId/builds',  getProjectBuildsRoute);
-app.get('/projects/:projectId',         getProjectBuildsRoute );
+app.get('/projects/:projectId',         getProjectBuildsRoute);
 
 app.get('/projects/:projectId/builds/:buildId', getProjectBuildDataRoute);
+app.get('/projects/:projectId/builds/:buildId/installer', getProjectBuildInstallerRoute);
 
 app.listen(3001);

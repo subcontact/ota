@@ -36,6 +36,10 @@
     "plist": "~0.4.3",
     "bplist-parser": "0.0.4",
     "zip": "~1.1.1",
-    "mustache": "~0.8.1"
+    "mustache": "~0.8.1",
+    "koa-compress": "~1.0.0",
+    "koa-etag": "~1.2.2",
+    "koa-static-cache": "~1.0.2",
+    "koa-static": "~1.4.2"
   }
 }
