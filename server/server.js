@@ -1,6 +1,7 @@
 var q       = require('q');
 var koa     = require('koa');
 var router  = require('koa-router');
+var serve   = require('koa-static');
 var co      = require('co');
 var fs      = require('co-fs');
 var path    = require('path');
@@ -21,6 +22,9 @@ app.use(function *(next){
   var ms = new Date - start;
   console.log('%s %s - %s', this.method, this.url, ms);
 });
+
+app.use(serve('.'));
+app.use(serve('../..'));
 
 app.use(router(app));  
 
