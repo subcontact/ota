@@ -34,7 +34,7 @@ qx.Class.define("ota.page.Projects",
 
   events : {
     /** Fired when the user selects a tweet */
-    showProject : "qx.event.type.Data"
+    showProjectBuilds : "qx.event.type.Data"
   },
 
 
@@ -47,6 +47,15 @@ qx.Class.define("ota.page.Projects",
       nullable : true,
       init : null,
       event : "changeProjects"
+    },
+
+    /** currently selected Project */
+    projectId :
+    {
+      check : "String",
+      nullable : true,
+      init : null,
+      event : "changeProjectId"
     }
   },
 

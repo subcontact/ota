@@ -49,7 +49,25 @@ qx.Class.define("ota.page.ProjectBuilds",
       nullable : true,
       init : null,
       event : "changeBuilds"
-    }
+    },
+
+    /** currently selected Project */
+    projectId :
+    {
+      check : "String",
+      nullable : true,
+      init : null,
+      event : "changeProjectId"
+    },
+
+    /** currently selected Build for the Project */
+    buildId :
+    {
+      check : "String",
+      nullable : true,
+      init : null,
+      event : "changeBuildId"
+    } 
   },
 
 
@@ -69,9 +87,9 @@ qx.Class.define("ota.page.ProjectBuilds",
       list.setDelegate({
         configureItem : function(item, value, row) {
           // set the data of the model
-          item.setTitle(value.getName());
+          item.setTitle(value.getInstanceName());
           //item.setSubtitle(dateFormat.format(new Date(value.getCreated_at())));
-          //item.setImage(value.getUser().getProfile_image_url());
+          item.setImage("http://www.westpac.com.au/favicon.ico");
           // we have more data to display, show an arrow
           item.setShowArrow(true);
         }
