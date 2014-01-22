@@ -119,6 +119,8 @@ qx.Class.define("ota.Application",
       -------------------------------------------------------------------------
       */
 
+      qx.util.AliasManager.getInstance().add('wbg', 'http://www.westpac.com.au');
+
       // Create a manager in mobile device context >> "false"
       var manager = new qx.ui.mobile.page.Manager(false);
 

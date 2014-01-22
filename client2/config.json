@@ -40,7 +40,7 @@
     "APPLICATION_CSS" : "${APPLICATION}/css/styles.css",  // resource id of custom css
     "QOOXDOO_PATH" : "../../qooxdoo/",
     "LOCALES"      : [ "en" ],
-    "PLATFORM"     : "indigo",  // provide a default
+    "PLATFORM"     : "flat",  // provide a default
     "CSS_COMB_URI" : "./resource/${APPLICATION}/css/${PLATFORM}-style-min.css",
     "CSS_COMBINED" : "${BUILD_PATH}/${CSS_COMB_URI}",
     "ROOT"         : "."

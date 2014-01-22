@@ -89,7 +89,7 @@ qx.Class.define("ota.page.ProjectBuilds",
           // set the data of the model
           item.setTitle(value.getInstanceName());
           //item.setSubtitle(dateFormat.format(new Date(value.getCreated_at())));
-          item.setImage("http://www.westpac.com.au/favicon.ico");
+          item.setImage("wbg/favicon.ico");
           // we have more data to display, show an arrow
           item.setShowArrow(true);
         }
