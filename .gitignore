@@ -34,5 +34,5 @@ node_modules
 ### SublimeText ###
 # SublimeText project files
 *.sublime-workspace
-client2/soure/script/
+client2/source/script/
 client2/build/
