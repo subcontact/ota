@@ -20,7 +20,7 @@ qx.$$g = {}
 
 qx.$$loader = {
   parts : {"boot":[0]},
-  packages : {"0":{"uris":["__out__:ota.1f195320b92c.js","ota:ota/Application.js","__out__:ota.650eb689ab99.js","ota:ota/page/Projects.js","__out__:ota.b3609203fbe6.js","ota:ota/page/ProjectBuilds.js","__out__:ota.cb34630186b4.js"]}},
+  packages : {"0":{"uris":["__out__:ota.a79c67d57d6a.js","ota:ota/Application.js","__out__:ota.43f5db9d28cc.js","ota:ota/page/Projects.js","__out__:ota.b3609203fbe6.js","ota:ota/page/ProjectBuilds.js","__out__:ota.cb34630186b4.js"]}},
   urisBefore : [],
   cssBefore : ["../../../qooxdoo//framework/source/resource/qx/mobile/css/flat.css","./resource/ota/css/styles.css"],
   boot : "boot",

@@ -35,7 +35,15 @@ var getProjectsRoute = function *(next) {
 
 var getProjectBuildsRoute = function *(next) {
   var projectList   = yield ota.getProjectsService();
+//  var projectId     = decodeURIComponent(this.params.projectId);
+  var projectId     = this.params.projectId;
   var project       = lodash.find(projectList, {_id : this.params.projectId});
+  /*
+  console.log(projectList);
+  console.log(this.params.projectId);
+  console.log(projectId);
+  console.log(project);
+  */
   var projectBuilds = yield ota.getProjectBuildListService(project);
   this.body = projectBuilds;
 };

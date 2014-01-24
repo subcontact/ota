@@ -32,13 +32,23 @@ var otafs = function() {
   var self = this;
   var buildProjects = null;
   var buildFolderRoot = null;
+  var buildFolderRootRE = null;
 
-  this.setBuildFolderRoot = function(path) {
-    buildFolderRoot = path;
+  this.setBuildFolderRoot = function(value) {
+    buildFolderRoot   = value;
+    buildFolderRootRE = new RegExp("^" + buildFolderRoot + "(//+)?"); // used to check if a path is already starting at the root for resolveRootPath
   };
 
   this.getBuildFolderRoot = function() {
     return buildFolderRoot;
+  };
+
+  this.resolveRootPath = function(value) {
+    return buildFolderRootRE.test(value) ? value : path.normalize(buildFolderRoot + '/' + value);
+  };
+
+  this.removeRootPath = function(value) {
+    return value.replace(buildFolderRootRE, "");
   };
 
   this.clone = function(value, excludeList) {
@@ -77,7 +87,7 @@ var otafs = function() {
     }
     for (var i=0; i< files.length; i++) {
       var fullFile = path.normalize(dirPath + '/' + files[i]);
-      stat = yield fs.stat(fullFile);
+      stat = yield fs.lstat(fullFile);
       if (stat.isDirectory()) {
         if (nameFilter) {
           if (nameFilter.test(path.basename(fullFile))) {
@@ -101,7 +111,7 @@ var otafs = function() {
     }
     for (var i=0; i< files.length; i++) {
       var fullFile = path.normalize(dirPath + '/' + files[i]);
-      stat = yield fs.stat(fullFile);
+      stat = yield fs.lstat(fullFile);
       if (stat.isFile()) {
         if (nameFilter) {
           if (nameFilter.test(path.basename(fullFile))) {
@@ -124,6 +134,7 @@ var otafs = function() {
         var stat = yield fs.stat(fullFile);
         if (stat.isDirectory()) {
           var buildList = yield self.getFolders(fullFile, { name : otaconsts.BUILD_LIST_PATTERN }); // using direct regex syntax rather than a string 
+         // console.log(buildList);
         }
       }
       return buildList;
@@ -189,7 +200,7 @@ var otafs = function() {
 
     var output = mustache.render(yield fs.readFile('manifest.plist.template', 'utf8'), results);
     results['installerUrl'] = output;
-    console.log(output);
+    //console.log(output);
 
     return results;
   };
@@ -232,7 +243,7 @@ var otafs = function() {
           data = {
             type : otaconsts.TYPE_IOS,
             buildName : path.basename(file).replace(otaconsts.iOS_FILE, ""),
-            buildFile : file,
+            buildFile : self.removeRootPath(file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
             timeStamp2: stat.mtime.getTime() / 1000
@@ -243,7 +254,7 @@ var otafs = function() {
           data = {
             type : otaconsts.TYPE_AND,
             buildName : path.basename(file).replace(otaconsts.AND_FILE, ""),
-            buildFile : file,
+            buildFile : self.removeRootPath(file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
             timeStamp2: stat.mtime.getTime() / 1000
@@ -254,7 +265,7 @@ var otafs = function() {
           data = {
             type : otaconsts.TYPE_WIN,
             buildName : path.basename(file).replace(otaconsts.WIN_FILE, ""),
-            buildFile : file,
+            buildFile : self.removeRootPath(file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
             timeStamp2: stat.mtime.getTime() / 1000
@@ -284,9 +295,27 @@ var otafs = function() {
     var bp   = yield self.getFolders(buildFolderRoot);
     // get the names at the root level
     buildProjects  = bp.map(function(data) {
+      /*
+      console.log("**");
+      console.log("**");
+      console.log(self.resolveRootPath("jobs/Android_WBC_OTP1.0x_PROD_PROD"));
+      console.log(self.removeRootPath("jobs/Android_WBC_OTP1.0x_PROD_PROD"));
+      console.log("**");
+      console.log(self.resolveRootPath("Android_WBC_OTP1.0x_PROD_PROD"));
+      console.log(self.removeRootPath("Android_WBC_OTP1.0x_PROD_PROD"));
+      console.log("**");
+      console.log(self.resolveRootPath("/Android_WBC_OTP1.0x_PROD_PROD"));
+      console.log(self.removeRootPath("/Android_WBC_OTP1.0x_PROD_PROD"));
+      console.log("**");
+      
+      data = data.substring(buildFolderRoot.length);
+      console.log(data);
+      */
+
+      data = self.removeRootPath(data);
       return {
         name  : path.basename(data),
-        _id   : data.replace(/\//g, '_'),
+        _id   : data.replace(/[\/\s]/g, '_'),
         path  : data,
       };
     });
@@ -295,7 +324,7 @@ var otafs = function() {
     // loop through and get the builds for each project. 
     // We need one to work out the type of project (EG TYPE);
     for (var i=0; i<buildProjects.length; i++) {
-      list = yield self.getBuildProjectList(buildProjects[i].path);
+      list = yield self.getBuildProjectList(path.normalize(buildFolderRoot + '/' + buildProjects[i].path));
       if (list.length > 0) {
         dirPath = list[0];
         buildInfo = yield self.findBuildFile(dirPath);
@@ -313,14 +342,15 @@ var otafs = function() {
     if (project.list) {
        return self.clone(project.list, ['list']);
     }
-    var list, files, dirPath, fullFile, buildMeta, buildData;
-    list = yield self.getBuildProjectList(project.path);
+    var list, files, dirPath, fullFile, buildMeta, buildData, data;
+    list = yield self.getBuildProjectList(path.normalize(buildFolderRoot + '/' + project.path));
     project.list = [];
     for (var i=0; i<list.length; i++) {
+      data = self.removeRootPath(list[i]);
       project.list[i] = {
-        instanceName  : path.basename(list[i]),
-        _id   : list[i].replace(/\//g, '_'),
-        instancePath  : list[i],
+        instanceName  : data,
+        _id   : data.replace(/[\/\s]/g, '_'),
+        instancePath  : data,
       };
       buildMeta = yield self.findBuildFile(list[i]);
       if (buildMeta) {

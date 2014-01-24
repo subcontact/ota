@@ -3,7 +3,8 @@
 var otaconsts = function() {
   var self = this;
   const BUILD_DIR = "builds";
-  const BUILD_LIST_PATTERN = /^\d{14}$/i;
+//  const BUILD_LIST_PATTERN = /^\d{14}$/i;
+  const BUILD_LIST_PATTERN = /^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$/i;
   const iOS_FILE  = /\.ipa$/i;
   const AND_FILE  = /\.apk$/i;
   const WIN_FILE  = /\.exe$/i;
