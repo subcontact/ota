@@ -20,8 +20,8 @@ qx.$$g = {}
 
 qx.$$loader = {
   parts : {"boot":[0]},
-  packages : {"0":{"uris":["__out__:ota.a79c67d57d6a.js","ota:ota/Application.js","__out__:ota.43f5db9d28cc.js","ota:ota/page/Projects.js","__out__:ota.b3609203fbe6.js","ota:ota/page/ProjectBuilds.js","__out__:ota.cb34630186b4.js"]}},
-  urisBefore : [],
+  packages : {"0":{"uris":["__out__:ota.ae263dc36c6b.js","ota:ota/Application.js","__out__:ota.43f5db9d28cc.js","ota:ota/page/Projects.js","__out__:ota.b3609203fbe6.js","ota:ota/page/ProjectBuilds.js","__out__:ota.cb34630186b4.js"]}},
+  urisBefore : ["./resource/moment.js"],
   cssBefore : ["../../../qooxdoo//framework/source/resource/qx/mobile/css/flat.css","./resource/ota/css/styles.css"],
   boot : "boot",
   closureParts : {},

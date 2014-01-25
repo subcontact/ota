@@ -130,6 +130,9 @@
       "add-css" : [
         { "uri" : "../${QOOXDOO_PATH}/framework/source/resource/qx/mobile/css/${PLATFORM}.css" },
         { "uri" : "./resource/${APPLICATION_CSS}" }
+      ],
+      "add-script" : [
+        { "uri" : "./resource/moment.js" }
       ]
     },
 
@@ -140,6 +143,9 @@
       "add-css" : [
         { "uri" : "./resource/qx/mobile/css/${PLATFORM}.css" },
         { "uri" : "./resource/${APPLICATION_CSS}" }
+      ],
+      "add-script" : [
+        { "uri" : "./resource/moment.js" }
       ]
     },
 

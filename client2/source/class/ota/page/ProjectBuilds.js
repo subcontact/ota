@@ -87,7 +87,9 @@ qx.Class.define("ota.page.ProjectBuilds",
       list.setDelegate({
         configureItem : function(item, value, row) {
           // set the data of the model
-          item.setTitle(value.getInstanceName());
+          var date = moment(value.getInstanceName(), "YYYYMMDDHHmmss");
+          var data = date.format("ddd, MM Do YYYY, h:mm:ss a") + " (" + date.fromNow() + ")";
+          item.setTitle(data);
           //item.setSubtitle(dateFormat.format(new Date(value.getCreated_at())));
           item.setImage("wbg/favicon.ico");
           // we have more data to display, show an arrow

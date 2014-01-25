@@ -13,7 +13,9 @@ var admZip    = require('adm-zip');
 var zip       = require('zip');
 var util      = require('util');
 var mustache  = require('mustache');
+var moment    = require('moment');
 var otaconsts = require('./ota-consts');
+
 
 // turn standard callback function into a single param callback function for use with co generator (via koa)
 //bplist.parseFile = thunkify(bplist.parseFile); 
@@ -129,15 +131,47 @@ var otafs = function() {
   // retreives a list of build folders for a build profile
   // expects a folder named "build" with a list of folders matching a time format
   this.getBuildProjectList = function *(buildProfilePath) {
+    var buildList = [];
+    var i,j;
       var fullFile = path.normalize(buildProfilePath + '/' + otaconsts.BUILD_DIR);
       if (yield fs.exists(fullFile)) {
         var stat = yield fs.stat(fullFile);
         if (stat.isDirectory()) {
-          var buildList = yield self.getFolders(fullFile, { name : otaconsts.BUILD_LIST_PATTERN }); // using direct regex syntax rather than a string 
-         // console.log(buildList);
+          buildList = yield self.getFolders(fullFile);//, { name : otaconsts.BUILD_LIST_PATTERN }); // using direct regex syntax rather than a string 
+          buildList = self.filterKnownBuildFolders(buildList);
         }
       }
       return buildList;
+  };
+
+  this.filterKnownBuildFolders = function(folders) {
+
+    var list = [];
+    for (i=0; i<folders.length; i++) {
+      for (j=0; j<otaconsts.PARSE_BUILD_DIR.length; j++)
+      {
+        if (otaconsts.PARSE_BUILD_DIR[j].pattern.test(path.basename(folders[i]))) {
+          list.push(folders[i]);
+          break;
+        }
+      }
+    }
+    return list;
+  };
+
+  this.normaliseDate = function(folders) {
+
+    var list = [];
+    for (i=0; i<folders.length; i++) {
+      for (j=0; j<otaconsts.PARSE_BUILD_DIR.length; j++)
+      {
+        if (otaconsts.PARSE_BUILD_DIR[j].pattern.test(path.basename(folders[i]))) {
+          list.push(moment(path.basename(folders[i]), otaconsts.PARSE_BUILD_DIR[j].format).unix());
+          break;
+        }
+      }
+    }
+    return list;
   };
 
   this.parseIPA = function *(file) {
@@ -348,7 +382,7 @@ var otafs = function() {
     for (var i=0; i<list.length; i++) {
       data = self.removeRootPath(list[i]);
       project.list[i] = {
-        instanceName  : data,
+        instanceName  : path.basename(data),
         _id   : data.replace(/[\/\s]/g, '_'),
         instancePath  : data,
       };

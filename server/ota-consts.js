@@ -3,8 +3,8 @@
 var otaconsts = function() {
   var self = this;
   const BUILD_DIR = "builds";
-//  const BUILD_LIST_PATTERN = /^\d{14}$/i;
-  const BUILD_LIST_PATTERN = /^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$/i;
+  const BUILD_LIST_PATTERN = /^\d{14}$/i;
+//  const BUILD_LIST_PATTERN = /(^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$)|(^\d{14})/i;
   const iOS_FILE  = /\.ipa$/i;
   const AND_FILE  = /\.apk$/i;
   const WIN_FILE  = /\.exe$/i;
@@ -58,6 +58,18 @@ var otaconsts = function() {
   this.IOS_ID               = IOS_ID;
   this.IOS_TEAM             = IOS_TEAM;
   this.IOS_ICON             = IOS_ICON;
+
+  this.PARSE_BUILD_DIR = [
+    {
+      pattern : /^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$/,
+      format  : "YYYY-MM-DD_HH::mm:ss"
+    },
+    {
+      pattern : /^\d{14}$/,
+      format  : "YYYYMMDDHHmmss"
+    }
+
+  ];
 }
 
 module.exports = new otaconsts();
