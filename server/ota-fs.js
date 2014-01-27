@@ -138,13 +138,36 @@ var otafs = function() {
         var stat = yield fs.stat(fullFile);
         if (stat.isDirectory()) {
           buildList = yield self.getFolders(fullFile);//, { name : otaconsts.BUILD_LIST_PATTERN }); // using direct regex syntax rather than a string 
-          buildList = self.filterKnownBuildFolders(buildList);
+          //buildList = self.filterKnownBuildFolderList(buildList);
         }
       }
       return buildList;
   };
 
-  this.filterKnownBuildFolders = function(folders) {
+  this.filterKnownBuildFolder = function(folder) {
+
+    for (var i=0; i<otaconsts.PARSE_BUILD_DIR.length; i++)
+    {
+      if (otaconsts.PARSE_BUILD_DIR[i].pattern.test(path.basename(folder))) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  this.normaliseDate = function(folder) {
+
+    for (var i=0; i<otaconsts.PARSE_BUILD_DIR.length; i++)
+    {
+      if (otaconsts.PARSE_BUILD_DIR[i].pattern.test(path.basename(folder))) {
+        return moment(path.basename(folder), otaconsts.PARSE_BUILD_DIR[i].format).valueOf();
+      }
+    }
+    return path.basename(folder);
+  };
+
+
+  this.filterKnownBuildFolderList = function(folders) {
 
     var list = [];
     for (i=0; i<folders.length; i++) {
@@ -159,14 +182,14 @@ var otafs = function() {
     return list;
   };
 
-  this.normaliseDate = function(folders) {
+  this.normaliseDateList = function(folders) {
 
     var list = [];
     for (i=0; i<folders.length; i++) {
       for (j=0; j<otaconsts.PARSE_BUILD_DIR.length; j++)
       {
         if (otaconsts.PARSE_BUILD_DIR[j].pattern.test(path.basename(folders[i]))) {
-          list.push(moment(path.basename(folders[i]), otaconsts.PARSE_BUILD_DIR[j].format).unix());
+          list.push(moment(path.basename(folders[i]), otaconsts.PARSE_BUILD_DIR[j].format).valueOf());
           break;
         }
       }
@@ -280,7 +303,7 @@ var otafs = function() {
             buildFile : self.removeRootPath(file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
-            timeStamp2: stat.mtime.getTime() / 1000
+            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
           };
           found = true;
         }
@@ -291,7 +314,7 @@ var otafs = function() {
             buildFile : self.removeRootPath(file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
-            timeStamp2: stat.mtime.getTime() / 1000
+            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
           };
           found = true;
         }
@@ -302,7 +325,7 @@ var otafs = function() {
             buildFile : self.removeRootPath(file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
-            timeStamp2: stat.mtime.getTime() / 1000
+            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
           };
           found = true;
         }
@@ -383,7 +406,9 @@ var otafs = function() {
       data = self.removeRootPath(list[i]);
       project.list[i] = {
         instanceName  : path.basename(data),
-        _id   : data.replace(/[\/\s]/g, '_'),
+        instanceLabel : self.normaliseDate(path.basename(data)),
+        instanceLabel2: moment(self.normaliseDate(path.basename(data))).fromNow() + " (" + moment(self.normaliseDate(path.basename(data))).toISOString() + ")",
+        _id           : data.replace(/[\/\s]/g, '_'),
         instancePath  : data,
       };
       buildMeta = yield self.findBuildFile(list[i]);

@@ -15,11 +15,14 @@ var otaconsts = require('./ota-consts');
 var app = koa();
 ota.setBuildFolderRoot(process.argv.length > 2 ? process.argv[2] : ".");
 
+console.log(new Date().getTimezoneOffset());
+//console.log(Date.getTimezoneOffset());
+
 // logger
 app.use(function *(next){
-  var start = new Date;
+  var start = new Date();
   yield next;
-  var ms = new Date - start;
+  var ms = new Date() - start;
   console.log('%s %s - %s', this.method, this.url, ms);
 });
 
