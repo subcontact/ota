@@ -36,3 +36,4 @@ node_modules
 *.sublime-workspace
 client2/source/script/
 client2/build/
+client2/cache/
