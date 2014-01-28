@@ -46,6 +46,12 @@ var otafs = function() {
   };
 
   this.resolveRootPath = function(value) {
+    /*
+    console.log(value);
+    console.log(buildFolderRootRE);
+    console.log(buildFolderRoot);
+    console.log(buildFolderRootRE.test(value));
+    */
     return buildFolderRootRE.test(value) ? value : path.normalize(buildFolderRoot + '/' + value);
   };
 
@@ -166,7 +172,7 @@ var otafs = function() {
     return path.basename(folder);
   };
 
-
+/*
   this.filterKnownBuildFolderList = function(folders) {
 
     var list = [];
@@ -196,8 +202,10 @@ var otafs = function() {
     }
     return list;
   };
-
+*/
   this.parseIPA = function *(file) {
+
+    //console.log(file);
     var fileBuffer  = yield fs.readFile(file);
     var reader      = zip.Reader(fileBuffer);
     var InfoFound   = false;
@@ -279,6 +287,7 @@ var otafs = function() {
   };
 
   this.findBuildFile = function(dirPath) {
+    //console.log(dirPath);
     return function(done) {
       var finder = find(dirPath);
       var found = false;
@@ -411,7 +420,7 @@ var otafs = function() {
         _id           : data.replace(/[\/\s]/g, '_'),
         instancePath  : data,
       };
-      buildMeta = yield self.findBuildFile(list[i]);
+      buildMeta = yield self.findBuildFile(self.resolveRootPath(list[i]));
       if (buildMeta) {
         lodash.extend(project.list[i], buildMeta);
       }
@@ -425,14 +434,18 @@ var otafs = function() {
        return projectBuild.buildData;
     }
     var buildData;
+    console.log(projectBuild);
+
     if (projectBuild.type === otaconsts.TYPE_IOS) {
-      buildData = self.getBuildInfoIOS(projectBuild.buildFile);
+
+      buildData = self.getBuildInfoIOS(self.resolveRootPath(projectBuild.buildFile));
+      console.log(buildData);
     }
     else if (projectBuild.type === otaconsts.TYPE_AND) {
-      buildData = self.getBuildInfoAND(projectBuild.buildFile);
+      buildData = self.getBuildInfoAND(self.resolveRootPath(projectBuild.buildFile));
     }    
     else if (projectBuild.type === otaconsts.TYPE_WIN) {
-      buildData = self.getBuildInfoWIN(projectBuild.buildFile);
+      buildData = self.getBuildInfoWIN(self.resolveRootPath(projectBuild.buildFile));
     }
     if (buildData) {
       projectBuild.buildData = buildData;

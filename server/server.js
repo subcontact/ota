@@ -15,7 +15,7 @@ var otaconsts = require('./ota-consts');
 var app = koa();
 ota.setBuildFolderRoot(process.argv.length > 2 ? process.argv[2] : ".");
 
-console.log(new Date().getTimezoneOffset());
+//console.log(new Date().getTimezoneOffset());
 //console.log(Date.getTimezoneOffset());
 
 // logger

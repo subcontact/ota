@@ -120,7 +120,7 @@
       "asset-let" : {
         "qx.mobile.platform" : [ "${PLATFORM}" ]
       },
-      "=run" : ["build-resources", "build-files", "build-script", "minify-css"]
+      "=run" : ["build-resources", "build-files", "build-files-custom", "build-script", "minify-css"]
     },
 
 
@@ -132,7 +132,7 @@
         { "uri" : "./resource/${APPLICATION_CSS}" }
       ],
       "add-script" : [
-        { "uri" : "./resource/moment.js" }
+        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/moment.js" }
       ]
     },
 
@@ -145,8 +145,22 @@
         { "uri" : "./resource/${APPLICATION_CSS}" }
       ],
       "add-script" : [
-        { "uri" : "./resource/moment.js" }
+        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/moment.js" }
       ]
+    },
+
+    "build-files-custom" :
+    {
+      "copy-files" :
+      {
+        "files" :
+        [
+          "${APPLICATION}/bower_components/momentjs/moment.js"
+        ],
+
+        "source" : "${ROOT}/source/resource",
+        "target" : "${BUILD_PATH}/resource"
+      }
     },
 
     "build-files" :
