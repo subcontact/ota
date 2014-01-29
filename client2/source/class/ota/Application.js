@@ -54,6 +54,17 @@ qx.Class.define("ota.Application",
       apply : "_applyBuilds" // just for logging the data
     },
 
+
+    /** Holds all projects */
+    buildDetail :
+    {
+      check : "Object",
+      nullable : true,
+      init : null,
+      event : "changeBuildDetail",
+      apply : "_applyBuildDetail" // just for logging the data
+    },
+
     /** currently selected Project */
     projectId :
     {
@@ -142,9 +153,15 @@ qx.Class.define("ota.Application",
       this.bind("projectId", buildsPage, "projectId");
       this.bind("buildId", buildsPage, "buildId");
 
+      var buildDetailPage = new ota.page.BuildDetail();
+      this.bind("buildDetail", buildDetailPage, "buildDetail");
+      this.bind("projectId", buildDetailPage, "projectId");
+      this.bind("buildId", buildDetailPage, "buildId");
+
       // Add page to manager
       manager.addDetail(projectsPage);
       manager.addDetail(buildsPage);
+      manager.addDetail(buildDetailPage);
       this.__loadProjects();
       projectsPage.show();
 
@@ -174,6 +191,25 @@ qx.Class.define("ota.Application",
         //tweetPage.show();//{animation : "cube"});
       }, this);
 
+      buildsPage.addListener("showBuild", function(evt) {
+        var index = evt.getData();
+        /*
+        this.debug('showBuild');
+        this.debug(index);
+        this.debug(this.getProjectId());
+        */
+        this.setBuildId(this.getBuilds().getItem(index).get_id());
+        this.__loadBuild(this.getBuildId());
+        buildDetailPage.show();
+
+        //this.debug(this.getProjects().getItem(index).get_id());
+
+        //this.setProjectId(this.getProjects().getItem(index).get_id());
+        ////this.__loadProjectBuilds(this.getProjectId());
+        //buildsPage.show();
+        //tweetPage.setTweet(this.getTweets().getItem(index));
+        //tweetPage.show();//{animation : "cube"});
+      }, this);
 /*
       // Return to the Input page
       tweetsPage.addListener("back", function(evt) {
@@ -185,6 +221,12 @@ qx.Class.define("ota.Application",
       // Return to the Tweets Page.
       buildsPage.addListener("back", function(evt) {
         projectsPage.show({
+          reverse: true
+        });
+      }, this);
+      
+      buildDetailPage.addListener("back", function(evt) {
+        buildsPage.show({
           reverse: true
         });
       }, this);
@@ -207,6 +249,12 @@ qx.Class.define("ota.Application",
     _applyBuilds : function(value, old) {
       // print the loaded data in the console
       this.debug("Builds: ", qx.lang.Json.stringify(value)); // just display the data
+    },
+
+    // property apply
+    _applyBuildDetail : function(value, old) {
+      // print the loaded data in the console
+      this.debug("Build Detail: ", qx.lang.Json.stringify(value)); // just display the data
     },
 
 
@@ -244,6 +292,29 @@ qx.Class.define("ota.Application",
 
       // Use data binding to bind the "model" property of the store to the "tweets" property
       store.bind("model", this, "builds");
+    },
+
+
+    /**
+     * Loads all tweets of the currently set user.
+     */
+    __loadBuild : function(buildId)
+    {
+      // Mocked Identica Tweets API
+      // Create a new JSONP store instance with the given url
+      // var url = "http://demo.qooxdoo.org/" + qx.core.Environment.get("qx.version") + "/tweets_step4.5/resource/tweets/service.js";
+
+      this.debug(this.getProjectId());
+      this.debug(this.getBuildId());
+
+      var url = "/projects/" + this.getProjectId() + '/builds/' + this.getBuildId();
+
+      var store = new qx.data.store.Json();
+      //store.setCallbackName("callback");
+      store.setUrl(url);
+
+      // Use data binding to bind the "model" property of the store to the "tweets" property
+      store.bind("model", this, "buildDetail");
     },
 
 

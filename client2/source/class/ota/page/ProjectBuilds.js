@@ -36,7 +36,7 @@ qx.Class.define("ota.page.ProjectBuilds",
 
   events : {
     /** Fired when the user selects a tweet */
-    showProject : "qx.event.type.Data"
+    showBuild : "qx.event.type.Data"
   },
 
 
@@ -113,7 +113,7 @@ qx.Class.define("ota.page.ProjectBuilds",
     {
       // retrieve the index of the selected row
       var index = evt.getData();
-      this.fireDataEvent("showBuilds", index);
+      this.fireDataEvent("showBuild", index);
     }
   },
 

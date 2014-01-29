@@ -37,13 +37,31 @@ qx.Class.define("ota.page.BuildDetail",
   properties:
   {
     /** Holds the current shown tweet */
-    build :
+    buildDetail :
     {
       check : "Object",
       nullable : true,
       init : null,
-      event : "changeBuild"
-    }
+      event : "changeBuildDetail"
+    },
+
+    /** currently selected Project */
+    projectId :
+    {
+      check : "String",
+      nullable : true,
+      init : null,
+      event : "changeProjectId"
+    },
+
+    /** currently selected Build for the Project */
+    buildId :
+    {
+      check : "String",
+      nullable : true,
+      init : null,
+      event : "changeBuildId"
+    } 
   },
 
   members :
@@ -56,7 +74,7 @@ qx.Class.define("ota.page.BuildDetail",
       var label = new qx.ui.mobile.basic.Label();
       this.getContent().add(label);
       // bind the "tweet.getText" property to the "value" of the label
-      this.bind("tweet.name", label, "value");
+      this.bind("BuildDetail.version", label, "value");
     }
   }
 });
