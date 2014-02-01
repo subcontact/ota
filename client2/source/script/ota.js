@@ -5,7 +5,7 @@ if (!window.qx) window.qx = {};
 qx.$$start = new Date();
 
 if (!qx.$$environment) qx.$$environment = {};
-var envinfo = {"qx.application":"ota.Application","qx.mobile.emulatetouch":true,"qx.mobile.nativescroll":false,"qx.revision":"","qx.theme":"qx.theme.Modern","qx.version":"3.5"};
+var envinfo = {"qx.application":"ota.Application","qx.mobile.emulatetouch":true,"qx.mobile.nativescroll":false,"qx.revision":"","qx.theme":"qx.theme.Modern","qx.version":"3.5.1"};
 for (var k in envinfo) qx.$$environment[k] = envinfo[k];
 
 if (!qx.$$libraries) qx.$$libraries = {};
@@ -20,8 +20,8 @@ qx.$$g = {}
 
 qx.$$loader = {
   parts : {"boot":[0]},
-  packages : {"0":{"uris":["__out__:ota.1f195320b92c.js","ota:ota/Application.js","__out__:ota.43f5db9d28cc.js","ota:ota/page/Projects.js","__out__:ota.b3609203fbe6.js","ota:ota/page/ProjectBuilds.js","ota:ota/page/BuildDetail.js","__out__:ota.cb34630186b4.js"]}},
-  urisBefore : ["./resource/ota/bower_components/momentjs/moment.js"],
+  packages : {"0":{"uris":["__out__:ota.c26a2a9db874.js","ota:ota/Application.js","__out__:ota.7d057f4f827e.js","ota:ota/page/Projects.js","__out__:ota.b3609203fbe6.js","ota:ota/page/ProjectBuilds.js","ota:ota/page/BuildDetail.js","__out__:ota.cb34630186b4.js"]}},
+  urisBefore : ["./resource/ota/bower_components/momentjs/moment.js","./resource/ota/promiscuous-browser.js"],
   cssBefore : ["../../../qooxdoo//framework/source/resource/qx/mobile/css/flat.css","./resource/ota/css/styles.css"],
   boot : "boot",
   closureParts : {},

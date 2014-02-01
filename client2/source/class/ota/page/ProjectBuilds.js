@@ -83,6 +83,7 @@ qx.Class.define("ota.page.ProjectBuilds",
       // Create a new list instance
       var list = this.__list = new qx.ui.mobile.list.List();
       var dateFormat = new qx.util.format.DateFormat();
+      var types = qx.core.Init.getApplication().getTypes();
       // Use a delegate to configure each single list item
       list.setDelegate({
         configureItem : function(item, value, row) {
@@ -91,7 +92,9 @@ qx.Class.define("ota.page.ProjectBuilds",
           var data = date.format("ddd, MM Do YYYY, h:mm:ss a") + " (" + date.fromNow() + ")";
           item.setTitle(data);
           //item.setSubtitle(dateFormat.format(new Date(value.getCreated_at())));
-          item.setImage("wbg/favicon.ico");
+          item.setImage("resource/ota/internet.png");        
+          item.setSubtitle(types.getItem(value.getType()));
+
           // we have more data to display, show an arrow
           item.setShowArrow(true);
         }

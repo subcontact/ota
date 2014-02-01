@@ -434,12 +434,12 @@ var otafs = function() {
        return projectBuild.buildData;
     }
     var buildData;
-    console.log(projectBuild);
+    //console.log(projectBuild);
 
     if (projectBuild.type === otaconsts.TYPE_IOS) {
 
       buildData = self.getBuildInfoIOS(self.resolveRootPath(projectBuild.buildFile));
-      console.log(buildData);
+      //console.log(buildData);
     }
     else if (projectBuild.type === otaconsts.TYPE_AND) {
       buildData = self.getBuildInfoAND(self.resolveRootPath(projectBuild.buildFile));

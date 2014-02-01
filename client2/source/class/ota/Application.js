@@ -83,6 +83,15 @@ qx.Class.define("ota.Application",
       event : "changeBuildId"
     },
 
+    types : 
+    {
+      check : "qx.data.Array",
+      nullable : true,
+      init : null,
+      event : "changeTypes",
+      apply : "_applyTypes"
+    },
+
     /** The current username */
     username :
     {
@@ -162,8 +171,33 @@ qx.Class.define("ota.Application",
       manager.addDetail(projectsPage);
       manager.addDetail(buildsPage);
       manager.addDetail(buildDetailPage);
+      this.__loadTypes();
       this.__loadProjects();
-      projectsPage.show();
+      setTimeout(function() {
+
+        projectsPage.show();
+      }, 1000);
+
+      function promiseLater(something) {
+        return new Promise(function (resolve, reject) {
+          setTimeout(function () {
+            if (something)
+              resolve(something);
+            else
+              reject(new Error("nothing"));
+          }, 1000);
+        });
+      }
+      promiseLater("something").then(
+        function (value) { console.log(value); },
+        function (error) { console.error(error.message); });
+      /* something */
+
+      promiseLater(null).then(
+        function (value) { console.log(value); },
+        function (error) { console.error(error.message); });
+      /* nothing */
+      
 
       // Create an instance of the Tweet class
       //var tweetPage = new ota.page.TweetDetail();
@@ -238,23 +272,28 @@ qx.Class.define("ota.Application",
       this.__loadProjects();
     },
 
+    _applyTypes : function(value, old) {
+
+      this.debug("Types arrived");
+    },
+
     // property apply
     _applyProjects : function(value, old) {
       // print the loaded data in the console
-      this.debug("Projects: ", qx.lang.Json.stringify(value)); // just display the data
+      this.debug("Projects: ");//, qx.lang.Json.stringify(value)); // just display the data
     },
 
 
     // property apply
     _applyBuilds : function(value, old) {
       // print the loaded data in the console
-      this.debug("Builds: ", qx.lang.Json.stringify(value)); // just display the data
+      this.debug("Builds: ");//, qx.lang.Json.stringify(value)); // just display the data
     },
 
     // property apply
     _applyBuildDetail : function(value, old) {
       // print the loaded data in the console
-      this.debug("Build Detail: ", qx.lang.Json.stringify(value)); // just display the data
+      this.debug("Build Detail: ");//, qx.lang.Json.stringify(value)); // just display the data
     },
 
 
@@ -274,6 +313,21 @@ qx.Class.define("ota.Application",
 
       // Use data binding to bind the "model" property of the store to the "tweets" property
       store.bind("model", this, "projects");
+    },
+
+   __loadTypes : function()
+    {
+      // Mocked Identica Tweets API
+      // Create a new JSONP store instance with the given url
+      // var url = "http://demo.qooxdoo.org/" + qx.core.Environment.get("qx.version") + "/tweets_step4.5/resource/tweets/service.js";
+      var url = "/types";
+
+      var store = new qx.data.store.Json();
+      //store.setCallbackName("callback");
+      store.setUrl(url);
+
+      // Use data binding to bind the "model" property of the store to the "tweets" property
+      store.bind("model", this, "types");
     },
 
     /**
