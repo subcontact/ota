@@ -19,6 +19,7 @@
 
 /* ************************************************************************
 
+@
 
 ************************************************************************ */
 
@@ -26,6 +27,9 @@
  * This is the main application class of your custom application "ota"
  *
  * @asset(ota/css/styles.css)
+ * 
+ * @ignore(moment)
+ * @ignore(Promise)
  */
 qx.Class.define("ota.Application",
 {
@@ -90,16 +94,6 @@ qx.Class.define("ota.Application",
       init : null,
       event : "changeTypes",
       apply : "_applyTypes"
-    },
-
-    /** The current username */
-    username :
-    {
-      check : "String",
-      nullable : false,
-      init : "",
-      event : "changeUsername",
-      apply : "_applyUsername" // this method will be called when the property is set
     }
   },
 
@@ -144,15 +138,6 @@ qx.Class.define("ota.Application",
       // Create a manager in mobile device context >> "false"
       var manager = new qx.ui.mobile.page.Manager(false);
 
-      // Create an instance of the Input class and initial show it
-      //var inputPage = this.__inputPage = new ota.page.Input();
-
-      // Add page to manager
-      // manager.addDetail(inputPage);
-
-      // Display inputPage on start
-      //inputPage.show();
-
       // Create an instance of the Projects class and establish data bindings
       var projectsPage = this.__startPage = new ota.page.Projects();
       this.bind("projects", projectsPage, "projects");
@@ -171,58 +156,29 @@ qx.Class.define("ota.Application",
       manager.addDetail(projectsPage);
       manager.addDetail(buildsPage);
       manager.addDetail(buildDetailPage);
-      this.__loadTypes();
-      this.__loadProjects();
-      setTimeout(function() {
-
-        projectsPage.show();
-      }, 1000);
-
-      function promiseLater(something) {
-        return new Promise(function (resolve, reject) {
-          setTimeout(function () {
-            if (something)
-              resolve(something);
-            else
-              reject(new Error("nothing"));
-          }, 1000);
-        });
-      }
-      promiseLater("something").then(
-        function (value) { console.log(value); },
-        function (error) { console.error(error.message); });
-      /* something */
-
-      promiseLater(null).then(
-        function (value) { console.log(value); },
-        function (error) { console.error(error.message); });
-      /* nothing */
       
+      Promise.all([
+        this.__loadTypes(),
+        this.__loadProjects()
+      ]).then(function () { 
+          console.log('all events finished successfully');
+          projectsPage.show(); 
+        }, function(values) {
+          console.log('some or all events failed');
+          console.log(values);
+        });
 
-      // Create an instance of the Tweet class
-      //var tweetPage = new ota.page.TweetDetail();
-
-      // Add page to manager
-      //manager.addDetail(tweetPage);
-
-      // Load the tweets and show the tweets page
-      //inputPage.addListener("requestProject", function(evt) {
-      //  this.setUsername(evt.getData());
-      //  projectsPage.show();
-      //}, this);
-
-      // Show the selected tweet
       projectsPage.addListener("showProjectBuilds", function(evt) {
         var index = evt.getData();
+        /*
         this.debug('showProjectBuilds');
         this.debug(index);
         this.debug(this.getProjects().getItem(index).get_id());
-
+        */
         this.setProjectId(this.getProjects().getItem(index).get_id());
-        this.__loadProjectBuilds(this.getProjectId());
-        buildsPage.show();
-        //tweetPage.setTweet(this.getTweets().getItem(index));
-        //tweetPage.show();//{animation : "cube"});
+        this.__loadProjectBuilds(this.getProjectId()).then(function() {
+          buildsPage.show();
+        });
       }, this);
 
       buildsPage.addListener("showBuild", function(evt) {
@@ -233,8 +189,10 @@ qx.Class.define("ota.Application",
         this.debug(this.getProjectId());
         */
         this.setBuildId(this.getBuilds().getItem(index).get_id());
-        this.__loadBuild(this.getBuildId());
-        buildDetailPage.show();
+        this.__loadBuild(this.getBuildId()).then(function() {
+          buildDetailPage.show();
+        });
+        
 
         //this.debug(this.getProjects().getItem(index).get_id());
 
@@ -267,114 +225,101 @@ qx.Class.define("ota.Application",
     },
 
 
-    // property apply
-    _applyUsername : function(value, old) {
-      this.__loadProjects();
-    },
-
     _applyTypes : function(value, old) {
 
-      this.debug("Types arrived");
+      //this.debug("Types arrived");
     },
 
     // property apply
     _applyProjects : function(value, old) {
       // print the loaded data in the console
-      this.debug("Projects: ");//, qx.lang.Json.stringify(value)); // just display the data
+      //this.debug("Projects: ");//, qx.lang.Json.stringify(value)); // just display the data
     },
 
 
     // property apply
     _applyBuilds : function(value, old) {
       // print the loaded data in the console
-      this.debug("Builds: ");//, qx.lang.Json.stringify(value)); // just display the data
+      //this.debug("Builds: ");//, qx.lang.Json.stringify(value)); // just display the data
     },
 
     // property apply
     _applyBuildDetail : function(value, old) {
       // print the loaded data in the console
-      this.debug("Build Detail: ");//, qx.lang.Json.stringify(value)); // just display the data
+      //this.debug("Build Detail: ");//, qx.lang.Json.stringify(value)); // just display the data
     },
 
-
-    /**
-     * Loads all tweets of the currently set user.
-     */
     __loadProjects : function()
     {
-      // Mocked Identica Tweets API
-      // Create a new JSONP store instance with the given url
-      // var url = "http://demo.qooxdoo.org/" + qx.core.Environment.get("qx.version") + "/tweets_step4.5/resource/tweets/service.js";
       var url = "/projects";
-
       var store = new qx.data.store.Json();
-      //store.setCallbackName("callback");
       store.setUrl(url);
-
-      // Use data binding to bind the "model" property of the store to the "tweets" property
       store.bind("model", this, "projects");
+      console.log('Projects store load requested');
+      return new Promise(function (resolve, reject) {
+        store.addListener('loaded', function(evt) {
+          console.log('Projects store loaded OK');// + evt.getData());
+          resolve();
+        });
+        store.addListener('error', function(evt) {
+          reject(new Error('Projects store load failed : ' + evt.getData()));
+        });
+      });
     },
 
    __loadTypes : function()
     {
-      // Mocked Identica Tweets API
-      // Create a new JSONP store instance with the given url
-      // var url = "http://demo.qooxdoo.org/" + qx.core.Environment.get("qx.version") + "/tweets_step4.5/resource/tweets/service.js";
       var url = "/types";
-
       var store = new qx.data.store.Json();
-      //store.setCallbackName("callback");
       store.setUrl(url);
-
-      // Use data binding to bind the "model" property of the store to the "tweets" property
       store.bind("model", this, "types");
+      console.log('Types store load requested');
+      return new Promise(function (resolve, reject) {
+        store.addListener('loaded', function(evt) {
+          console.log('Types store loaded OK');// + evt.getData());
+          resolve();
+        });
+        store.addListener('error', function(evt) {
+          reject(new Error('Types store load failed : ' + evt.getData()));
+        });
+      });
     },
 
-    /**
-     * Loads all tweets of the currently set user.
-     */
     __loadProjectBuilds : function(projectId)
     {
-      // Mocked Identica Tweets API
-      // Create a new JSONP store instance with the given url
-      // var url = "http://demo.qooxdoo.org/" + qx.core.Environment.get("qx.version") + "/tweets_step4.5/resource/tweets/service.js";
       var url = "/projects/" + projectId;
-
       var store = new qx.data.store.Json();
-      //store.setCallbackName("callback");
       store.setUrl(url);
-
-      // Use data binding to bind the "model" property of the store to the "tweets" property
       store.bind("model", this, "builds");
+      console.log('Project Builds store load requested');
+      return new Promise(function (resolve, reject) {
+        store.addListener('loaded', function(evt) {
+          console.log('Project Builds store loaded OK');// + evt.getData());
+          resolve();
+        });
+        store.addListener('error', function(evt) {
+          reject(new Error('Project Builds store load failed : ' + evt.getData()));
+        });
+      });
     },
 
-
-    /**
-     * Loads all tweets of the currently set user.
-     */
     __loadBuild : function(buildId)
     {
-      // Mocked Identica Tweets API
-      // Create a new JSONP store instance with the given url
-      // var url = "http://demo.qooxdoo.org/" + qx.core.Environment.get("qx.version") + "/tweets_step4.5/resource/tweets/service.js";
-
-      this.debug(this.getProjectId());
-      this.debug(this.getBuildId());
-
       var url = "/projects/" + this.getProjectId() + '/builds/' + this.getBuildId();
-
       var store = new qx.data.store.Json();
-      //store.setCallbackName("callback");
       store.setUrl(url);
-
-      // Use data binding to bind the "model" property of the store to the "tweets" property
       store.bind("model", this, "buildDetail");
+      return new Promise(function (resolve, reject) {
+        store.addListener('loaded', function(evt) {
+          console.log('Build Detail store loaded OK');// + evt.getData());
+          resolve();
+        });
+        store.addListener('error', function(evt) {
+          reject(new Error('Build Detail store load failed : ' + evt.getData()));
+        });
+      });
     },
 
-
-    /**
-     * Shows the input page of the application.
-     */
     __showStartPage : function() {
       this.__startPage.show({reverse:true});
     }
