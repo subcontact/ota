@@ -72,9 +72,53 @@ qx.Class.define("ota.page.BuildDetail",
       this.base(arguments);
       // Create a new label instance
       var label = new qx.ui.mobile.basic.Label();
-      this.getContent().add(label);
+      this.getContent().add(label);      
       // bind the "tweet.getText" property to the "value" of the label
       this.bind("BuildDetail.version", label, "value");
+
+      label = new qx.ui.mobile.basic.Label();
+      this.getContent().add(label);
+      this.bind("BuildDetail.commitHash", label, "value");
+
+      label = new qx.ui.mobile.basic.Label();
+      this.getContent().add(label);
+      this.bind("BuildDetail.displayName", label, "value");
+/*
+      label = new qx.ui.mobile.basic.Label();
+      this.getContent().add(label);
+      this.bind("BuildDetail.CFBundleVersion", label, "value");
+
+      label = new qx.ui.mobile.basic.Label();
+      this.getContent().add(label);
+      this.bind("BuildDetail.CFBundleIdentifier", label, "value");
+
+      label = new qx.ui.mobile.basic.Label();
+      this.getContent().add(label);
+      this.bind("BuildDetail.CFBundleIconFile", label, "value");
+
+      label = new qx.ui.mobile.basic.Label();
+      this.getContent().add(label);
+      this.bind("BuildDetail.url", label, "value");
+
+      label = new qx.ui.mobile.basic.Label();
+      this.getContent().add(label);
+      this.bind("BuildDetail.installerSource", label, "value");
+
+
+      var button = new qx.ui.mobile.form.Button("Download IPA Direct");
+      this.getContent().add(button);
+
+      button.addListener("tap", function() {
+        document.location = this.getBuildDetail().getUrl();
+      }, this);
+
+      button = new qx.ui.mobile.form.Button("Download IPA Installer");
+      this.getContent().add(button);
+
+      button.addListener("tap", function() {
+        document.location = this.getBuildDetail().getInstallerUrl();
+      }, this);
+*/
     }
   }
 });

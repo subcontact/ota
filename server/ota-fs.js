@@ -16,11 +16,6 @@ var mustache  = require('mustache');
 var moment    = require('moment');
 var otaconsts = require('./ota-consts');
 
-
-// turn standard callback function into a single param callback function for use with co generator (via koa)
-//bplist.parseFile = thunkify(bplist.parseFile); 
-//admZip.prototype.readAsTextAsync = thunkify(admZip.prototype.readAsTextAsync);
-
 var zipReadAsTextAsyncThunk = function(object, entry) {
   return function(done){
     // for some reason the params are non standard (swapped) meaning I had to thunk this myself.
@@ -46,12 +41,6 @@ var otafs = function() {
   };
 
   this.resolveRootPath = function(value) {
-    /*
-    console.log(value);
-    console.log(buildFolderRootRE);
-    console.log(buildFolderRoot);
-    console.log(buildFolderRootRE.test(value));
-    */
     return buildFolderRootRE.test(value) ? value : path.normalize(buildFolderRoot + '/' + value);
   };
 
@@ -143,8 +132,7 @@ var otafs = function() {
       if (yield fs.exists(fullFile)) {
         var stat = yield fs.stat(fullFile);
         if (stat.isDirectory()) {
-          buildList = yield self.getFolders(fullFile);//, { name : otaconsts.BUILD_LIST_PATTERN }); // using direct regex syntax rather than a string 
-          //buildList = self.filterKnownBuildFolderList(buildList);
+          buildList = yield self.getFolders(fullFile);
         }
       }
       return buildList;
@@ -204,8 +192,6 @@ var otafs = function() {
   };
 */
   this.parseIPA = function *(file) {
-
-    //console.log(file);
     var fileBuffer  = yield fs.readFile(file);
     var reader      = zip.Reader(fileBuffer);
     var InfoFound   = false;
@@ -256,21 +242,18 @@ var otafs = function() {
     var results = {
       commitHash : "12345A",
     };  
-    results[otaconsts.IOS_NAME]     = data[otaconsts.IOS_NAME];
+    results['displayName']     = data[otaconsts.IOS_NAME];
     results[otaconsts.IOS_VERSION]  = data[otaconsts.IOS_VERSION];
     results[otaconsts.IOS_ID]       = data[otaconsts.IOS_ID];
     results[otaconsts.IOS_TEAM]     = data[otaconsts.IOS_TEAM];
     results[otaconsts.IOS_ICON]     = data[otaconsts.IOS_ICON];
     results['url'] = '/' + file;
+    results['installerUrl'] = path.dirname('/' + file) + '/installer';
 
     var output = mustache.render(yield fs.readFile('manifest.plist.template', 'utf8'), results);
-    results['installerUrl'] = output;
-    //console.log(output);
-
+    results['installerSource'] = output;
     return results;
   };
-
-
 
   this.getBuildInfoAND = function(file) {
     return {
@@ -287,7 +270,6 @@ var otafs = function() {
   };
 
   this.findBuildFile = function(dirPath) {
-    //console.log(dirPath);
     return function(done) {
       var finder = find(dirPath);
       var found = false;
@@ -300,7 +282,7 @@ var otafs = function() {
       finder.on('stop', onEnd);
 
       function onDirectory(dir, stat, stop) {
-          if (found) { stop(); }
+        if (found) { stop(); }
       }
 
       function onFile(file, stat) {
@@ -361,23 +343,6 @@ var otafs = function() {
     var bp   = yield self.getFolders(buildFolderRoot);
     // get the names at the root level
     buildProjects  = bp.map(function(data) {
-      /*
-      console.log("**");
-      console.log("**");
-      console.log(self.resolveRootPath("jobs/Android_WBC_OTP1.0x_PROD_PROD"));
-      console.log(self.removeRootPath("jobs/Android_WBC_OTP1.0x_PROD_PROD"));
-      console.log("**");
-      console.log(self.resolveRootPath("Android_WBC_OTP1.0x_PROD_PROD"));
-      console.log(self.removeRootPath("Android_WBC_OTP1.0x_PROD_PROD"));
-      console.log("**");
-      console.log(self.resolveRootPath("/Android_WBC_OTP1.0x_PROD_PROD"));
-      console.log(self.removeRootPath("/Android_WBC_OTP1.0x_PROD_PROD"));
-      console.log("**");
-      
-      data = data.substring(buildFolderRoot.length);
-      console.log(data);
-      */
-
       data = self.removeRootPath(data);
       return {
         name  : path.basename(data),
@@ -385,7 +350,6 @@ var otafs = function() {
         path  : data,
       };
     });
-    //timeStamp = Date.now();
     var list, files, dirPath, fullFile, buildInfo;
     // loop through and get the builds for each project. 
     // We need one to work out the type of project (EG TYPE);
@@ -397,7 +361,6 @@ var otafs = function() {
         if (buildInfo) {
           buildProjects[i].type  = buildInfo.type;
           buildProjects[i].label = otaconsts.TYPE_LABELS[buildInfo.type];
-          //meta.buildProjects[i].icon  = "TODO//ICON";
         }
       }
     }
@@ -434,12 +397,8 @@ var otafs = function() {
        return projectBuild.buildData;
     }
     var buildData;
-    //console.log(projectBuild);
-
     if (projectBuild.type === otaconsts.TYPE_IOS) {
-
       buildData = self.getBuildInfoIOS(self.resolveRootPath(projectBuild.buildFile));
-      //console.log(buildData);
     }
     else if (projectBuild.type === otaconsts.TYPE_AND) {
       buildData = self.getBuildInfoAND(self.resolveRootPath(projectBuild.buildFile));
@@ -453,6 +412,4 @@ var otafs = function() {
     return projectBuild.buildData;
   };
 }
-
 module.exports = new otafs();
-

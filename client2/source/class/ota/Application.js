@@ -177,6 +177,7 @@ qx.Class.define("ota.Application",
         */
         this.setProjectId(this.getProjects().getItem(index).get_id());
         this.__loadProjectBuilds(this.getProjectId()).then(function() {
+          console.log('showing builds list detail');
           buildsPage.show();
         });
       }, this);
@@ -190,6 +191,7 @@ qx.Class.define("ota.Application",
         */
         this.setBuildId(this.getBuilds().getItem(index).get_id());
         this.__loadBuild(this.getBuildId()).then(function() {
+          console.log('showing build detail');
           buildDetailPage.show();
         });
         
