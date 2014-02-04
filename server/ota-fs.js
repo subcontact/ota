@@ -460,7 +460,7 @@ var otafs = function() {
         instancePath  : data,
       };
 
-      buildMeta = yield self.findBuildFile(self.resolveRootPath(list[i]));
+      buildMeta = yield self.findBuildFile2(self.resolveRootPath(list[i]));
    //   console.log(buildMeta);
       if (buildMeta) {
         lodash.extend(project.list[i], buildMeta);
