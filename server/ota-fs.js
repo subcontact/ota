@@ -15,6 +15,7 @@ var util      = require('util');
 var mustache  = require('mustache');
 var moment    = require('moment');
 var otaconsts = require('./ota-consts');
+var find2     = require('find');
 
 var zipReadAsTextAsyncThunk = function(object, entry) {
   return function(done){
@@ -282,10 +283,11 @@ var otafs = function() {
       finder.on('stop', onEnd);
 
       function onDirectory(dir, stat, stop) {
-        if (found) { stop(); }
+        if (found) { console.log('stopped'); stop(); }
       }
 
       function onFile(file, stat) {
+       // console.log(file);
         if (found) { return; }
         if (otaconsts.iOS_FILE.test(file)) {
           data = {
@@ -323,6 +325,86 @@ var otafs = function() {
       }
 
       function onEnd() {
+        //console.log('finished');
+        cleanup();
+        done(null, data);
+      }
+
+      function cleanup() {
+        finder.removeListener('directory', onDirectory);
+        finder.removeListener('file', onFile);
+        finder.removeListener('end', onEnd);
+        finder.removeListener('stop', onEnd);
+      }
+    };
+  };
+
+  this.findBuildFile2 = function(dirPath) {
+    console.log(dirPath);
+      find2.file(/./, dirPath, function(files) {
+        console.log(files);
+      })
+      return;
+    return function(done) {
+
+     find2.file(/./, dirPath, function(files) {
+        console.log(files);
+      });
+
+      var finder = find(dirPath);
+      var found = false;
+      var data = null;
+      var buildData = null;
+
+      finder.on('directory', onDirectory);
+      finder.on('file', onFile);
+      finder.on('end', onEnd);
+      finder.on('stop', onEnd);
+
+      function onDirectory(dir, stat, stop) {
+        if (found) { console.log('stopped'); stop(); }
+      }
+
+      function onFile(file, stat) {
+        //console.log(file);
+        if (found) { return; }
+        if (otaconsts.iOS_FILE.test(file)) {
+          data = {
+            type : otaconsts.TYPE_IOS,
+            buildName : path.basename(file).replace(otaconsts.iOS_FILE, ""),
+            buildFile : self.removeRootPath(file),
+            size      : stat.size,
+            timeStamp : stat.mtime.getTime(),
+            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+          };
+          found = true;
+        }
+        else if (otaconsts.AND_FILE.test(file)) {
+          data = {
+            type : otaconsts.TYPE_AND,
+            buildName : path.basename(file).replace(otaconsts.AND_FILE, ""),
+            buildFile : self.removeRootPath(file),
+            size      : stat.size,
+            timeStamp : stat.mtime.getTime(),
+            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+          };
+          found = true;
+        }
+        else if (otaconsts.WIN_FILE.test(file)) {
+          data = {
+            type : otaconsts.TYPE_WIN,
+            buildName : path.basename(file).replace(otaconsts.WIN_FILE, ""),
+            buildFile : self.removeRootPath(file),
+            size      : stat.size,
+            timeStamp : stat.mtime.getTime(),
+            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+          };
+          found = true;
+        }
+      }
+
+      function onEnd() {
+        //console.log('finished');
         cleanup();
         done(null, data);
       }
@@ -355,9 +437,15 @@ var otafs = function() {
     // We need one to work out the type of project (EG TYPE);
     for (var i=0; i<buildProjects.length; i++) {
       list = yield self.getBuildProjectList(path.normalize(buildFolderRoot + '/' + buildProjects[i].path));
+     // console.log(buildProjects[i].name);
+     // console.log(list.length);
       if (list.length > 0) {
         dirPath = list[0];
-        buildInfo = yield self.findBuildFile(dirPath);
+      //console.log('start');
+      //self.findBuildFile2(dirPath);
+      //console.log('end');
+        //buildInfo = yield self.findBuildFile(dirPath);
+        //console.log(buildInfo);
         if (buildInfo) {
           buildProjects[i].type  = buildInfo.type;
           buildProjects[i].label = otaconsts.TYPE_LABELS[buildInfo.type];
@@ -376,6 +464,11 @@ var otafs = function() {
     project.list = [];
     for (var i=0; i<list.length; i++) {
       data = self.removeRootPath(list[i]);
+     // console.log(data);
+     // console.log(self.normaliseDate(path.basename(data)));      
+     // console.log(moment(self.normaliseDate(path.basename(data))).fromNow() + " (" + moment(self.normaliseDate(path.basename(data))).toISOString() + ")");
+     // console.log(data.replace(/[\/\s]/g, '_'));
+     // console.log('##');
       project.list[i] = {
         instanceName  : path.basename(data),
         instanceLabel : self.normaliseDate(path.basename(data)),
@@ -383,7 +476,9 @@ var otafs = function() {
         _id           : data.replace(/[\/\s]/g, '_'),
         instancePath  : data,
       };
+
       buildMeta = yield self.findBuildFile(self.resolveRootPath(list[i]));
+   //   console.log(buildMeta);
       if (buildMeta) {
         lodash.extend(project.list[i], buildMeta);
       }
