@@ -4,6 +4,7 @@ var router    = require('koa-router');
 var thunkify  = require('thunkify');
 var co        = require('co');
 var fs        = require('co-fs');
+var old_fs    = require('fs');
 var path      = require('path');
 var lodash    = require('lodash');
 var util      = require('util');
@@ -340,81 +341,59 @@ var otafs = function() {
   };
 
   this.findBuildFile2 = function(dirPath) {
-    console.log(dirPath);
-      find2.file(/./, dirPath, function(files) {
-        console.log(files);
-      })
-      return;
-    return function(done) {
+    return function (done) {
 
-     find2.file(/./, dirPath, function(files) {
-        console.log(files);
-      });
-
-      var finder = find(dirPath);
       var found = false;
       var data = null;
       var buildData = null;
+      var stat = null;
+      
+      find2.eachfile(/./, dirPath, function(file) {
 
-      finder.on('directory', onDirectory);
-      finder.on('file', onFile);
-      finder.on('end', onEnd);
-      finder.on('stop', onEnd);
-
-      function onDirectory(dir, stat, stop) {
-        if (found) { console.log('stopped'); stop(); }
-      }
-
-      function onFile(file, stat) {
-        //console.log(file);
         if (found) { return; }
         if (otaconsts.iOS_FILE.test(file)) {
-          data = {
-            type : otaconsts.TYPE_IOS,
-            buildName : path.basename(file).replace(otaconsts.iOS_FILE, ""),
-            buildFile : self.removeRootPath(file),
-            size      : stat.size,
-            timeStamp : stat.mtime.getTime(),
-            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
-          };
-          found = true;
+          old_fs.stat(file, function(err, stat) {
+            data = {
+              type : otaconsts.TYPE_IOS,
+              buildName : path.basename(file).replace(otaconsts.iOS_FILE, ""),
+              buildFile : self.removeRootPath(file),
+              size      : stat.size,
+              timeStamp : stat.mtime.getTime(),
+              timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+            };
+            found = true;
+          });
         }
         else if (otaconsts.AND_FILE.test(file)) {
-          data = {
-            type : otaconsts.TYPE_AND,
-            buildName : path.basename(file).replace(otaconsts.AND_FILE, ""),
-            buildFile : self.removeRootPath(file),
-            size      : stat.size,
-            timeStamp : stat.mtime.getTime(),
-            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
-          };
-          found = true;
+          old_fs.stat(file, function(err, stat) {
+            data = {
+              type : otaconsts.TYPE_AND,
+              buildName : path.basename(file).replace(otaconsts.AND_FILE, ""),
+              buildFile : self.removeRootPath(file),
+              size      : stat.size,
+              timeStamp : stat.mtime.getTime(),
+              timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+            };
+            found = true;
+          });
         }
         else if (otaconsts.WIN_FILE.test(file)) {
-          data = {
-            type : otaconsts.TYPE_WIN,
-            buildName : path.basename(file).replace(otaconsts.WIN_FILE, ""),
-            buildFile : self.removeRootPath(file),
-            size      : stat.size,
-            timeStamp : stat.mtime.getTime(),
-            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
-          };
-          found = true;
+          old_fs.stat(file, function(err, stat) {
+            data = {
+              type : otaconsts.TYPE_WIN,
+              buildName : path.basename(file).replace(otaconsts.WIN_FILE, ""),
+              buildFile : self.removeRootPath(file),
+              size      : stat.size,
+              timeStamp : stat.mtime.getTime(),
+              timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+            };
+            found = true;
+          });
         }
-      }
-
-      function onEnd() {
-        //console.log('finished');
-        cleanup();
-        done(null, data);
-      }
-
-      function cleanup() {
-        finder.removeListener('directory', onDirectory);
-        finder.removeListener('file', onFile);
-        finder.removeListener('end', onEnd);
-        finder.removeListener('stop', onEnd);
-      }
+      }).end(function(){
+        console.log('find end ' + found);
+        done(null,data);
+      });
     };
   };
 
@@ -444,11 +423,15 @@ var otafs = function() {
       //console.log('start');
       //self.findBuildFile2(dirPath);
       //console.log('end');
-        //buildInfo = yield self.findBuildFile(dirPath);
+        buildInfo = yield self.findBuildFile2(dirPath);
         //console.log(buildInfo);
         if (buildInfo) {
           buildProjects[i].type  = buildInfo.type;
           buildProjects[i].label = otaconsts.TYPE_LABELS[buildInfo.type];
+        } else {
+          // no valid build files found so remove from the list
+          buildProjects.splice(i,1);
+          i--;
         }
       }
     }
