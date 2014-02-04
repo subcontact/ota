@@ -346,52 +346,43 @@ var otafs = function() {
       var found = false;
       var data = null;
       var buildData = null;
-      var stat = null;
-      
-      find2.eachfile(/./, dirPath, function(file) {
-
+            
+      find2.eachfile(/./, dirPath, function(file, stat) {
         if (found) { return; }
         if (otaconsts.iOS_FILE.test(file)) {
-          old_fs.stat(file, function(err, stat) {
-            data = {
-              type : otaconsts.TYPE_IOS,
-              buildName : path.basename(file).replace(otaconsts.iOS_FILE, ""),
-              buildFile : self.removeRootPath(file),
-              size      : stat.size,
-              timeStamp : stat.mtime.getTime(),
-              timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
-            };
-            found = true;
-          });
+          data = {
+            type : otaconsts.TYPE_IOS,
+            buildName : path.basename(file).replace(otaconsts.iOS_FILE, ""),
+            buildFile : self.removeRootPath(file),
+            size      : stat.size,
+            timeStamp : stat.mtime.getTime(),
+            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+          };
+          found = true;
         }
         else if (otaconsts.AND_FILE.test(file)) {
-          old_fs.stat(file, function(err, stat) {
-            data = {
-              type : otaconsts.TYPE_AND,
-              buildName : path.basename(file).replace(otaconsts.AND_FILE, ""),
-              buildFile : self.removeRootPath(file),
-              size      : stat.size,
-              timeStamp : stat.mtime.getTime(),
-              timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
-            };
-            found = true;
-          });
+          data = {
+            type : otaconsts.TYPE_AND,
+            buildName : path.basename(file).replace(otaconsts.AND_FILE, ""),
+            buildFile : self.removeRootPath(file),
+            size      : stat.size,
+            timeStamp : stat.mtime.getTime(),
+            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+          };
+          found = true;
         }
         else if (otaconsts.WIN_FILE.test(file)) {
-          old_fs.stat(file, function(err, stat) {
-            data = {
-              type : otaconsts.TYPE_WIN,
-              buildName : path.basename(file).replace(otaconsts.WIN_FILE, ""),
-              buildFile : self.removeRootPath(file),
-              size      : stat.size,
-              timeStamp : stat.mtime.getTime(),
-              timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
-            };
-            found = true;
-          });
+          data = {
+            type : otaconsts.TYPE_WIN,
+            buildName : path.basename(file).replace(otaconsts.WIN_FILE, ""),
+            buildFile : self.removeRootPath(file),
+            size      : stat.size,
+            timeStamp : stat.mtime.getTime(),
+            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+          };
+          found = true;
         }
       }).end(function(){
-        console.log('find end ' + found);
         done(null,data);
       });
     };
