@@ -37,12 +37,13 @@ qx.Class.define("ota.page.BuildDetail",
   properties:
   {
     /** Holds the current shown tweet */
-    buildDetail :
+    buildData :
     {
       check : "Object",
       nullable : true,
       init : null,
-      event : "changeBuildDetail"
+      event : "changeBuildData",
+      apply : "_applyBuildData"
     },
 
     /** currently selected Project */
@@ -70,19 +71,21 @@ qx.Class.define("ota.page.BuildDetail",
     _initialize : function()
     {
       this.base(arguments);
+      
       // Create a new label instance
-      var label = new qx.ui.mobile.basic.Label();
-      this.getContent().add(label);      
-      // bind the "tweet.getText" property to the "value" of the label
-      this.bind("BuildDetail.version", label, "value");
+      var label = new qx.ui.mobile.basic.Label("test");
+      this.bind("buildData.version", label, "value");
+      this.getContent().add(label); 
+
+      
+      label = new qx.ui.mobile.basic.Label();
+      this.getContent().add(label);
+      this.bind("buildData.commitHash", label, "value");
 
       label = new qx.ui.mobile.basic.Label();
       this.getContent().add(label);
-      this.bind("BuildDetail.commitHash", label, "value");
-
-      label = new qx.ui.mobile.basic.Label();
-      this.getContent().add(label);
-      this.bind("BuildDetail.displayName", label, "value");
+      this.bind("buildData.displayName", label, "value");
+      
 /*
       label = new qx.ui.mobile.basic.Label();
       this.getContent().add(label);
@@ -103,22 +106,33 @@ qx.Class.define("ota.page.BuildDetail",
       label = new qx.ui.mobile.basic.Label();
       this.getContent().add(label);
       this.bind("BuildDetail.installerSource", label, "value");
-
+*/
 
       var button = new qx.ui.mobile.form.Button("Download IPA Direct");
       this.getContent().add(button);
 
       button.addListener("tap", function() {
-        document.location = this.getBuildDetail().getUrl();
+        document.location = this.getBuildData().getUrl();
       }, this);
 
       button = new qx.ui.mobile.form.Button("Download IPA Installer");
       this.getContent().add(button);
 
       button.addListener("tap", function() {
-        document.location = this.getBuildDetail().getInstallerUrl();
+        var url = "itms-services://?action=download-manifest&url=" + "http://192.168.0.3:8080/projects/" + this.getProjectId() + '/builds/' + this.getBuildId() + '/installer';
+        console.log(url);
+        document.location = url;
       }, this);
-*/
+
+    },
+
+    _applyBuildData : function(value, old) {
+
+      this.debug("Build Data: " + qx.dev.Debug.debugProperties(value)); // just display the data
+      if (value) {
+        this.debug(this.getBuildData().getVersion());
+        this.debug(value.getVersion());
+      }
     }
   }
 });

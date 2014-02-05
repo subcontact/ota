@@ -245,11 +245,11 @@ var otafs = function() {
       commitHash : "12345A",
     };  
     results['displayName']     = data[otaconsts.IOS_NAME];
-    results[otaconsts.IOS_VERSION]  = data[otaconsts.IOS_VERSION];
+    results['version']  = data[otaconsts.IOS_VERSION];
     results[otaconsts.IOS_ID]       = data[otaconsts.IOS_ID];
     results[otaconsts.IOS_TEAM]     = data[otaconsts.IOS_TEAM];
     results[otaconsts.IOS_ICON]     = data[otaconsts.IOS_ICON];
-    results['url'] = '/' + file;
+    results['url'] = 'http://192.168.0.3:8080/' + file;
     results['installerUrl'] = path.dirname('/' + file) + '/installer';
 
     var output = mustache.render(yield fs.readFile('manifest.plist.template', 'utf8'), results);

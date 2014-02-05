@@ -60,13 +60,13 @@ qx.Class.define("ota.Application",
 
 
     /** Holds all projects */
-    buildDetail :
+    buildData :
     {
       check : "Object",
       nullable : true,
       init : null,
-      event : "changeBuildDetail",
-      apply : "_applyBuildDetail" // just for logging the data
+      event : "changeBuildData",
+      apply : "_applyBuildData" // just for logging the data
     },
 
     /** currently selected Project */
@@ -148,7 +148,7 @@ qx.Class.define("ota.Application",
       this.bind("buildId", buildsPage, "buildId");
 
       var buildDetailPage = new ota.page.BuildDetail();
-      this.bind("buildDetail", buildDetailPage, "buildDetail");
+      this.bind("buildData", buildDetailPage, "buildData");
       this.bind("projectId", buildDetailPage, "projectId");
       this.bind("buildId", buildDetailPage, "buildId");
 
@@ -246,7 +246,7 @@ qx.Class.define("ota.Application",
     },
 
     // property apply
-    _applyBuildDetail : function(value, old) {
+    _applyBuildData : function(value, old) {
       // print the loaded data in the console
       //this.debug("Build Detail: ");//, qx.lang.Json.stringify(value)); // just display the data
     },
@@ -310,7 +310,7 @@ qx.Class.define("ota.Application",
       var url = "/projects/" + this.getProjectId() + '/builds/' + this.getBuildId();
       var store = new qx.data.store.Json();
       store.setUrl(url);
-      store.bind("model", this, "buildDetail");
+      store.bind("model", this, "buildData");
       return new Promise(function (resolve, reject) {
         store.addListener('loaded', function(evt) {
           console.log('Build Detail store loaded OK');// + evt.getData());

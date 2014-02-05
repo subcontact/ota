@@ -25,6 +25,7 @@ app.use(function *(next){
 
 app.use(serve('.'));
 app.use(serve('../..'));
+app.use(serve(ota.getBuildFolderRoot()));
 
 app.use(router(app));  
 
@@ -56,7 +57,7 @@ var getProjectBuildInstallerRoute = function *(next) {
   var projectBuilds = yield ota.getProjectBuildListService(project);
   var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
   var buildData     = yield ota.getProjectBuildDataService(build);
-  var installer     = buildData.installerUrl;
+  var installer     = buildData.installerSource;
   this.body = installer;
   this.set('Content-Type', 'application/xml');
 };
