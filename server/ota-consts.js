@@ -23,7 +23,6 @@ var otaconsts = function() {
     "iOS",
     "Android",
     "Windows",
-
     "iPhone",
     "iPad",
     "Android Phone",

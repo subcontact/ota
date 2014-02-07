@@ -346,6 +346,7 @@ var otafs = function() {
       var found = false;
       var data = null;
       var buildData = null;
+      console.log(dirPath);
             
       find2.eachfile(/./, dirPath, function(file, stat) {
         if (found) { return; }
@@ -392,37 +393,26 @@ var otafs = function() {
     if (buildProjects) {
        return self.clone(buildProjects, ['list']);
     }
-    var bp   = yield self.getFolders(buildFolderRoot);
-    // get the names at the root level
-    buildProjects  = bp.map(function(data) {
-      data = self.removeRootPath(data);
-      return {
-        name  : path.basename(data),
-        _id   : data.replace(/[\/\s]/g, '_'),
-        path  : data,
-      };
-    });
-    var list, files, dirPath, fullFile, buildInfo;
+   var bp = yield self.getFolders(buildFolderRoot);
+   buildProjects = []; // shouldn't be needed
+
+    var list, files, dirPath, fullFile, buildInfo, filePath;
     // loop through and get the builds for each project. 
     // We need one to work out the type of project (EG TYPE);
-    for (var i=0; i<buildProjects.length; i++) {
-      list = yield self.getBuildProjectList(path.normalize(buildFolderRoot + '/' + buildProjects[i].path));
-     // console.log(buildProjects[i].name);
-     // console.log(list.length);
+    for (var i=0; i<bp.length; i++) {
+      filePath = self.removeRootPath(bp[i]);
+      list = yield self.getBuildProjectList(path.normalize(buildFolderRoot + '/' + filePath));
       if (list.length > 0) {
         dirPath = list[0];
-      //console.log('start');
-      //self.findBuildFile2(dirPath);
-      //console.log('end');
         buildInfo = yield self.findBuildFile2(dirPath);
-        //console.log(buildInfo);
         if (buildInfo) {
-          buildProjects[i].type  = buildInfo.type;
-          buildProjects[i].label = otaconsts.TYPE_LABELS[buildInfo.type];
-        } else {
-          // no valid build files found so remove from the list
-          buildProjects.splice(i,1);
-          i--;
+          buildProjects.push({
+            name  : path.basename(filePath),
+            _id   : filePath.replace(/[\/\s]/g, '_'),
+            path  : filePath,
+            type  : buildInfo.type,
+            label : otaconsts.TYPE_LABELS[buildInfo.type]
+          });
         }
       }
     }
