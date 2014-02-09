@@ -1,13 +1,13 @@
-
-
+"use strict";
 var otaconsts = function() {
   var self = this;
   const BUILD_DIR = "builds";
   const BUILD_LIST_PATTERN = /^\d{14}$/i;
-//  const BUILD_LIST_PATTERN = /(^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$)|(^\d{14})/i;
   const iOS_FILE  = /\.ipa$/i;
   const AND_FILE  = /\.apk$/i;
-  const WIN_FILE  = /\.exe$/i;
+  const WIN_FILE  = /\.exe$/i;    
+  const WIN_FILE_EXE  = /\.exe$/i;  
+  const WIN_FILE_XAP  = /\.xap$/i;
   const TYPE_IOS  = 0;
   const TYPE_AND  = 1;
   const TYPE_WIN  = 2;
@@ -18,6 +18,7 @@ var otaconsts = function() {
   const TYPE_ANDROID_TABLET = 6;
   const TYPE_WINDOWS_PHONE  = 7;
   const TYPE_WINDOWS_TABLET = 8;
+  const TYPE_UNKNOWN        = 9;
 
   const TYPE_LABELS = [
     "iOS",
@@ -28,7 +29,8 @@ var otaconsts = function() {
     "Android Phone",
     "Android Tablet",
     "Windows Phone",
-    "Windows Tablet"
+    "Windows Tablet",
+    "Unkown"
   ];
 
   const IOS_NAME    = 'CFBundleDisplayName';
@@ -43,6 +45,8 @@ var otaconsts = function() {
   this.iOS_FILE             = iOS_FILE;
   this.AND_FILE             = AND_FILE;
   this.WIN_FILE             = WIN_FILE;
+  this.WIN_FILE_EXE         = WIN_FILE_EXE;
+  this.WIN_FILE_XAP         = WIN_FILE_XAP;
   this.TYPE_IOS             = TYPE_IOS;
   this.TYPE_AND             = TYPE_AND;
   this.TYPE_WIN             = TYPE_WIN;
@@ -51,6 +55,7 @@ var otaconsts = function() {
   this.TYPE_ANDROID_TABLET  = TYPE_ANDROID_TABLET;
   this.TYPE_WINDOWS_PHONE   = TYPE_WINDOWS_PHONE;
   this.TYPE_WINDOWS_TABLET  = TYPE_WINDOWS_TABLET;
+  this.TYPE_UNKNOWN         = TYPE_UNKNOWN;
   this.TYPE_LABELS          = TYPE_LABELS;
   this.IOS_NAME             = IOS_NAME;
   this.IOS_VERSION          = IOS_VERSION;
@@ -67,8 +72,6 @@ var otaconsts = function() {
       pattern : /^\d{14}$/,
       format  : "YYYYMMDDHHmmss"
     }
-
   ];
 }
-
 module.exports = new otaconsts();

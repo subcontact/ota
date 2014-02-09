@@ -1,3 +1,4 @@
+"use strict";
 var q       = require('q');
 var koa     = require('koa');
 var router  = require('koa-router');
