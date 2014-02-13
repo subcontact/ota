@@ -24,9 +24,17 @@ app.use(function *(next){
   console.log('%s %s - %s', this.method, this.url, ms);
 });
 
-app.use(serve('.'));
-app.use(serve('../..'));
-app.use(serve(ota.getBuildFolderRoot()));
+app.use(function *(next){
+
+    //TODO - add a last modified by adding a timestamp to each service call response
+    //this.set('Last-Modified', stats.mtime.toUTCString());
+    yield next;
+    this.set('Cache-Control', 'max-age=' + (60 * 60 * 24 * 5));
+});
+
+app.use(serve('.', {maxage: 1000 * 60 * 60 * 24 * 5}));
+app.use(serve('../..', {maxage: 1000 * 60 * 60 * 24 * 5}));
+app.use(serve(ota.getBuildFolderRoot(), {maxage: 1000  * 60 * 60 * 24 * 5}));
 
 app.use(router(app));  
 

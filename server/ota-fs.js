@@ -255,8 +255,11 @@ var otafs = function() {
     results[otaconsts.IOS_ID]       = data[otaconsts.IOS_ID];
     results[otaconsts.IOS_TEAM]     = data[otaconsts.IOS_TEAM];
     results[otaconsts.IOS_ICON]     = data[otaconsts.IOS_ICON];
-    results['url'] = 'http://192.168.0.3:8080/' + file;
-    results['installerUrl'] = path.dirname('/' + file) + '/installer';
+    results['url'] = 'http://192.168.0.3:8080/' + self.removeRootPath(path.dirname(file)) + '/installer';
+    results['installerUrl'] = self.removeRootPath(file) + '/installer';
+
+    console.log(file);
+    console.log(self.removeRootPath(file));
 
     var output = mustache.render(yield fs.readFile('manifest.plist.template', 'utf8'), results);
     results['installerSource'] = output;

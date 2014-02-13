@@ -128,11 +128,11 @@ qx.Class.define("ota.page.BuildDetail",
 
     _applyBuildData : function(value, old) {
 
-      this.debug("Build Data: " + qx.dev.Debug.debugProperties(value)); // just display the data
-      if (value) {
-        this.debug(this.getBuildData().getVersion());
-        this.debug(value.getVersion());
-      }
+      //this.debug("Build Data: " + qx.dev.Debug.debugProperties(value)); // just display the data
+     // if (value) {
+      //  this.debug(this.getBuildData().getVersion());
+      //  this.debug(value.getVersion());
+      //}
     }
   }
 });

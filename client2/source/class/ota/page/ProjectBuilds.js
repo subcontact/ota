@@ -89,11 +89,11 @@ qx.Class.define("ota.page.ProjectBuilds",
         configureItem : function(item, value, row) {
           // set the data of the model
           var date = moment(value.getInstanceLabel());
-          var data = date.format("ddd, MM Do YYYY, h:mm:ss a") + " (" + date.fromNow() + ")";
+          var data = date.format("ddd, Do MMM YYYY, h:mm:ss a") + " (" + date.fromNow() + ")";
           item.setTitle(data);
           //item.setSubtitle(dateFormat.format(new Date(value.getCreated_at())));
-          item.setImage("resource/ota/internet.png");        
-          item.setSubtitle(types.getItem(value.getType()));
+         // item.setImage("resource/ota/internet.png");        
+         // item.setSubtitle(types.getItem(value.getType()));
 
           // we have more data to display, show an arrow
           item.setShowArrow(true);
