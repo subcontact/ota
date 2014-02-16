@@ -3,6 +3,7 @@ var q       = require('q');
 var koa     = require('koa');
 var router  = require('koa-router');
 var serve   = require('koa-static');
+var send    = require('koa-send');
 var co      = require('co');
 var fs      = require('co-fs');
 var path    = require('path');
@@ -21,15 +22,15 @@ app.use(function *(next){
   var start = new Date();
   yield next;
   var ms = new Date() - start;
-  console.log('%s %s - %s', this.method, this.url, ms);
+  console.log('%s %s - %s', this.method, this.url, ms + ' ms');
 });
 
 app.use(function *(next){
-
     //TODO - add a last modified by adding a timestamp to each service call response
     //this.set('Last-Modified', stats.mtime.toUTCString());
     yield next;
-    this.set('Cache-Control', 'max-age=' + (60 * 60 * 24 * 5));
+    // not while we're debugging
+    //this.set('Cache-Control', 'max-age=' + (60 * 60 * 24 * 5));
 });
 
 app.use(serve('.', {maxage: 1000 * 60 * 60 * 24 * 5}));
@@ -64,11 +65,36 @@ var getProjectBuildInstallerRoute = function *(next) {
   var projectList   = yield ota.getProjectsService();
   var project       = lodash.find(projectList, {_id : this.params.projectId});
   var projectBuilds = yield ota.getProjectBuildListService(project);
-  var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
+  var build         = lodash.find(projectBuilds, {_id : this.params.buildId}); 
+  console.log(this.params.buildId); 
+  console.log(project);    
+  console.log(projectBuilds);  
+  console.log(build); 
   var buildData     = yield ota.getProjectBuildDataService(build);
   var installer     = buildData.installerSource;
   this.body = installer;
   this.set('Content-Type', 'application/xml');
+};
+
+var getProjectBuildFileRoute = function *(next) {
+  var projectList   = yield ota.getProjectsService();
+  var project       = lodash.find(projectList, {_id : this.params.projectId});
+  var projectBuilds = yield ota.getProjectBuildListService(project);
+  var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
+  var buildData     = yield ota.getProjectBuildDataService(build);
+  var installer     = buildData.installerSource;
+  yield send(this, build.buildFile, {root : ota.getBuildFolderRoot()});
+};
+
+var getProjectBuildDownloadRoute = function *(next) {
+  var projectList   = yield ota.getProjectsService();
+  var project       = lodash.find(projectList, {_id : this.params.projectId});
+  var projectBuilds = yield ota.getProjectBuildListService(project);
+  var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
+  var buildData     = yield ota.getProjectBuildDataService(build);
+  var installer     = buildData.installerSource;
+  yield send(this, build.buildFile, {root : ota.getBuildFolderRoot()});
+  this.response.attachment([path.basename(build.buildFile)]);
 };
 
 app.get('/',          getProjectsRoute);
@@ -83,5 +109,7 @@ app.get('/projects/:projectId',         getProjectBuildsRoute);
 
 app.get('/projects/:projectId/builds/:buildId', getProjectBuildDataRoute);
 app.get('/projects/:projectId/builds/:buildId/installer', getProjectBuildInstallerRoute);
+app.get('/projects/:projectId/builds/:buildId/file', getProjectBuildFileRoute);
+app.get('/projects/:projectId/builds/:buildId/download', getProjectBuildDownloadRoute);
 
 app.listen(8080);
