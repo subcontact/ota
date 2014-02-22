@@ -1,0 +1,1085 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/tyronne/.nvm/v0.11.9/bin/node',
+1 verbose cli   '/Users/tyronne/.nvm/v0.11.9/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   'plist-native',
+1 verbose cli   '--save' ]
+2 info using npm@1.3.15
+3 info using node@v0.11.9
+4 warn package.json directory-cache@1.0.4 No repository field.
+5 warn package.json directory-watcher@1.0.1 No repository field.
+6 warn package.json im-cache@0.0.2 No repository field.
+7 warn package.json mu2@0.5.20 No repository field.
+8 verbose readDependencies using package.json deps
+9 verbose cache add [ 'plist-native', null ]
+10 verbose cache add name=undefined spec="plist-native" args=["plist-native",null]
+11 verbose parsed url { protocol: null,
+11 verbose parsed url   slashes: null,
+11 verbose parsed url   auth: null,
+11 verbose parsed url   host: null,
+11 verbose parsed url   port: null,
+11 verbose parsed url   hostname: null,
+11 verbose parsed url   hash: null,
+11 verbose parsed url   search: null,
+11 verbose parsed url   query: null,
+11 verbose parsed url   pathname: 'plist-native',
+11 verbose parsed url   path: 'plist-native',
+11 verbose parsed url   href: 'plist-native' }
+12 silly lockFile b00926c2-plist-native plist-native
+13 verbose lock plist-native /Users/tyronne/.npm/b00926c2-plist-native.lock
+14 silly lockFile b00926c2-plist-native plist-native
+15 silly lockFile b00926c2-plist-native plist-native
+16 verbose addNamed [ 'plist-native', '' ]
+17 verbose addNamed [ null, '*' ]
+18 silly lockFile eb8d5f7b-plist-native plist-native@
+19 verbose lock plist-native@ /Users/tyronne/.npm/eb8d5f7b-plist-native.lock
+20 silly addNameRange { name: 'plist-native', range: '*', hasData: false }
+21 verbose url raw plist-native
+22 verbose url resolving [ 'https://registry.npmjs.org/', './plist-native' ]
+23 verbose url resolved https://registry.npmjs.org/plist-native
+24 info trying registry request attempt 1 at 14:23:46
+25 http GET https://registry.npmjs.org/plist-native
+26 http 200 https://registry.npmjs.org/plist-native
+27 silly registry.get cb [ 200,
+27 silly registry.get   { vary: 'Accept',
+27 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R15B03)',
+27 silly registry.get     etag: '"4SKK7HCD2YF2BDUEN9F6NX0BD"',
+27 silly registry.get     date: 'Sun, 15 Dec 2013 03:23:49 GMT',
+27 silly registry.get     'content-type': 'application/json',
+27 silly registry.get     'content-length': '11821' } ]
+28 silly addNameRange number 2 { name: 'plist-native', range: '*', hasData: true }
+29 silly addNameRange versions [ 'plist-native', [ '0.2.0', '0.2.1', '0.2.2' ] ]
+30 verbose addNamed [ 'plist-native', '0.2.2' ]
+31 verbose addNamed [ '0.2.2', '0.2.2' ]
+32 silly lockFile 1b38a2ce-plist-native-0-2-2 plist-native@0.2.2
+33 verbose lock plist-native@0.2.2 /Users/tyronne/.npm/1b38a2ce-plist-native-0-2-2.lock
+34 silly lockFile 645f7261-st-native-plist-native-0-2-2-tgz https://registry.npmjs.org/plist-native/-/plist-native-0.2.2.tgz
+35 verbose lock https://registry.npmjs.org/plist-native/-/plist-native-0.2.2.tgz /Users/tyronne/.npm/645f7261-st-native-plist-native-0-2-2-tgz.lock
+36 verbose addRemoteTarball [ 'https://registry.npmjs.org/plist-native/-/plist-native-0.2.2.tgz',
+36 verbose addRemoteTarball   '6abde856b07a52f0d6bc027f7750f4d97ff93858' ]
+37 info retry fetch attempt 1 at 14:23:49
+38 verbose fetch to= /var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/tmp.tgz
+39 http GET https://registry.npmjs.org/plist-native/-/plist-native-0.2.2.tgz
+40 http 200 https://registry.npmjs.org/plist-native/-/plist-native-0.2.2.tgz
+41 verbose tar unpack /var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/tmp.tgz
+42 silly lockFile c892a0b7-29769-0-6792112377006561-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/package
+43 verbose lock tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/package /Users/tyronne/.npm/c892a0b7-29769-0-6792112377006561-package.lock
+44 silly lockFile 0c0ee5ea-29769-0-6792112377006561-tmp-tgz tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/tmp.tgz
+45 verbose lock tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/tmp.tgz /Users/tyronne/.npm/0c0ee5ea-29769-0-6792112377006561-tmp-tgz.lock
+46 silly gunzTarPerm modes [ '755', '644' ]
+47 silly gunzTarPerm extractEntry package.json
+48 silly gunzTarPerm extractEntry .npmignore
+49 silly gunzTarPerm extractEntry index.js
+50 silly gunzTarPerm extractEntry .editorconfig
+51 silly gunzTarPerm extractEntry .jshintrc
+52 silly gunzTarPerm extractEntry .travis.yml
+53 silly gunzTarPerm extractEntry lib/plist-native.js
+54 silly gunzTarPerm extractEntry readme.md
+55 silly gunzTarPerm extractEntry test/build.js
+56 silly gunzTarPerm extractEntry test/parse.js
+57 silly gunzTarPerm extractEntry test/fixtures/cordova.json
+58 silly gunzTarPerm extractEntry test/fixtures/cordova.plist
+59 silly gunzTarPerm extractEntry test/fixtures/itunes-small.xml
+60 silly lockFile c892a0b7-29769-0-6792112377006561-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/package
+61 silly lockFile c892a0b7-29769-0-6792112377006561-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/package
+62 silly lockFile 0c0ee5ea-29769-0-6792112377006561-tmp-tgz tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/tmp.tgz
+63 silly lockFile 0c0ee5ea-29769-0-6792112377006561-tmp-tgz tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/tmp.tgz
+64 verbose tar pack [ '/Users/tyronne/.npm/plist-native/0.2.2/package.tgz',
+64 verbose tar pack   '/var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/package' ]
+65 verbose tarball /Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+66 verbose folder /var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/package
+67 silly lockFile c892a0b7-29769-0-6792112377006561-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/package
+68 verbose lock tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/package /Users/tyronne/.npm/c892a0b7-29769-0-6792112377006561-package.lock
+69 silly lockFile 2952bdaf-m-plist-native-0-2-2-package-tgz tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+70 verbose lock tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz /Users/tyronne/.npm/2952bdaf-m-plist-native-0-2-2-package-tgz.lock
+71 silly lockFile c892a0b7-29769-0-6792112377006561-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/package
+72 silly lockFile c892a0b7-29769-0-6792112377006561-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077829769-0.6792112377006561/package
+73 silly lockFile 2952bdaf-m-plist-native-0-2-2-package-tgz tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+74 silly lockFile 2952bdaf-m-plist-native-0-2-2-package-tgz tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+75 silly lockFile 0bfe2b4f-e-npm-plist-native-0-2-2-package /Users/tyronne/.npm/plist-native/0.2.2/package
+76 verbose lock /Users/tyronne/.npm/plist-native/0.2.2/package /Users/tyronne/.npm/0bfe2b4f-e-npm-plist-native-0-2-2-package.lock
+77 silly lockFile 0bfe2b4f-e-npm-plist-native-0-2-2-package /Users/tyronne/.npm/plist-native/0.2.2/package
+78 silly lockFile 0bfe2b4f-e-npm-plist-native-0-2-2-package /Users/tyronne/.npm/plist-native/0.2.2/package
+79 verbose tar unpack /Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+80 silly lockFile 825d08d9-e-npm-plist-native-0-2-2-package tar:///Users/tyronne/.npm/plist-native/0.2.2/package
+81 verbose lock tar:///Users/tyronne/.npm/plist-native/0.2.2/package /Users/tyronne/.npm/825d08d9-e-npm-plist-native-0-2-2-package.lock
+82 silly lockFile 2952bdaf-m-plist-native-0-2-2-package-tgz tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+83 verbose lock tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz /Users/tyronne/.npm/2952bdaf-m-plist-native-0-2-2-package-tgz.lock
+84 silly gunzTarPerm modes [ '755', '644' ]
+85 silly gunzTarPerm extractEntry package.json
+86 silly gunzTarPerm extractEntry .npmignore
+87 silly gunzTarPerm extractEntry index.js
+88 silly gunzTarPerm extractEntry .editorconfig
+89 silly gunzTarPerm extractEntry .jshintrc
+90 silly gunzTarPerm extractEntry .travis.yml
+91 silly gunzTarPerm extractEntry lib/plist-native.js
+92 silly gunzTarPerm extractEntry readme.md
+93 silly gunzTarPerm extractEntry test/build.js
+94 silly gunzTarPerm extractEntry test/parse.js
+95 silly gunzTarPerm extractEntry test/fixtures/cordova.json
+96 silly gunzTarPerm extractEntry test/fixtures/cordova.plist
+97 silly gunzTarPerm extractEntry test/fixtures/itunes-small.xml
+98 silly lockFile 825d08d9-e-npm-plist-native-0-2-2-package tar:///Users/tyronne/.npm/plist-native/0.2.2/package
+99 silly lockFile 825d08d9-e-npm-plist-native-0-2-2-package tar:///Users/tyronne/.npm/plist-native/0.2.2/package
+100 silly lockFile 2952bdaf-m-plist-native-0-2-2-package-tgz tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+101 silly lockFile 2952bdaf-m-plist-native-0-2-2-package-tgz tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+102 verbose chmod /Users/tyronne/.npm/plist-native/0.2.2/package.tgz 644
+103 verbose chown /Users/tyronne/.npm/plist-native/0.2.2/package.tgz [ 501, 20 ]
+104 silly lockFile 645f7261-st-native-plist-native-0-2-2-tgz https://registry.npmjs.org/plist-native/-/plist-native-0.2.2.tgz
+105 silly lockFile 645f7261-st-native-plist-native-0-2-2-tgz https://registry.npmjs.org/plist-native/-/plist-native-0.2.2.tgz
+106 silly lockFile 1b38a2ce-plist-native-0-2-2 plist-native@0.2.2
+107 silly lockFile 1b38a2ce-plist-native-0-2-2 plist-native@0.2.2
+108 silly lockFile eb8d5f7b-plist-native plist-native@
+109 silly lockFile eb8d5f7b-plist-native plist-native@
+110 silly resolved [ { name: 'plist-native',
+110 silly resolved     author: { name: 'Olivier Louvignes' },
+110 silly resolved     license: 'MIT',
+110 silly resolved     version: '0.2.2',
+110 silly resolved     description: 'Node.js native plist parser & builder',
+110 silly resolved     main: 'index.js',
+110 silly resolved     scripts: { test: 'nodeunit test' },
+110 silly resolved     repository:
+110 silly resolved      { type: 'git',
+110 silly resolved        url: 'https://github.com/mgcrea/node-plist-native.git' },
+110 silly resolved     keywords: [ 'plist', 'xml' ],
+110 silly resolved     dependencies: { libxmljs: '~0.8.1' },
+110 silly resolved     devDependencies: { nodeunit: '>= 0.7.4' },
+110 silly resolved     readme: '[node-plist-native](http://mgcrea.github.com/node-plist-native) [![Build Status](https://secure.travis-ci.org/mgcrea/node-plist-native.png?branch=master)](http://travis-ci.org/#!/mgcrea/node-plist-native)\n=================\n\nLight, fast & memory efficient plist parser/builder that relies on [libxmljs](https://github.com/polotek/libxmljs).\n\nQuick start\n-----------\n\nInstall the `libxml2-dev` package required by `libxmljs` on your system.\n\nParsing a plist from file/string\n``` javascript\nvar plist = require(\'plist-native\');\n\nvar obj = plist.parse(fs.readFileSync(__dirname + \'/myPlist.plist\')); // parses a buffer\n\nvar obj2 = plist.parseString(\'<plist><string>Hello World!</string></plist>\'); // parses a string\n\n```\n\nBuilding a plist from an object:\n``` javascript\nvar plist = require(\'plist-native\');\n\nvar buffer = plist.build({\'foo\' : \'bar\'}); // returns a buffer\n\nvar str = plist.buildString({\'foo\' : \'bar\'}); // returns a string\n\n```\n\nBenchmarks\n----------\n\nSpeed benchmark with `debug` working with a 13MB iTunes.xml plist library file:\n\n>\n\t------------------------------------------------------------------------------------\n\t|   | library      | engine (dep)  | size (lines)  | parsing       | building      |\n\t------------------------------------------------------------------------------------\n\t| 1 | plist-native | libxmljs      | 106           | 2s638ms       | 3s139ms       |\n\t| 2 | plist        | xmlbuilder    | 297           | 5s202ms +97%  | 3s698ms +18%  |\n\t| 3 | xml2js       | sax           | 254           | 6s887ms +161% | n/a           |\n\t------------------------------------------------------------------------------------\n\nMemory benchmark with `memwatch` working with a 13MB iTunes.xml plist library file:\n\n>\n\t------------------------------------------------------------------------------------\n\t|   | library      | engine (dep)  | size (lines)  | parsing       | building      |\n\t------------------------------------------------------------------------------------\n\t| 1 | plist-native | libxmljs      | 106           | 52.86mb       | 16.78mb       |\n\t| 2 | plist        | xmlbuilder    | 297           | 53.30mb +1%   | 156.34mb (?!) |\n\t| 3 | xml2js       | sax           | 254           | 61.87mb +17%  | n/a           |\n\t------------------------------------------------------------------------------------\n\nTesting\n-------\n\nnode-plist-native is tested with `nodeunit`.\n\n>\n\tnpm install --dev\n\tnpm test\n\nContributing\n------------\n\nPlease submit all pull requests the against master branch. If your unit test contains javascript patches or features, you should include relevant unit tests. Thanks!\n\nAuthors\n-------\n\n**Olivier Louvignes**\n\n+ http://olouv.com\n+ http://github.com/mgcrea\n\nCopyright and license\n---------------------\n\n\tThe MIT License\n\n\tCopyright (c) 2012 Olivier Louvignes\n\n\tPermission is hereby granted, free of charge, to any person obtaining a copy\n\tof this software and associated documentation files (the "Software"), to deal\n\tin the Software without restriction, including without limitation the rights\n\tto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n\tcopies of the Software, and to permit persons to whom the Software is\n\tfurnished to do so, subject to the following conditions:\n\n\tThe above copyright notice and this permission notice shall be included in\n\tall copies or substantial portions of the Software.\n\n\tTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n\tIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n\tFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n\tAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n\tLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n\tOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n\tTHE SOFTWARE.\n',
+110 silly resolved     readmeFilename: 'readme.md',
+110 silly resolved     bugs: { url: 'https://github.com/mgcrea/node-plist-native/issues' },
+110 silly resolved     homepage: 'https://github.com/mgcrea/node-plist-native',
+110 silly resolved     _id: 'plist-native@0.2.2',
+110 silly resolved     dist: { shasum: '6abde856b07a52f0d6bc027f7750f4d97ff93858' },
+110 silly resolved     _from: 'plist-native@',
+110 silly resolved     _resolved: 'https://registry.npmjs.org/plist-native/-/plist-native-0.2.2.tgz' } ]
+111 info install plist-native@0.2.2 into /Users/tyronne/code/otav2/server
+112 info installOne plist-native@0.2.2
+113 info /Users/tyronne/code/otav2/server/node_modules/plist-native unbuild
+114 verbose tar unpack /Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+115 silly lockFile dbac2da9-server-node-modules-plist-native tar:///Users/tyronne/code/otav2/server/node_modules/plist-native
+116 verbose lock tar:///Users/tyronne/code/otav2/server/node_modules/plist-native /Users/tyronne/.npm/dbac2da9-server-node-modules-plist-native.lock
+117 silly lockFile 2952bdaf-m-plist-native-0-2-2-package-tgz tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+118 verbose lock tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz /Users/tyronne/.npm/2952bdaf-m-plist-native-0-2-2-package-tgz.lock
+119 silly gunzTarPerm modes [ '755', '644' ]
+120 silly gunzTarPerm extractEntry package.json
+121 silly gunzTarPerm extractEntry .npmignore
+122 silly gunzTarPerm extractEntry index.js
+123 silly gunzTarPerm extractEntry .editorconfig
+124 silly gunzTarPerm extractEntry .jshintrc
+125 silly gunzTarPerm extractEntry .travis.yml
+126 silly gunzTarPerm extractEntry lib/plist-native.js
+127 silly gunzTarPerm extractEntry readme.md
+128 silly gunzTarPerm extractEntry test/build.js
+129 silly gunzTarPerm extractEntry test/parse.js
+130 silly gunzTarPerm extractEntry test/fixtures/cordova.json
+131 silly gunzTarPerm extractEntry test/fixtures/cordova.plist
+132 silly gunzTarPerm extractEntry test/fixtures/itunes-small.xml
+133 silly lockFile dbac2da9-server-node-modules-plist-native tar:///Users/tyronne/code/otav2/server/node_modules/plist-native
+134 silly lockFile dbac2da9-server-node-modules-plist-native tar:///Users/tyronne/code/otav2/server/node_modules/plist-native
+135 silly lockFile 2952bdaf-m-plist-native-0-2-2-package-tgz tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+136 silly lockFile 2952bdaf-m-plist-native-0-2-2-package-tgz tar:///Users/tyronne/.npm/plist-native/0.2.2/package.tgz
+137 info preinstall plist-native@0.2.2
+138 verbose readDependencies using package.json deps
+139 verbose readDependencies using package.json deps
+140 verbose cache add [ 'libxmljs@~0.8.1', null ]
+141 verbose cache add name=undefined spec="libxmljs@~0.8.1" args=["libxmljs@~0.8.1",null]
+142 verbose parsed url { protocol: null,
+142 verbose parsed url   slashes: null,
+142 verbose parsed url   auth: null,
+142 verbose parsed url   host: null,
+142 verbose parsed url   port: null,
+142 verbose parsed url   hostname: null,
+142 verbose parsed url   hash: null,
+142 verbose parsed url   search: null,
+142 verbose parsed url   query: null,
+142 verbose parsed url   pathname: 'libxmljs@~0.8.1',
+142 verbose parsed url   path: 'libxmljs@~0.8.1',
+142 verbose parsed url   href: 'libxmljs@~0.8.1' }
+143 verbose cache add name="libxmljs" spec="~0.8.1" args=["libxmljs","~0.8.1"]
+144 verbose parsed url { protocol: null,
+144 verbose parsed url   slashes: null,
+144 verbose parsed url   auth: null,
+144 verbose parsed url   host: null,
+144 verbose parsed url   port: null,
+144 verbose parsed url   hostname: null,
+144 verbose parsed url   hash: null,
+144 verbose parsed url   search: null,
+144 verbose parsed url   query: null,
+144 verbose parsed url   pathname: '~0.8.1',
+144 verbose parsed url   path: '~0.8.1',
+144 verbose parsed url   href: '~0.8.1' }
+145 verbose addNamed [ 'libxmljs', '~0.8.1' ]
+146 verbose addNamed [ null, '>=0.8.1-0 <0.9.0-0' ]
+147 silly lockFile b43e3ce7-libxmljs-0-8-1 libxmljs@~0.8.1
+148 verbose lock libxmljs@~0.8.1 /Users/tyronne/.npm/b43e3ce7-libxmljs-0-8-1.lock
+149 silly addNameRange { name: 'libxmljs', range: '>=0.8.1-0 <0.9.0-0', hasData: false }
+150 verbose url raw libxmljs
+151 verbose url resolving [ 'https://registry.npmjs.org/', './libxmljs' ]
+152 verbose url resolved https://registry.npmjs.org/libxmljs
+153 info trying registry request attempt 1 at 14:23:51
+154 http GET https://registry.npmjs.org/libxmljs
+155 http 200 https://registry.npmjs.org/libxmljs
+156 silly registry.get cb [ 200,
+156 silly registry.get   { vary: 'Accept',
+156 silly registry.get     server: 'CouchDB/1.3.1 (Erlang OTP/R15B03)',
+156 silly registry.get     etag: '"DU9JNZQLBABLA61E5U07FQVLG"',
+156 silly registry.get     date: 'Sun, 15 Dec 2013 03:23:52 GMT',
+156 silly registry.get     'content-type': 'application/json',
+156 silly registry.get     'content-length': '36458' } ]
+157 silly addNameRange number 2 { name: 'libxmljs', range: '>=0.8.1-0 <0.9.0-0', hasData: true }
+158 silly addNameRange versions [ 'libxmljs',
+158 silly addNameRange   [ '0.4.1',
+158 silly addNameRange     '0.4.2',
+158 silly addNameRange     '0.4.3',
+158 silly addNameRange     '0.5.0',
+158 silly addNameRange     '0.5.1',
+158 silly addNameRange     '0.5.2',
+158 silly addNameRange     '0.5.3',
+158 silly addNameRange     '0.5.4',
+158 silly addNameRange     '0.6.0',
+158 silly addNameRange     '0.6.1',
+158 silly addNameRange     '0.7.0',
+158 silly addNameRange     '0.7.1',
+158 silly addNameRange     '0.8.0',
+158 silly addNameRange     '0.8.1' ] ]
+159 verbose addNamed [ 'libxmljs', '0.8.1' ]
+160 verbose addNamed [ '0.8.1', '0.8.1' ]
+161 silly lockFile ef62991d-libxmljs-0-8-1 libxmljs@0.8.1
+162 verbose lock libxmljs@0.8.1 /Users/tyronne/.npm/ef62991d-libxmljs-0-8-1.lock
+163 silly lockFile a0ffbad7--org-libxmljs-libxmljs-0-8-1-tgz https://registry.npmjs.org/libxmljs/-/libxmljs-0.8.1.tgz
+164 verbose lock https://registry.npmjs.org/libxmljs/-/libxmljs-0.8.1.tgz /Users/tyronne/.npm/a0ffbad7--org-libxmljs-libxmljs-0-8-1-tgz.lock
+165 verbose addRemoteTarball [ 'https://registry.npmjs.org/libxmljs/-/libxmljs-0.8.1.tgz',
+165 verbose addRemoteTarball   'b8b1d3962a92dbc5be9dc798bac028e09db8d630' ]
+166 info retry fetch attempt 1 at 14:23:53
+167 verbose fetch to= /var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/tmp.tgz
+168 http GET https://registry.npmjs.org/libxmljs/-/libxmljs-0.8.1.tgz
+169 http 200 https://registry.npmjs.org/libxmljs/-/libxmljs-0.8.1.tgz
+170 verbose tar unpack /var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/tmp.tgz
+171 silly lockFile 53419e76-3681-0-05740080703981221-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/package
+172 verbose lock tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/package /Users/tyronne/.npm/53419e76-3681-0-05740080703981221-package.lock
+173 silly lockFile c2df862f-3681-0-05740080703981221-tmp-tgz tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/tmp.tgz
+174 verbose lock tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/tmp.tgz /Users/tyronne/.npm/c2df862f-3681-0-05740080703981221-tmp-tgz.lock
+175 silly gunzTarPerm modes [ '755', '644' ]
+176 silly gunzTarPerm extractEntry package.json
+177 silly gunzTarPerm extractEntry .npmignore
+178 silly gunzTarPerm extractEntry README.md
+179 silly gunzTarPerm extractEntry LICENSE
+180 silly gunzTarPerm extractEntry index.js
+181 silly gunzTarPerm extractEntry src/html_document.h
+182 silly gunzTarPerm extractEntry src/xml_xpath_context.cc
+183 silly gunzTarPerm extractEntry src/xml_attribute.cc
+184 silly gunzTarPerm extractEntry src/xml_attribute.h
+185 silly gunzTarPerm extractEntry src/xml_element.h
+186 silly gunzTarPerm extractEntry src/xml_namespace.cc
+187 silly gunzTarPerm extractEntry src/xml_namespace.h
+188 silly gunzTarPerm extractEntry src/xml_sax_parser.h
+189 silly gunzTarPerm extractEntry src/xml_syntax_error.cc
+190 silly gunzTarPerm extractEntry src/xml_syntax_error.h
+191 silly gunzTarPerm extractEntry src/html_document.cc
+192 silly gunzTarPerm extractEntry src/xml_xpath_context.h
+193 silly gunzTarPerm extractEntry src/libxmljs.h
+194 silly gunzTarPerm extractEntry src/xml_document.h
+195 silly gunzTarPerm extractEntry src/libxmljs.cc
+196 silly gunzTarPerm extractEntry src/xml_element.cc
+197 silly gunzTarPerm extractEntry src/xml_node.cc
+198 silly gunzTarPerm extractEntry src/xml_node.h
+199 silly gunzTarPerm extractEntry src/xml_document.cc
+200 silly gunzTarPerm extractEntry src/xml_sax_parser.cc
+201 silly gunzTarPerm extractEntry test/attribute.js
+202 silly gunzTarPerm extractEntry test/searching.js
+203 silly gunzTarPerm extractEntry test/html_parser.js
+204 silly gunzTarPerm extractEntry test/namespace.js
+205 silly gunzTarPerm extractEntry test/xml_sax_parser.js
+206 silly gunzTarPerm extractEntry test/node_attributes.js
+207 silly gunzTarPerm extractEntry test/document.js
+208 silly gunzTarPerm extractEntry test/element.js
+209 silly gunzTarPerm extractEntry test/text_node.js
+210 silly gunzTarPerm extractEntry test/xml_parser.js
+211 silly gunzTarPerm extractEntry test/traversal.js
+212 silly gunzTarPerm extractEntry test/main.js
+213 silly gunzTarPerm extractEntry test/ref_integrity.js
+214 silly gunzTarPerm extractEntry test/fixtures/errors/comment.xml
+215 silly gunzTarPerm extractEntry test/fixtures/parser-utf16.xml
+216 silly gunzTarPerm extractEntry test/fixtures/parser.euc_jp.html
+217 silly gunzTarPerm extractEntry test/fixtures/parser.html
+218 silly gunzTarPerm extractEntry test/fixtures/parser.xml
+219 silly gunzTarPerm extractEntry test/fixtures/sax_parser.xml
+220 silly gunzTarPerm extractEntry test/fixtures/warnings/amp.html
+221 silly gunzTarPerm extractEntry test/fixtures/warnings/ent9.xml
+222 silly gunzTarPerm extractEntry vendor/libxml/HTMLparser.c
+223 silly gunzTarPerm extractEntry vendor/libxml/schematron.c
+224 silly gunzTarPerm extractEntry vendor/libxml/HTMLtree.c
+225 silly gunzTarPerm extractEntry vendor/libxml/SAX.c
+226 silly gunzTarPerm extractEntry vendor/libxml/SAX2.c
+227 silly gunzTarPerm extractEntry vendor/libxml/buf.c
+228 silly gunzTarPerm extractEntry vendor/libxml/buf.h
+229 silly gunzTarPerm extractEntry vendor/libxml/c14n.c
+230 silly gunzTarPerm extractEntry vendor/libxml/catalog.c
+231 silly gunzTarPerm extractEntry vendor/libxml/chvalid.c
+232 silly gunzTarPerm extractEntry vendor/libxml/config.h
+233 silly gunzTarPerm extractEntry vendor/libxml/debugXML.c
+234 silly gunzTarPerm extractEntry vendor/libxml/dict.c
+235 silly gunzTarPerm extractEntry vendor/libxml/elfgcchack.h
+236 silly gunzTarPerm extractEntry vendor/libxml/enc.h
+237 silly gunzTarPerm extractEntry vendor/libxml/encoding.c
+238 silly gunzTarPerm extractEntry vendor/libxml/entities.c
+239 silly gunzTarPerm extractEntry vendor/libxml/error.c
+240 silly gunzTarPerm extractEntry vendor/libxml/globals.c
+241 silly gunzTarPerm extractEntry vendor/libxml/hash.c
+242 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/HTMLparser.h
+243 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/schematron.h
+244 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/HTMLtree.h
+245 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/Makefile
+246 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/Makefile.am
+247 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/Makefile.in
+248 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/SAX.h
+249 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/SAX2.h
+250 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/c14n.h
+251 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/catalog.h
+252 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/chvalid.h
+253 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/debugXML.h
+254 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/dict.h
+255 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/encoding.h
+256 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/entities.h
+257 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/globals.h
+258 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/hash.h
+259 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/list.h
+260 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/nanoftp.h
+261 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/nanohttp.h
+262 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/parser.h
+263 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/parserInternals.h
+264 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/pattern.h
+265 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/relaxng.h
+266 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/schemasInternals.h
+267 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/DOCBparser.h
+268 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/threads.h
+269 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/tree.h
+270 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/uri.h
+271 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/valid.h
+272 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xinclude.h
+273 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xlink.h
+274 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlIO.h
+275 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlautomata.h
+276 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlerror.h
+277 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlexports.h
+278 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlmemory.h
+279 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlmodule.h
+280 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlreader.h
+281 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlregexp.h
+282 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlsave.h
+283 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlschemas.h
+284 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlschemastypes.h
+285 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlstring.h
+286 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlunicode.h
+287 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlversion.h
+288 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlwriter.h
+289 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xpath.h
+290 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xpathInternals.h
+291 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xpointer.h
+292 silly gunzTarPerm extractEntry vendor/libxml/include/win32config.h
+293 silly gunzTarPerm extractEntry vendor/libxml/include/wsockcompat.h
+294 silly gunzTarPerm extractEntry vendor/libxml/legacy.c
+295 silly gunzTarPerm extractEntry vendor/libxml/libxml.gyp
+296 silly gunzTarPerm extractEntry vendor/libxml/libxml.h
+297 silly gunzTarPerm extractEntry vendor/libxml/list.c
+298 silly gunzTarPerm extractEntry vendor/libxml/nanoftp.c
+299 silly gunzTarPerm extractEntry vendor/libxml/nanohttp.c
+300 silly gunzTarPerm extractEntry vendor/libxml/parser.c
+301 silly gunzTarPerm extractEntry vendor/libxml/parserInternals.c
+302 silly gunzTarPerm extractEntry vendor/libxml/pattern.c
+303 silly gunzTarPerm extractEntry vendor/libxml/relaxng.c
+304 silly gunzTarPerm extractEntry vendor/libxml/runsuite.c
+305 silly gunzTarPerm extractEntry vendor/libxml/save.h
+306 silly gunzTarPerm extractEntry vendor/libxml/DOCBparser.c
+307 silly gunzTarPerm extractEntry vendor/libxml/threads.c
+308 silly gunzTarPerm extractEntry vendor/libxml/timsort.h
+309 silly gunzTarPerm extractEntry vendor/libxml/tree.c
+310 silly gunzTarPerm extractEntry vendor/libxml/trio.c
+311 silly gunzTarPerm extractEntry vendor/libxml/trio.h
+312 silly gunzTarPerm extractEntry vendor/libxml/triodef.h
+313 silly gunzTarPerm extractEntry vendor/libxml/trionan.c
+314 silly gunzTarPerm extractEntry vendor/libxml/trionan.h
+315 silly gunzTarPerm extractEntry vendor/libxml/triop.h
+316 silly gunzTarPerm extractEntry vendor/libxml/triostr.c
+317 silly gunzTarPerm extractEntry vendor/libxml/triostr.h
+318 silly gunzTarPerm extractEntry vendor/libxml/uri.c
+319 silly gunzTarPerm extractEntry vendor/libxml/valid.c
+320 silly gunzTarPerm extractEntry vendor/libxml/xinclude.c
+321 silly gunzTarPerm extractEntry vendor/libxml/xlink.c
+322 silly gunzTarPerm extractEntry vendor/libxml/xmlIO.c
+323 silly gunzTarPerm extractEntry vendor/libxml/xmlcatalog.c
+324 silly gunzTarPerm extractEntry vendor/libxml/xmllint.c
+325 silly gunzTarPerm extractEntry vendor/libxml/xmlmemory.c
+326 silly gunzTarPerm extractEntry vendor/libxml/xmlmodule.c
+327 silly gunzTarPerm extractEntry vendor/libxml/xmlreader.c
+328 silly gunzTarPerm extractEntry vendor/libxml/xmlregexp.c
+329 silly gunzTarPerm extractEntry vendor/libxml/xmlsave.c
+330 silly gunzTarPerm extractEntry vendor/libxml/xmlschemas.c
+331 silly gunzTarPerm extractEntry vendor/libxml/xmlschemastypes.c
+332 silly gunzTarPerm extractEntry vendor/libxml/xmlstring.c
+333 silly gunzTarPerm extractEntry vendor/libxml/xmlunicode.c
+334 silly gunzTarPerm extractEntry vendor/libxml/xmlwriter.c
+335 silly gunzTarPerm extractEntry vendor/libxml/xpath.c
+336 silly gunzTarPerm extractEntry vendor/libxml/xpointer.c
+337 silly gunzTarPerm extractEntry vendor/libxml/xzlib.c
+338 silly gunzTarPerm extractEntry vendor/libxml/xzlib.h
+339 silly gunzTarPerm extractEntry docs/Home.md
+340 silly gunzTarPerm extractEntry docs/Migrating-from-0.4.x-to-0.5.0.md
+341 silly gunzTarPerm extractEntry docs/_Sidebar.md
+342 silly gunzTarPerm extractEntry docs/api/Attribute.md
+343 silly gunzTarPerm extractEntry docs/api/Element.md
+344 silly gunzTarPerm extractEntry docs/api/HtmlDocument.md
+345 silly gunzTarPerm extractEntry docs/api/Libxmljs.md
+346 silly gunzTarPerm extractEntry docs/api/Namespace.md
+347 silly gunzTarPerm extractEntry docs/api/SaxParser.md
+348 silly gunzTarPerm extractEntry docs/api/SaxPushParser.md
+349 silly gunzTarPerm extractEntry docs/api/SyntaxError.md
+350 silly gunzTarPerm extractEntry docs/api/XmlDocument.md
+351 silly gunzTarPerm extractEntry .travis.yml
+352 silly gunzTarPerm extractEntry Makefile
+353 silly gunzTarPerm extractEntry examples/cdata.js
+354 silly gunzTarPerm extractEntry binding.gyp
+355 silly gunzTarPerm extractEntry lib/element.js
+356 silly gunzTarPerm extractEntry lib/sax_parser.js
+357 silly gunzTarPerm extractEntry lib/bindings.js
+358 silly gunzTarPerm extractEntry lib/document.js
+359 silly gunzTarPerm extractEntry wscript
+360 silly lockFile 53419e76-3681-0-05740080703981221-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/package
+361 silly lockFile 53419e76-3681-0-05740080703981221-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/package
+362 silly lockFile c2df862f-3681-0-05740080703981221-tmp-tgz tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/tmp.tgz
+363 silly lockFile c2df862f-3681-0-05740080703981221-tmp-tgz tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/tmp.tgz
+364 verbose tar pack [ '/Users/tyronne/.npm/libxmljs/0.8.1/package.tgz',
+364 verbose tar pack   '/var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/package' ]
+365 verbose tarball /Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+366 verbose folder /var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/package
+367 silly lockFile 53419e76-3681-0-05740080703981221-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/package
+368 verbose lock tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/package /Users/tyronne/.npm/53419e76-3681-0-05740080703981221-package.lock
+369 silly lockFile 93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+370 verbose lock tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz /Users/tyronne/.npm/93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz.lock
+371 silly lockFile 53419e76-3681-0-05740080703981221-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/package
+372 silly lockFile 53419e76-3681-0-05740080703981221-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077833681-0.05740080703981221/package
+373 silly lockFile 93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+374 silly lockFile 93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+375 silly lockFile c44f5262-ronne-npm-libxmljs-0-8-1-package /Users/tyronne/.npm/libxmljs/0.8.1/package
+376 verbose lock /Users/tyronne/.npm/libxmljs/0.8.1/package /Users/tyronne/.npm/c44f5262-ronne-npm-libxmljs-0-8-1-package.lock
+377 silly lockFile c44f5262-ronne-npm-libxmljs-0-8-1-package /Users/tyronne/.npm/libxmljs/0.8.1/package
+378 silly lockFile c44f5262-ronne-npm-libxmljs-0-8-1-package /Users/tyronne/.npm/libxmljs/0.8.1/package
+379 verbose tar unpack /Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+380 silly lockFile 1eac5ad3-ronne-npm-libxmljs-0-8-1-package tar:///Users/tyronne/.npm/libxmljs/0.8.1/package
+381 verbose lock tar:///Users/tyronne/.npm/libxmljs/0.8.1/package /Users/tyronne/.npm/1eac5ad3-ronne-npm-libxmljs-0-8-1-package.lock
+382 silly lockFile 93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+383 verbose lock tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz /Users/tyronne/.npm/93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz.lock
+384 silly gunzTarPerm modes [ '755', '644' ]
+385 silly gunzTarPerm extractEntry package.json
+386 silly gunzTarPerm extractEntry .npmignore
+387 silly gunzTarPerm extractEntry README.md
+388 silly gunzTarPerm extractEntry LICENSE
+389 silly gunzTarPerm extractEntry index.js
+390 silly gunzTarPerm extractEntry binding.gyp
+391 silly gunzTarPerm extractEntry docs/Home.md
+392 silly gunzTarPerm extractEntry docs/Migrating-from-0.4.x-to-0.5.0.md
+393 silly gunzTarPerm extractEntry docs/_Sidebar.md
+394 silly gunzTarPerm extractEntry docs/api/Attribute.md
+395 silly gunzTarPerm extractEntry docs/api/Element.md
+396 silly gunzTarPerm extractEntry docs/api/HtmlDocument.md
+397 silly gunzTarPerm extractEntry docs/api/Libxmljs.md
+398 silly gunzTarPerm extractEntry docs/api/Namespace.md
+399 silly gunzTarPerm extractEntry docs/api/SaxParser.md
+400 silly gunzTarPerm extractEntry docs/api/SaxPushParser.md
+401 silly gunzTarPerm extractEntry docs/api/SyntaxError.md
+402 silly gunzTarPerm extractEntry docs/api/XmlDocument.md
+403 silly gunzTarPerm extractEntry .travis.yml
+404 silly gunzTarPerm extractEntry Makefile
+405 silly gunzTarPerm extractEntry lib/bindings.js
+406 silly gunzTarPerm extractEntry lib/document.js
+407 silly gunzTarPerm extractEntry lib/element.js
+408 silly gunzTarPerm extractEntry lib/sax_parser.js
+409 silly gunzTarPerm extractEntry wscript
+410 silly gunzTarPerm extractEntry src/xml_namespace.cc
+411 silly gunzTarPerm extractEntry src/html_document.cc
+412 silly gunzTarPerm extractEntry src/libxmljs.cc
+413 silly gunzTarPerm extractEntry src/libxmljs.h
+414 silly gunzTarPerm extractEntry src/xml_attribute.cc
+415 silly gunzTarPerm extractEntry src/xml_attribute.h
+416 silly gunzTarPerm extractEntry src/xml_document.cc
+417 silly gunzTarPerm extractEntry src/xml_document.h
+418 silly gunzTarPerm extractEntry src/xml_element.cc
+419 silly gunzTarPerm extractEntry src/xml_element.h
+420 silly gunzTarPerm extractEntry src/html_document.h
+421 silly gunzTarPerm extractEntry src/xml_namespace.h
+422 silly gunzTarPerm extractEntry src/xml_node.cc
+423 silly gunzTarPerm extractEntry src/xml_node.h
+424 silly gunzTarPerm extractEntry src/xml_sax_parser.cc
+425 silly gunzTarPerm extractEntry src/xml_sax_parser.h
+426 silly gunzTarPerm extractEntry src/xml_syntax_error.cc
+427 silly gunzTarPerm extractEntry src/xml_syntax_error.h
+428 silly gunzTarPerm extractEntry src/xml_xpath_context.cc
+429 silly gunzTarPerm extractEntry src/xml_xpath_context.h
+430 silly gunzTarPerm extractEntry test/attribute.js
+431 silly gunzTarPerm extractEntry test/xml_parser.js
+432 silly gunzTarPerm extractEntry test/html_parser.js
+433 silly gunzTarPerm extractEntry test/main.js
+434 silly gunzTarPerm extractEntry test/element.js
+435 silly gunzTarPerm extractEntry test/document.js
+436 silly gunzTarPerm extractEntry test/ref_integrity.js
+437 silly gunzTarPerm extractEntry test/searching.js
+438 silly gunzTarPerm extractEntry test/text_node.js
+439 silly gunzTarPerm extractEntry test/traversal.js
+440 silly gunzTarPerm extractEntry test/namespace.js
+441 silly gunzTarPerm extractEntry test/xml_sax_parser.js
+442 silly gunzTarPerm extractEntry test/node_attributes.js
+443 silly gunzTarPerm extractEntry test/fixtures/errors/comment.xml
+444 silly gunzTarPerm extractEntry test/fixtures/parser-utf16.xml
+445 silly gunzTarPerm extractEntry test/fixtures/parser.euc_jp.html
+446 silly gunzTarPerm extractEntry test/fixtures/parser.html
+447 silly gunzTarPerm extractEntry test/fixtures/parser.xml
+448 silly gunzTarPerm extractEntry test/fixtures/sax_parser.xml
+449 silly gunzTarPerm extractEntry test/fixtures/warnings/amp.html
+450 silly gunzTarPerm extractEntry test/fixtures/warnings/ent9.xml
+451 silly gunzTarPerm extractEntry vendor/libxml/schematron.c
+452 silly gunzTarPerm extractEntry vendor/libxml/DOCBparser.c
+453 silly gunzTarPerm extractEntry vendor/libxml/HTMLtree.c
+454 silly gunzTarPerm extractEntry vendor/libxml/SAX.c
+455 silly gunzTarPerm extractEntry vendor/libxml/SAX2.c
+456 silly gunzTarPerm extractEntry vendor/libxml/buf.c
+457 silly gunzTarPerm extractEntry vendor/libxml/buf.h
+458 silly gunzTarPerm extractEntry vendor/libxml/c14n.c
+459 silly gunzTarPerm extractEntry vendor/libxml/catalog.c
+460 silly gunzTarPerm extractEntry vendor/libxml/chvalid.c
+461 silly gunzTarPerm extractEntry vendor/libxml/config.h
+462 silly gunzTarPerm extractEntry vendor/libxml/debugXML.c
+463 silly gunzTarPerm extractEntry vendor/libxml/dict.c
+464 silly gunzTarPerm extractEntry vendor/libxml/elfgcchack.h
+465 silly gunzTarPerm extractEntry vendor/libxml/enc.h
+466 silly gunzTarPerm extractEntry vendor/libxml/encoding.c
+467 silly gunzTarPerm extractEntry vendor/libxml/entities.c
+468 silly gunzTarPerm extractEntry vendor/libxml/error.c
+469 silly gunzTarPerm extractEntry vendor/libxml/globals.c
+470 silly gunzTarPerm extractEntry vendor/libxml/hash.c
+471 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/schematron.h
+472 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/DOCBparser.h
+473 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/HTMLtree.h
+474 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/Makefile
+475 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/Makefile.am
+476 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/Makefile.in
+477 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/SAX.h
+478 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/SAX2.h
+479 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/c14n.h
+480 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/catalog.h
+481 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/chvalid.h
+482 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/debugXML.h
+483 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/dict.h
+484 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/encoding.h
+485 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/entities.h
+486 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/globals.h
+487 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/hash.h
+488 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/list.h
+489 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/nanoftp.h
+490 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/nanohttp.h
+491 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/parser.h
+492 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/parserInternals.h
+493 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/pattern.h
+494 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/relaxng.h
+495 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/schemasInternals.h
+496 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/HTMLparser.h
+497 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/threads.h
+498 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/tree.h
+499 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/uri.h
+500 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/valid.h
+501 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xinclude.h
+502 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xlink.h
+503 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlIO.h
+504 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlautomata.h
+505 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlerror.h
+506 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlexports.h
+507 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlmemory.h
+508 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlmodule.h
+509 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlreader.h
+510 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlregexp.h
+511 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlsave.h
+512 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlschemas.h
+513 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlschemastypes.h
+514 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlstring.h
+515 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlunicode.h
+516 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlversion.h
+517 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlwriter.h
+518 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xpath.h
+519 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xpathInternals.h
+520 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xpointer.h
+521 silly gunzTarPerm extractEntry vendor/libxml/include/win32config.h
+522 silly gunzTarPerm extractEntry vendor/libxml/include/wsockcompat.h
+523 silly gunzTarPerm extractEntry vendor/libxml/legacy.c
+524 silly gunzTarPerm extractEntry vendor/libxml/libxml.gyp
+525 silly gunzTarPerm extractEntry vendor/libxml/libxml.h
+526 silly gunzTarPerm extractEntry vendor/libxml/list.c
+527 silly gunzTarPerm extractEntry vendor/libxml/nanoftp.c
+528 silly gunzTarPerm extractEntry vendor/libxml/nanohttp.c
+529 silly gunzTarPerm extractEntry vendor/libxml/parser.c
+530 silly gunzTarPerm extractEntry vendor/libxml/parserInternals.c
+531 silly gunzTarPerm extractEntry vendor/libxml/pattern.c
+532 silly gunzTarPerm extractEntry vendor/libxml/relaxng.c
+533 silly gunzTarPerm extractEntry vendor/libxml/runsuite.c
+534 silly gunzTarPerm extractEntry vendor/libxml/save.h
+535 silly gunzTarPerm extractEntry vendor/libxml/HTMLparser.c
+536 silly gunzTarPerm extractEntry vendor/libxml/threads.c
+537 silly gunzTarPerm extractEntry vendor/libxml/timsort.h
+538 silly gunzTarPerm extractEntry vendor/libxml/tree.c
+539 silly gunzTarPerm extractEntry vendor/libxml/trio.c
+540 silly gunzTarPerm extractEntry vendor/libxml/trio.h
+541 silly gunzTarPerm extractEntry vendor/libxml/triodef.h
+542 silly gunzTarPerm extractEntry vendor/libxml/trionan.c
+543 silly gunzTarPerm extractEntry vendor/libxml/trionan.h
+544 silly gunzTarPerm extractEntry vendor/libxml/triop.h
+545 silly gunzTarPerm extractEntry vendor/libxml/triostr.c
+546 silly gunzTarPerm extractEntry vendor/libxml/triostr.h
+547 silly gunzTarPerm extractEntry vendor/libxml/uri.c
+548 silly gunzTarPerm extractEntry vendor/libxml/valid.c
+549 silly gunzTarPerm extractEntry vendor/libxml/xinclude.c
+550 silly gunzTarPerm extractEntry vendor/libxml/xlink.c
+551 silly gunzTarPerm extractEntry vendor/libxml/xmlIO.c
+552 silly gunzTarPerm extractEntry vendor/libxml/xmlcatalog.c
+553 silly gunzTarPerm extractEntry vendor/libxml/xmllint.c
+554 silly gunzTarPerm extractEntry vendor/libxml/xmlmemory.c
+555 silly gunzTarPerm extractEntry vendor/libxml/xmlmodule.c
+556 silly gunzTarPerm extractEntry vendor/libxml/xmlreader.c
+557 silly gunzTarPerm extractEntry vendor/libxml/xmlregexp.c
+558 silly gunzTarPerm extractEntry vendor/libxml/xmlsave.c
+559 silly gunzTarPerm extractEntry vendor/libxml/xmlschemas.c
+560 silly gunzTarPerm extractEntry vendor/libxml/xmlschemastypes.c
+561 silly gunzTarPerm extractEntry vendor/libxml/xmlstring.c
+562 silly gunzTarPerm extractEntry vendor/libxml/xmlunicode.c
+563 silly gunzTarPerm extractEntry vendor/libxml/xmlwriter.c
+564 silly gunzTarPerm extractEntry vendor/libxml/xpath.c
+565 silly gunzTarPerm extractEntry vendor/libxml/xpointer.c
+566 silly gunzTarPerm extractEntry vendor/libxml/xzlib.c
+567 silly gunzTarPerm extractEntry vendor/libxml/xzlib.h
+568 silly gunzTarPerm extractEntry examples/cdata.js
+569 silly lockFile 1eac5ad3-ronne-npm-libxmljs-0-8-1-package tar:///Users/tyronne/.npm/libxmljs/0.8.1/package
+570 silly lockFile 1eac5ad3-ronne-npm-libxmljs-0-8-1-package tar:///Users/tyronne/.npm/libxmljs/0.8.1/package
+571 silly lockFile 93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+572 silly lockFile 93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+573 verbose chmod /Users/tyronne/.npm/libxmljs/0.8.1/package.tgz 644
+574 verbose chown /Users/tyronne/.npm/libxmljs/0.8.1/package.tgz [ 501, 20 ]
+575 silly lockFile a0ffbad7--org-libxmljs-libxmljs-0-8-1-tgz https://registry.npmjs.org/libxmljs/-/libxmljs-0.8.1.tgz
+576 silly lockFile a0ffbad7--org-libxmljs-libxmljs-0-8-1-tgz https://registry.npmjs.org/libxmljs/-/libxmljs-0.8.1.tgz
+577 silly lockFile ef62991d-libxmljs-0-8-1 libxmljs@0.8.1
+578 silly lockFile ef62991d-libxmljs-0-8-1 libxmljs@0.8.1
+579 silly lockFile b43e3ce7-libxmljs-0-8-1 libxmljs@~0.8.1
+580 silly lockFile b43e3ce7-libxmljs-0-8-1 libxmljs@~0.8.1
+581 silly resolved [ { name: 'libxmljs',
+581 silly resolved     author: { name: 'Marco Rogers - http://github.com/polotek' },
+581 silly resolved     contributors: [ [Object] ],
+581 silly resolved     description: 'libxml bindings for v8 javascript engine',
+581 silly resolved     version: '0.8.1',
+581 silly resolved     scripts:
+581 silly resolved      { test: 'node --expose_gc ./node_modules/nodeunit/bin/nodeunit test',
+581 silly resolved        install: 'node-gyp rebuild' },
+581 silly resolved     repository: { type: 'git', url: 'http://github.com/polotek/libxmljs.git' },
+581 silly resolved     bugs: { url: 'http://github.com/polotek/libxmljs/issues' },
+581 silly resolved     main: './index',
+581 silly resolved     engines: { node: '>=0.4.7' },
+581 silly resolved     dependencies: { bindings: '1.0.0' },
+581 silly resolved     devDependencies: { nodeunit: '*' },
+581 silly resolved     gypfile: true,
+581 silly resolved     readme: '# Libxmljs\n[![Build Status](https://secure.travis-ci.org/polotek/libxmljs.png?branch=master)](http://travis-ci.org/polotek/libxmljs)\n\nLibXML bindings for [node.js](http://nodejs.org/)\n\n```javascript\nvar libxmljs = require("libxmljs");\nvar xml =  \'<?xml version="1.0" encoding="UTF-8"?>\' +\n           \'<root>\' +\n               \'<child foo="bar">\' +\n                   \'<grandchild baz="fizbuzz">grandchild content</grandchild>\' +\n               \'</child>\' +\n               \'<sibling>with content!</sibling>\' +\n           \'</root>\';\n\nvar xmlDoc = libxmljs.parseXml(xml);\n\n// xpath queries\nvar gchild = xmlDoc.get(\'//grandchild\');\n\nconsole.log(gchild.text());  // prints "grandchild content"\n\nvar children = xmlDoc.root().childNodes();\nvar child = children[0];\n\nconsole.log(child.attr(\'foo\').value()); // prints "bar"\n```\n\n## Support\n\n* Docs - [http://github.com/polotek/libxmljs/wiki](http://github.com/polotek/libxmljs/wiki)\n* Mailing list - [http://groups.google.com/group/libxmljs](http://groups.google.com/group/libxmljs)\n\n## API and Examples\n\nCheck out the wiki [http://github.com/polotek/libxmljs/wiki](http://github.com/polotek/libxmljs/wiki).\n\nSee the [examples](https://github.com/polotek/libxmljs/tree/master/examples) folder.\n\n## Installation via [npm](https://npmjs.org)\n\n```shell\nnpm install libxmljs\n```\n\n### Requirements\n\nMake sure you have met the requirements for [node-gyp](https://github.com/TooTallNate/node-gyp#installation). You DO NOT need to manually install node-gyp; it comes bundled with node.\n\n',
+581 silly resolved     readmeFilename: 'README.md',
+581 silly resolved     homepage: 'https://github.com/polotek/libxmljs',
+581 silly resolved     _id: 'libxmljs@0.8.1',
+581 silly resolved     dist: { shasum: 'd05ec0f2494631affd301ee8285a8fd7d73643e3' },
+581 silly resolved     _from: 'libxmljs@~0.8.1',
+581 silly resolved     _resolved: 'https://registry.npmjs.org/libxmljs/-/libxmljs-0.8.1.tgz' } ]
+582 info install libxmljs@0.8.1 into /Users/tyronne/code/otav2/server/node_modules/plist-native
+583 info installOne libxmljs@0.8.1
+584 info /Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs unbuild
+585 verbose tar unpack /Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+586 silly lockFile c8856453-ist-native-node-modules-libxmljs tar:///Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs
+587 verbose lock tar:///Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs /Users/tyronne/.npm/c8856453-ist-native-node-modules-libxmljs.lock
+588 silly lockFile 93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+589 verbose lock tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz /Users/tyronne/.npm/93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz.lock
+590 silly gunzTarPerm modes [ '755', '644' ]
+591 silly gunzTarPerm extractEntry package.json
+592 silly gunzTarPerm extractEntry .npmignore
+593 silly gunzTarPerm extractEntry README.md
+594 silly gunzTarPerm extractEntry LICENSE
+595 silly gunzTarPerm extractEntry index.js
+596 silly gunzTarPerm extractEntry binding.gyp
+597 silly gunzTarPerm extractEntry docs/Home.md
+598 silly gunzTarPerm extractEntry docs/Migrating-from-0.4.x-to-0.5.0.md
+599 silly gunzTarPerm extractEntry docs/_Sidebar.md
+600 silly gunzTarPerm extractEntry docs/api/Attribute.md
+601 silly gunzTarPerm extractEntry docs/api/Element.md
+602 silly gunzTarPerm extractEntry docs/api/HtmlDocument.md
+603 silly gunzTarPerm extractEntry docs/api/Libxmljs.md
+604 silly gunzTarPerm extractEntry docs/api/Namespace.md
+605 silly gunzTarPerm extractEntry docs/api/SaxParser.md
+606 silly gunzTarPerm extractEntry docs/api/SaxPushParser.md
+607 silly gunzTarPerm extractEntry docs/api/SyntaxError.md
+608 silly gunzTarPerm extractEntry docs/api/XmlDocument.md
+609 silly gunzTarPerm extractEntry .travis.yml
+610 silly gunzTarPerm extractEntry Makefile
+611 silly gunzTarPerm extractEntry lib/bindings.js
+612 silly gunzTarPerm extractEntry lib/document.js
+613 silly gunzTarPerm extractEntry lib/element.js
+614 silly gunzTarPerm extractEntry lib/sax_parser.js
+615 silly gunzTarPerm extractEntry wscript
+616 silly gunzTarPerm extractEntry src/xml_namespace.cc
+617 silly gunzTarPerm extractEntry src/html_document.cc
+618 silly gunzTarPerm extractEntry src/libxmljs.cc
+619 silly gunzTarPerm extractEntry src/libxmljs.h
+620 silly gunzTarPerm extractEntry src/xml_attribute.cc
+621 silly gunzTarPerm extractEntry src/xml_attribute.h
+622 silly gunzTarPerm extractEntry src/xml_document.cc
+623 silly gunzTarPerm extractEntry src/xml_document.h
+624 silly gunzTarPerm extractEntry src/xml_element.cc
+625 silly gunzTarPerm extractEntry src/xml_element.h
+626 silly gunzTarPerm extractEntry src/html_document.h
+627 silly gunzTarPerm extractEntry src/xml_namespace.h
+628 silly gunzTarPerm extractEntry src/xml_node.cc
+629 silly gunzTarPerm extractEntry src/xml_node.h
+630 silly gunzTarPerm extractEntry src/xml_sax_parser.cc
+631 silly gunzTarPerm extractEntry src/xml_sax_parser.h
+632 silly gunzTarPerm extractEntry src/xml_syntax_error.cc
+633 silly gunzTarPerm extractEntry src/xml_syntax_error.h
+634 silly gunzTarPerm extractEntry src/xml_xpath_context.cc
+635 silly gunzTarPerm extractEntry src/xml_xpath_context.h
+636 silly gunzTarPerm extractEntry test/attribute.js
+637 silly gunzTarPerm extractEntry test/xml_parser.js
+638 silly gunzTarPerm extractEntry test/html_parser.js
+639 silly gunzTarPerm extractEntry test/main.js
+640 silly gunzTarPerm extractEntry test/element.js
+641 silly gunzTarPerm extractEntry test/document.js
+642 silly gunzTarPerm extractEntry test/ref_integrity.js
+643 silly gunzTarPerm extractEntry test/searching.js
+644 silly gunzTarPerm extractEntry test/text_node.js
+645 silly gunzTarPerm extractEntry test/traversal.js
+646 silly gunzTarPerm extractEntry test/namespace.js
+647 silly gunzTarPerm extractEntry test/xml_sax_parser.js
+648 silly gunzTarPerm extractEntry test/node_attributes.js
+649 silly gunzTarPerm extractEntry test/fixtures/errors/comment.xml
+650 silly gunzTarPerm extractEntry test/fixtures/parser-utf16.xml
+651 silly gunzTarPerm extractEntry test/fixtures/parser.euc_jp.html
+652 silly gunzTarPerm extractEntry test/fixtures/parser.html
+653 silly gunzTarPerm extractEntry test/fixtures/parser.xml
+654 silly gunzTarPerm extractEntry test/fixtures/sax_parser.xml
+655 silly gunzTarPerm extractEntry test/fixtures/warnings/amp.html
+656 silly gunzTarPerm extractEntry test/fixtures/warnings/ent9.xml
+657 silly gunzTarPerm extractEntry vendor/libxml/schematron.c
+658 silly gunzTarPerm extractEntry vendor/libxml/DOCBparser.c
+659 silly gunzTarPerm extractEntry vendor/libxml/HTMLtree.c
+660 silly gunzTarPerm extractEntry vendor/libxml/SAX.c
+661 silly gunzTarPerm extractEntry vendor/libxml/SAX2.c
+662 silly gunzTarPerm extractEntry vendor/libxml/buf.c
+663 silly gunzTarPerm extractEntry vendor/libxml/buf.h
+664 silly gunzTarPerm extractEntry vendor/libxml/c14n.c
+665 silly gunzTarPerm extractEntry vendor/libxml/catalog.c
+666 silly gunzTarPerm extractEntry vendor/libxml/chvalid.c
+667 silly gunzTarPerm extractEntry vendor/libxml/config.h
+668 silly gunzTarPerm extractEntry vendor/libxml/debugXML.c
+669 silly gunzTarPerm extractEntry vendor/libxml/dict.c
+670 silly gunzTarPerm extractEntry vendor/libxml/elfgcchack.h
+671 silly gunzTarPerm extractEntry vendor/libxml/enc.h
+672 silly gunzTarPerm extractEntry vendor/libxml/encoding.c
+673 silly gunzTarPerm extractEntry vendor/libxml/entities.c
+674 silly gunzTarPerm extractEntry vendor/libxml/error.c
+675 silly gunzTarPerm extractEntry vendor/libxml/globals.c
+676 silly gunzTarPerm extractEntry vendor/libxml/hash.c
+677 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/schematron.h
+678 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/DOCBparser.h
+679 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/HTMLtree.h
+680 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/Makefile
+681 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/Makefile.am
+682 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/Makefile.in
+683 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/SAX.h
+684 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/SAX2.h
+685 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/c14n.h
+686 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/catalog.h
+687 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/chvalid.h
+688 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/debugXML.h
+689 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/dict.h
+690 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/encoding.h
+691 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/entities.h
+692 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/globals.h
+693 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/hash.h
+694 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/list.h
+695 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/nanoftp.h
+696 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/nanohttp.h
+697 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/parser.h
+698 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/parserInternals.h
+699 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/pattern.h
+700 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/relaxng.h
+701 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/schemasInternals.h
+702 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/HTMLparser.h
+703 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/threads.h
+704 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/tree.h
+705 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/uri.h
+706 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/valid.h
+707 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xinclude.h
+708 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xlink.h
+709 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlIO.h
+710 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlautomata.h
+711 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlerror.h
+712 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlexports.h
+713 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlmemory.h
+714 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlmodule.h
+715 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlreader.h
+716 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlregexp.h
+717 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlsave.h
+718 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlschemas.h
+719 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlschemastypes.h
+720 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlstring.h
+721 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlunicode.h
+722 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlversion.h
+723 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xmlwriter.h
+724 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xpath.h
+725 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xpathInternals.h
+726 silly gunzTarPerm extractEntry vendor/libxml/include/libxml/xpointer.h
+727 silly gunzTarPerm extractEntry vendor/libxml/include/win32config.h
+728 silly gunzTarPerm extractEntry vendor/libxml/include/wsockcompat.h
+729 silly gunzTarPerm extractEntry vendor/libxml/legacy.c
+730 silly gunzTarPerm extractEntry vendor/libxml/libxml.gyp
+731 silly gunzTarPerm extractEntry vendor/libxml/libxml.h
+732 silly gunzTarPerm extractEntry vendor/libxml/list.c
+733 silly gunzTarPerm extractEntry vendor/libxml/nanoftp.c
+734 silly gunzTarPerm extractEntry vendor/libxml/nanohttp.c
+735 silly gunzTarPerm extractEntry vendor/libxml/parser.c
+736 silly gunzTarPerm extractEntry vendor/libxml/parserInternals.c
+737 silly gunzTarPerm extractEntry vendor/libxml/pattern.c
+738 silly gunzTarPerm extractEntry vendor/libxml/relaxng.c
+739 silly gunzTarPerm extractEntry vendor/libxml/runsuite.c
+740 silly gunzTarPerm extractEntry vendor/libxml/save.h
+741 silly gunzTarPerm extractEntry vendor/libxml/HTMLparser.c
+742 silly gunzTarPerm extractEntry vendor/libxml/threads.c
+743 silly gunzTarPerm extractEntry vendor/libxml/timsort.h
+744 silly gunzTarPerm extractEntry vendor/libxml/tree.c
+745 silly gunzTarPerm extractEntry vendor/libxml/trio.c
+746 silly gunzTarPerm extractEntry vendor/libxml/trio.h
+747 silly gunzTarPerm extractEntry vendor/libxml/triodef.h
+748 silly gunzTarPerm extractEntry vendor/libxml/trionan.c
+749 silly gunzTarPerm extractEntry vendor/libxml/trionan.h
+750 silly gunzTarPerm extractEntry vendor/libxml/triop.h
+751 silly gunzTarPerm extractEntry vendor/libxml/triostr.c
+752 silly gunzTarPerm extractEntry vendor/libxml/triostr.h
+753 silly gunzTarPerm extractEntry vendor/libxml/uri.c
+754 silly gunzTarPerm extractEntry vendor/libxml/valid.c
+755 silly gunzTarPerm extractEntry vendor/libxml/xinclude.c
+756 silly gunzTarPerm extractEntry vendor/libxml/xlink.c
+757 silly gunzTarPerm extractEntry vendor/libxml/xmlIO.c
+758 silly gunzTarPerm extractEntry vendor/libxml/xmlcatalog.c
+759 silly gunzTarPerm extractEntry vendor/libxml/xmllint.c
+760 silly gunzTarPerm extractEntry vendor/libxml/xmlmemory.c
+761 silly gunzTarPerm extractEntry vendor/libxml/xmlmodule.c
+762 silly gunzTarPerm extractEntry vendor/libxml/xmlreader.c
+763 silly gunzTarPerm extractEntry vendor/libxml/xmlregexp.c
+764 silly gunzTarPerm extractEntry vendor/libxml/xmlsave.c
+765 silly gunzTarPerm extractEntry vendor/libxml/xmlschemas.c
+766 silly gunzTarPerm extractEntry vendor/libxml/xmlschemastypes.c
+767 silly gunzTarPerm extractEntry vendor/libxml/xmlstring.c
+768 silly gunzTarPerm extractEntry vendor/libxml/xmlunicode.c
+769 silly gunzTarPerm extractEntry vendor/libxml/xmlwriter.c
+770 silly gunzTarPerm extractEntry vendor/libxml/xpath.c
+771 silly gunzTarPerm extractEntry vendor/libxml/xpointer.c
+772 silly gunzTarPerm extractEntry vendor/libxml/xzlib.c
+773 silly gunzTarPerm extractEntry vendor/libxml/xzlib.h
+774 silly gunzTarPerm extractEntry examples/cdata.js
+775 silly lockFile c8856453-ist-native-node-modules-libxmljs tar:///Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs
+776 silly lockFile c8856453-ist-native-node-modules-libxmljs tar:///Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs
+777 silly lockFile 93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+778 silly lockFile 93b4e3ed-e-npm-libxmljs-0-8-1-package-tgz tar:///Users/tyronne/.npm/libxmljs/0.8.1/package.tgz
+779 info preinstall libxmljs@0.8.1
+780 verbose readDependencies using package.json deps
+781 verbose readDependencies using package.json deps
+782 verbose cache add [ 'bindings@1.0.0', null ]
+783 verbose cache add name=undefined spec="bindings@1.0.0" args=["bindings@1.0.0",null]
+784 verbose parsed url { protocol: null,
+784 verbose parsed url   slashes: null,
+784 verbose parsed url   auth: null,
+784 verbose parsed url   host: null,
+784 verbose parsed url   port: null,
+784 verbose parsed url   hostname: null,
+784 verbose parsed url   hash: null,
+784 verbose parsed url   search: null,
+784 verbose parsed url   query: null,
+784 verbose parsed url   pathname: 'bindings@1.0.0',
+784 verbose parsed url   path: 'bindings@1.0.0',
+784 verbose parsed url   href: 'bindings@1.0.0' }
+785 verbose cache add name="bindings" spec="1.0.0" args=["bindings","1.0.0"]
+786 verbose parsed url { protocol: null,
+786 verbose parsed url   slashes: null,
+786 verbose parsed url   auth: null,
+786 verbose parsed url   host: null,
+786 verbose parsed url   port: null,
+786 verbose parsed url   hostname: null,
+786 verbose parsed url   hash: null,
+786 verbose parsed url   search: null,
+786 verbose parsed url   query: null,
+786 verbose parsed url   pathname: '1.0.0',
+786 verbose parsed url   path: '1.0.0',
+786 verbose parsed url   href: '1.0.0' }
+787 verbose addNamed [ 'bindings', '1.0.0' ]
+788 verbose addNamed [ '1.0.0', '1.0.0' ]
+789 silly lockFile f01e5454-bindings-1-0-0 bindings@1.0.0
+790 verbose lock bindings@1.0.0 /Users/tyronne/.npm/f01e5454-bindings-1-0-0.lock
+791 verbose url raw bindings/1.0.0
+792 verbose url resolving [ 'https://registry.npmjs.org/', './bindings/1.0.0' ]
+793 verbose url resolved https://registry.npmjs.org/bindings/1.0.0
+794 info trying registry request attempt 1 at 14:24:04
+795 verbose etag "7XQRO94WP9TZJP1WZGUS3P5I4"
+796 http GET https://registry.npmjs.org/bindings/1.0.0
+797 http 200 https://registry.npmjs.org/bindings/1.0.0
+798 silly registry.get cb [ 200,
+798 silly registry.get   { vary: 'Accept',
+798 silly registry.get     server: 'CouchDB/1.3.1 (Erlang OTP/R15B03)',
+798 silly registry.get     etag: '"BTQVML3KXCPRN3AXBL0ADFZ2T"',
+798 silly registry.get     date: 'Sun, 15 Dec 2013 03:24:06 GMT',
+798 silly registry.get     'content-type': 'application/json',
+798 silly registry.get     'content-length': '4132' } ]
+799 silly lockFile ccf0f56a--org-bindings-bindings-1-0-0-tgz https://registry.npmjs.org/bindings/-/bindings-1.0.0.tgz
+800 verbose lock https://registry.npmjs.org/bindings/-/bindings-1.0.0.tgz /Users/tyronne/.npm/ccf0f56a--org-bindings-bindings-1-0-0-tgz.lock
+801 verbose addRemoteTarball [ 'https://registry.npmjs.org/bindings/-/bindings-1.0.0.tgz',
+801 verbose addRemoteTarball   'c3ccde60e9de6807c6f1aa4ef4843af29191c828' ]
+802 info retry fetch attempt 1 at 14:24:06
+803 verbose fetch to= /var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/tmp.tgz
+804 http GET https://registry.npmjs.org/bindings/-/bindings-1.0.0.tgz
+805 http 200 https://registry.npmjs.org/bindings/-/bindings-1.0.0.tgz
+806 verbose tar unpack /var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/tmp.tgz
+807 silly lockFile 1013d388-6408-0-04547963570803404-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/package
+808 verbose lock tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/package /Users/tyronne/.npm/1013d388-6408-0-04547963570803404-package.lock
+809 silly lockFile 24dcc4cf-6408-0-04547963570803404-tmp-tgz tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/tmp.tgz
+810 verbose lock tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/tmp.tgz /Users/tyronne/.npm/24dcc4cf-6408-0-04547963570803404-tmp-tgz.lock
+811 silly gunzTarPerm modes [ '755', '644' ]
+812 silly gunzTarPerm extractEntry package.json
+813 silly gunzTarPerm extractEntry README.md
+814 silly gunzTarPerm extractEntry bindings.js
+815 silly lockFile 1013d388-6408-0-04547963570803404-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/package
+816 silly lockFile 1013d388-6408-0-04547963570803404-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/package
+817 silly lockFile 24dcc4cf-6408-0-04547963570803404-tmp-tgz tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/tmp.tgz
+818 silly lockFile 24dcc4cf-6408-0-04547963570803404-tmp-tgz tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/tmp.tgz
+819 verbose tar pack [ '/Users/tyronne/.npm/bindings/1.0.0/package.tgz',
+819 verbose tar pack   '/var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/package' ]
+820 verbose tarball /Users/tyronne/.npm/bindings/1.0.0/package.tgz
+821 verbose folder /var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/package
+822 silly lockFile 1013d388-6408-0-04547963570803404-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/package
+823 verbose lock tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/package /Users/tyronne/.npm/1013d388-6408-0-04547963570803404-package.lock
+824 silly lockFile 29b9a176-e-npm-bindings-1-0-0-package-tgz tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz
+825 verbose lock tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz /Users/tyronne/.npm/29b9a176-e-npm-bindings-1-0-0-package-tgz.lock
+826 silly lockFile 1013d388-6408-0-04547963570803404-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/package
+827 silly lockFile 1013d388-6408-0-04547963570803404-package tar:///var/folders/_b/1_q791nd1jd3f9pqdvwn606m0000gn/T/npm-6252-XpIdU5Cx/1387077846408-0.04547963570803404/package
+828 silly lockFile 29b9a176-e-npm-bindings-1-0-0-package-tgz tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz
+829 silly lockFile 29b9a176-e-npm-bindings-1-0-0-package-tgz tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz
+830 silly lockFile c0cd69ad-ronne-npm-bindings-1-0-0-package /Users/tyronne/.npm/bindings/1.0.0/package
+831 verbose lock /Users/tyronne/.npm/bindings/1.0.0/package /Users/tyronne/.npm/c0cd69ad-ronne-npm-bindings-1-0-0-package.lock
+832 silly lockFile c0cd69ad-ronne-npm-bindings-1-0-0-package /Users/tyronne/.npm/bindings/1.0.0/package
+833 silly lockFile c0cd69ad-ronne-npm-bindings-1-0-0-package /Users/tyronne/.npm/bindings/1.0.0/package
+834 verbose tar unpack /Users/tyronne/.npm/bindings/1.0.0/package.tgz
+835 silly lockFile efd1d8df-ronne-npm-bindings-1-0-0-package tar:///Users/tyronne/.npm/bindings/1.0.0/package
+836 verbose lock tar:///Users/tyronne/.npm/bindings/1.0.0/package /Users/tyronne/.npm/efd1d8df-ronne-npm-bindings-1-0-0-package.lock
+837 silly lockFile 29b9a176-e-npm-bindings-1-0-0-package-tgz tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz
+838 verbose lock tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz /Users/tyronne/.npm/29b9a176-e-npm-bindings-1-0-0-package-tgz.lock
+839 silly gunzTarPerm modes [ '755', '644' ]
+840 silly gunzTarPerm extractEntry package.json
+841 silly gunzTarPerm extractEntry README.md
+842 silly gunzTarPerm extractEntry bindings.js
+843 silly lockFile efd1d8df-ronne-npm-bindings-1-0-0-package tar:///Users/tyronne/.npm/bindings/1.0.0/package
+844 silly lockFile efd1d8df-ronne-npm-bindings-1-0-0-package tar:///Users/tyronne/.npm/bindings/1.0.0/package
+845 silly lockFile 29b9a176-e-npm-bindings-1-0-0-package-tgz tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz
+846 silly lockFile 29b9a176-e-npm-bindings-1-0-0-package-tgz tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz
+847 verbose chmod /Users/tyronne/.npm/bindings/1.0.0/package.tgz 644
+848 verbose chown /Users/tyronne/.npm/bindings/1.0.0/package.tgz [ 501, 20 ]
+849 silly lockFile ccf0f56a--org-bindings-bindings-1-0-0-tgz https://registry.npmjs.org/bindings/-/bindings-1.0.0.tgz
+850 silly lockFile ccf0f56a--org-bindings-bindings-1-0-0-tgz https://registry.npmjs.org/bindings/-/bindings-1.0.0.tgz
+851 silly lockFile f01e5454-bindings-1-0-0 bindings@1.0.0
+852 silly lockFile f01e5454-bindings-1-0-0 bindings@1.0.0
+853 silly resolved [ { name: 'bindings',
+853 silly resolved     description: 'Helper module for loading your native module\'s .node file',
+853 silly resolved     keywords: [ 'native', 'addon', 'bindings', 'gyp', 'waf', 'c', 'c++' ],
+853 silly resolved     version: '1.0.0',
+853 silly resolved     author:
+853 silly resolved      { name: 'Nathan Rajlich',
+853 silly resolved        email: 'nathan@tootallnate.net',
+853 silly resolved        url: 'http://tootallnate.net' },
+853 silly resolved     repository:
+853 silly resolved      { type: 'git',
+853 silly resolved        url: 'git://github.com/TooTallNate/node-bindings.git' },
+853 silly resolved     main: './bindings.js',
+853 silly resolved     readme: 'node-bindings\n=============\n### Helper module for loading your native module\'s .node file\n\nThis is a helper module for authors of Node.js native addon modules.\nIt is basically the "swiss army knife" of `require()`ing your native module\'s\n`.node` file.\n\nThroughout the course of Node\'s native addon history, addons have ended up being\ncompiled in a variety of different places, depending on which build tool and which\nversion of node was used. To make matters worse, now the _gyp_ build tool can\nproduce either a _Release_ or _Debug_ build, each being built into different\nlocations.\n\nThis module checks _all_ the possible locations that a native addon would be built\nat, and returns the first one that loads successfully.\n\n\nInstallation\n------------\n\nInstall with `npm`:\n\n``` bash\n$ npm install bindings\n```\n\nOr add it to the `"dependencies"` section of your _package.json_ file.\n\n\nExample\n-------\n\n`require()`ing the proper bindings file for the current node version, platform\nand architecture is as simple as:\n\n``` js\nvar bindings = require(\'bindings\')(\'binding.node\')\n\n// Use your bindings defined in your C files\nbindings.your_c_function()\n```\n\n\nNice Error Output\n-----------------\n\nWhen the `.node` file could not be loaded, `node-bindings` throws an Error with\na nice error message telling you exactly what was tried. You can also check the\n`err.tries` Array property.\n\n```\nError: Could not load the bindings file. Tried:\n → /Users/nrajlich/ref/build/binding.node\n → /Users/nrajlich/ref/build/Debug/binding.node\n → /Users/nrajlich/ref/build/Release/binding.node\n → /Users/nrajlich/ref/out/Debug/binding.node\n → /Users/nrajlich/ref/Debug/binding.node\n → /Users/nrajlich/ref/out/Release/binding.node\n → /Users/nrajlich/ref/Release/binding.node\n → /Users/nrajlich/ref/build/default/binding.node\n → /Users/nrajlich/ref/compiled/0.8.2/darwin/x64/binding.node\n    at bindings (/Users/nrajlich/ref/node_modules/bindings/bindings.js:84:13)\n    at Object.<anonymous> (/Users/nrajlich/ref/lib/ref.js:5:47)\n    at Module._compile (module.js:449:26)\n    at Object.Module._extensions..js (module.js:467:10)\n    at Module.load (module.js:356:32)\n    at Function.Module._load (module.js:312:12)\n    ...\n```\n\n\nLicense\n-------\n\n(The MIT License)\n\nCopyright (c) 2012 Nathan Rajlich &lt;nathan@tootallnate.net&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\'Software\'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n',
+853 silly resolved     readmeFilename: 'README.md',
+853 silly resolved     bugs: { url: 'https://github.com/TooTallNate/node-bindings/issues' },
+853 silly resolved     homepage: 'https://github.com/TooTallNate/node-bindings',
+853 silly resolved     _id: 'bindings@1.0.0',
+853 silly resolved     dist: { shasum: 'c3ccde60e9de6807c6f1aa4ef4843af29191c828' },
+853 silly resolved     _from: 'bindings@1.0.0',
+853 silly resolved     _resolved: 'https://registry.npmjs.org/bindings/-/bindings-1.0.0.tgz' } ]
+854 info install bindings@1.0.0 into /Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs
+855 info installOne bindings@1.0.0
+856 info /Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs/node_modules/bindings unbuild
+857 verbose tar unpack /Users/tyronne/.npm/bindings/1.0.0/package.tgz
+858 silly lockFile 20c6e012-s-libxmljs-node-modules-bindings tar:///Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs/node_modules/bindings
+859 verbose lock tar:///Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs/node_modules/bindings /Users/tyronne/.npm/20c6e012-s-libxmljs-node-modules-bindings.lock
+860 silly lockFile 29b9a176-e-npm-bindings-1-0-0-package-tgz tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz
+861 verbose lock tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz /Users/tyronne/.npm/29b9a176-e-npm-bindings-1-0-0-package-tgz.lock
+862 silly gunzTarPerm modes [ '755', '644' ]
+863 silly gunzTarPerm extractEntry package.json
+864 silly gunzTarPerm extractEntry README.md
+865 silly gunzTarPerm extractEntry bindings.js
+866 silly lockFile 20c6e012-s-libxmljs-node-modules-bindings tar:///Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs/node_modules/bindings
+867 silly lockFile 20c6e012-s-libxmljs-node-modules-bindings tar:///Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs/node_modules/bindings
+868 silly lockFile 29b9a176-e-npm-bindings-1-0-0-package-tgz tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz
+869 silly lockFile 29b9a176-e-npm-bindings-1-0-0-package-tgz tar:///Users/tyronne/.npm/bindings/1.0.0/package.tgz
+870 info preinstall bindings@1.0.0
+871 verbose readDependencies using package.json deps
+872 verbose readDependencies using package.json deps
+873 silly resolved []
+874 verbose about to build /Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs/node_modules/bindings
+875 info build /Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs/node_modules/bindings
+876 verbose linkStuff [ false,
+876 verbose linkStuff   false,
+876 verbose linkStuff   false,
+876 verbose linkStuff   '/Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs/node_modules' ]
+877 info linkStuff bindings@1.0.0
+878 verbose linkBins bindings@1.0.0
+879 verbose linkMans bindings@1.0.0
+880 verbose rebuildBundles bindings@1.0.0
+881 info install bindings@1.0.0
+882 info postinstall bindings@1.0.0
+883 verbose about to build /Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs
+884 info build /Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs
+885 verbose linkStuff [ false,
+885 verbose linkStuff   false,
+885 verbose linkStuff   false,
+885 verbose linkStuff   '/Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules' ]
+886 info linkStuff libxmljs@0.8.1
+887 verbose linkBins libxmljs@0.8.1
+888 verbose linkMans libxmljs@0.8.1
+889 verbose rebuildBundles libxmljs@0.8.1
+890 verbose rebuildBundles [ 'bindings' ]
+891 info install libxmljs@0.8.1
+892 verbose unsafe-perm in lifecycle true
+893 info libxmljs@0.8.1 Failed to exec install script
+894 info /Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules/libxmljs unbuild
+895 info preuninstall libxmljs@0.8.1
+896 info uninstall libxmljs@0.8.1
+897 verbose false,/Users/tyronne/code/otav2/server/node_modules,/Users/tyronne/code/otav2/server/node_modules/plist-native/node_modules unbuild libxmljs@0.8.1
+898 info postuninstall libxmljs@0.8.1
+899 verbose about to build /Users/tyronne/code/otav2/server/node_modules/plist-native
+900 info /Users/tyronne/code/otav2/server/node_modules/plist-native unbuild
+901 info preuninstall plist-native@0.2.2
+902 info uninstall plist-native@0.2.2
+903 verbose true,/Users/tyronne/code/otav2/server/node_modules,/Users/tyronne/code/otav2/server/node_modules unbuild plist-native@0.2.2
+904 info postuninstall plist-native@0.2.2
+905 error libxmljs@0.8.1 install: `node-gyp rebuild`
+905 error Exit status 1
+906 error Failed at the libxmljs@0.8.1 install script.
+906 error This is most likely a problem with the libxmljs package,
+906 error not with npm itself.
+906 error Tell the author that this fails on your system:
+906 error     node-gyp rebuild
+906 error You can get their info via:
+906 error     npm owner ls libxmljs
+906 error There is likely additional logging output above.
+907 error System Darwin 13.0.0
+908 error command "/Users/tyronne/.nvm/v0.11.9/bin/node" "/Users/tyronne/.nvm/v0.11.9/bin/npm" "install" "plist-native" "--save"
+909 error cwd /Users/tyronne/code/otav2/server
+910 error node -v v0.11.9
+911 error npm -v 1.3.15
+912 error code ELIFECYCLE
+913 verbose exit [ 1, true ]
