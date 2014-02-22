@@ -71,19 +71,19 @@ qx.Class.define("ota.page.Projects",
 
       // Create a new list instance
       var list = this.__list = new qx.ui.mobile.list.List();
-      var dateFormat = new qx.util.format.DateFormat();
-      var types = qx.core.Init.getApplication().getTypes();
+      //var dateFormat = new qx.util.format.DateFormat();
+      //var types = qx.core.Init.getApplication().getTypes();
       // Use a delegate to configure each single list item
       list.setDelegate({
         configureItem : function(item, value, row) {
           // set the data of the model
           item.setTitle(value.getName());
 //          item.setImage("resource/ota/favicon.png"); 
-          item.setImage("resource/ota/internet.png");        
-          item.setSubtitle(types.getItem(value.getType()));
+          //item.setImage("resource/ota/internet.png");        
+          //item.setSubtitle(types.getItem(value.getType()));
           //item.setImage(value.getUser().getProfile_image_url());
           // we have more data to display, show an arrow
-          item.setShowArrow(true);
+          //item.setShowArrow(true);
 //
         }
       });

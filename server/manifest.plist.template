@@ -13,6 +13,13 @@
                     <key>url</key>
                     <string>{{url}}</string>
                 </dict>
+                <dict>
+                    <key>kind</key>
+                    <string>display-image</string>
+                    <key>url</key>
+                    <!--  icon  -->
+                    <string>http://nybok.de/viewer/apple-adhoc-57.png</string>
+                </dict>
             </array>
             <key>metadata</key>
             <dict>
@@ -23,7 +30,7 @@
                 <key>kind</key>
                 <string>software</string>
                 <key>title</key>
-                <string>{{CFBundleDisplayName}}</string>
+                <string>{{displayName}}</string>
             </dict>
         </dict>
     </array>

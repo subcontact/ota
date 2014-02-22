@@ -1,6 +1,7 @@
 "use strict";
 var otaconsts = function() {
   var self = this;
+  const ATTACH_TST = /attachment;/i;
   const BUILD_DIR = "builds";
   const BUILD_LIST_PATTERN = /^\d{14}$/i;
   const iOS_FILE  = /\.ipa$/i;
@@ -39,7 +40,11 @@ var otaconsts = function() {
   const IOS_TEAM    = 'TeamName';
   const IOS_ICON    = 'CFBundleIconFile';
 
+  //const HOST_SVR    = 'http://192.168.0.3:8080';
+  const HOST_SVR    = process.argv.length > 3 ? process.argv[3] : 'http://192.168.0.3:8080';
+
   // must be a better way to export these!
+  this.ATTACH_TST           = ATTACH_TST;
   this.BUILD_DIR            = BUILD_DIR;
   this.BUILD_LIST_PATTERN   = BUILD_LIST_PATTERN;
   this.iOS_FILE             = iOS_FILE;
@@ -62,6 +67,7 @@ var otaconsts = function() {
   this.IOS_ID               = IOS_ID;
   this.IOS_TEAM             = IOS_TEAM;
   this.IOS_ICON             = IOS_ICON;
+  this.HOST_SVR             = HOST_SVR;
 
   this.PARSE_BUILD_DIR = [
     {

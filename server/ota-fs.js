@@ -255,7 +255,7 @@ var otafs = function() {
     results[otaconsts.IOS_ID]       = data[otaconsts.IOS_ID];
     results[otaconsts.IOS_TEAM]     = data[otaconsts.IOS_TEAM];
     results[otaconsts.IOS_ICON]     = data[otaconsts.IOS_ICON];
-    results['url'] = 'http://192.168.0.3:8080' + encodeURI(self.removeRootPath(file));
+    results['url'] = otaconsts.HOST_SVR + encodeURI(self.removeRootPath(file));
     results['installerUrl'] = encodeURI(self.removeRootPath(file) + '/installer');
 
     console.log(file);

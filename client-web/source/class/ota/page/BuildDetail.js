@@ -69,13 +69,14 @@ qx.Class.define("ota.page.BuildDetail",
   {
 
    __form : null,
+   ATTACH_TST : /attachment;/i,
 
     // overridden
     _initialize : function()
     {
       this.base(arguments);
 
-      this.debug(qx.dev.Debug.debugProperties(this.getBuildData()));
+      //this.debug(qx.dev.Debug.debugProperties(this.getBuildData()));
 
       this.__form = this.__createForm();
 
@@ -84,22 +85,49 @@ qx.Class.define("ota.page.BuildDetail",
       this.__installerButton = new qx.ui.mobile.form.Button("Install");
       this.__installerButton.addListener("tap", function() {
         var url = "itms-services://?action=download-manifest&url=" + "http://192.168.0.3:8080/projects/" + this.getProjectId() + '/builds/' + this.getBuildId() + '/installer';
-        console.log(url);
+        this.debug(url);
         document.location = url;
       }, this);
       this.getContent().add(this.__installerButton);
 
       this.__downloadButton = new qx.ui.mobile.form.Button("Download");
       this.__downloadButton.addListener("tap", function() {
-        var req = new qx.io.request.Xhr("/projects/" + this.getProjectId() + '/builds/' + this.getBuildId() + '/download');
+        var url = "/projects/" + this.getProjectId() + '/builds/' + this.getBuildId() + '/download';
+        //this.debug(url);
+        var req = new qx.io.request.Xhr(url);
 
+        // checking that the url is valid first before throwing it in front of document.location
+        // TODO - load this inside an iframe to remove any other risk of error which would unload the app.
         req.addListener("success", function(e) {
           var req = e.getTarget();
 
           // Response parsed according to the server's
           // response content type, e.g. JSON
           var type = req.getResponseContentType();
-          console.log(type);
+          var attachment = req.getResponseHeader('Content-Disposition');
+          this.debug("success");
+          //this.debug(type);
+          //this.debug(attachment);
+
+          if ((type === "application/octet-stream") && 
+            (this.ATTACH_TST.test(attachment)))
+            {
+              this.debug('file download success');
+              document.location = url;
+            } else {
+
+              this.debug('file download failed');
+            }
+          
+        }, this);
+
+        req.addListener("fail", function(e) {
+          var req = e.getTarget();
+
+          // Response parsed according to the server's
+          // response content type, e.g. JSON
+          
+          this.debug("request failed");
         }, this);
 
         // Send request
@@ -118,7 +146,7 @@ qx.Class.define("ota.page.BuildDetail",
           // Response parsed according to the server's
           // response content type, e.g. JSON
           var type = req.getResponseContentType();
-          console.log(type);
+          this.debug(type);
         }, this);
 
         // Send request
