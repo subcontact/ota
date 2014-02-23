@@ -71,6 +71,54 @@ qx.Class.define("ota.page.BuildDetail",
    __form : null,
    ATTACH_TST : /attachment;/i,
 
+    // checking that the url is valid first before throwing it in front of document.location
+    // TODO - load this inside an iframe to remove any other risk of error which would unload the app.
+    __isFileDownloadable : function(url)
+    {
+      var self = this;
+      var req = new qx.io.request.Xhr(url);
+      req.setMethod("HEAD");
+      return new Promise(function (resolve, reject) {
+        req.addListener("success", function(e) {
+          var req = e.getTarget();
+          if ((req.getResponseContentType() === "application/octet-stream") && 
+              (self.ATTACH_TST.test(req.getResponseHeader('Content-Disposition'))))
+          {
+            resolve(url);
+          } else {
+            reject(new Error('file is not downloadable or not binary'));
+          }
+        }, self);
+        req.addListener("fail", function(e) {
+          reject(new Error('network error'));
+        }, self);
+        req.send();
+      });
+    },
+    // checking that the url is valid first before throwing it in front of document.location
+    // TODO - load this inside an iframe to remove any other risk of error which would unload the app.
+    __isFileReachable : function(url)
+    {
+      var self = this;
+      var req = new qx.io.request.Xhr(url);
+      req.setMethod("HEAD");
+      return new Promise(function (resolve, reject) {
+        req.addListener("success", function(e) {
+          var req = e.getTarget();
+          if (req.getResponseContentType() === "application/octet-stream") 
+          {
+            resolve(url);
+          } else {
+            reject(new Error('file is not binary'));
+          }
+        }, self);
+        req.addListener("fail", function(e) {
+          reject(new Error('network error'));
+        }, self);
+        req.send();
+      });
+    },
+
     // overridden
     _initialize : function()
     {
@@ -93,64 +141,27 @@ qx.Class.define("ota.page.BuildDetail",
       this.__downloadButton = new qx.ui.mobile.form.Button("Download");
       this.__downloadButton.addListener("tap", function() {
         var url = "/projects/" + this.getProjectId() + '/builds/' + this.getBuildId() + '/download';
-        //this.debug(url);
-        var req = new qx.io.request.Xhr(url);
-
-        // checking that the url is valid first before throwing it in front of document.location
-        // TODO - load this inside an iframe to remove any other risk of error which would unload the app.
-        req.addListener("success", function(e) {
-          var req = e.getTarget();
-
-          // Response parsed according to the server's
-          // response content type, e.g. JSON
-          var type = req.getResponseContentType();
-          var attachment = req.getResponseHeader('Content-Disposition');
-          this.debug("success");
-          //this.debug(type);
-          //this.debug(attachment);
-
-          if ((type === "application/octet-stream") && 
-            (this.ATTACH_TST.test(attachment)))
-            {
-              this.debug('file download success');
-              document.location = url;
-            } else {
-
-              this.debug('file download failed');
-            }
-          
-        }, this);
-
-        req.addListener("fail", function(e) {
-          var req = e.getTarget();
-
-          // Response parsed according to the server's
-          // response content type, e.g. JSON
-          
-          this.debug("request failed");
-        }, this);
-
-        // Send request
-        req.send();
+        var self = this;
+        this.__isFileDownloadable(url).then(function() {
+          self.debug('file is downloadable');
+          document.location = url;
+        }, function() {
+          self.debug('file not downloadable');
+        });
       }, this);
       this.getContent().add(this.__downloadButton);
 
 
       this.__fileButton = new qx.ui.mobile.form.Button("File");
       this.__fileButton.addListener("tap", function() {
-        var req = new qx.io.request.Xhr("/projects/" + this.getProjectId() + '/builds/' + this.getBuildId() + '/file');
-
-        req.addListener("success", function(e) {
-          var req = e.getTarget();
-
-          // Response parsed according to the server's
-          // response content type, e.g. JSON
-          var type = req.getResponseContentType();
-          this.debug(type);
-        }, this);
-
-        // Send request
-        req.send();
+        var url = "/projects/" + this.getProjectId() + '/builds/' + this.getBuildId() + '/file';
+        var self = this;
+        this.__isFileReachable(url).then(function() {
+          self.debug('file is reachable');
+          document.location = url;
+        }, function() {
+          self.debug('file not reachable');
+        });
       }, this);
       this.getContent().add(this.__fileButton);
 

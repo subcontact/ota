@@ -109,7 +109,8 @@ app.get('/projects/:projectId',         getProjectBuildsRoute);
 
 app.get('/projects/:projectId/builds/:buildId', getProjectBuildDataRoute);
 app.get('/projects/:projectId/builds/:buildId/installer', getProjectBuildInstallerRoute);
-app.get('/projects/:projectId/builds/:buildId/file', getProjectBuildFileRoute);
-app.get('/projects/:projectId/builds/:buildId/download', getProjectBuildDownloadRoute);
+
+app.register('/projects/:projectId/builds/:buildId/file', ['get', 'head'], getProjectBuildFileRoute);
+app.register('/projects/:projectId/builds/:buildId/download', ['get', 'head'], getProjectBuildDownloadRoute);
 
 app.listen(8080);
