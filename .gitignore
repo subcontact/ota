@@ -34,9 +34,7 @@ node_modules
 ### SublimeText ###
 # SublimeText project files
 *.sublime-workspace
-client2/source/script/
-client2/build/
-client2/cache/
-client-web/source/script/
-client-web/build/
-client-web/cache/
+
+client-web/source/script
+client-web/build
+client-web/cache
