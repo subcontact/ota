@@ -20,8 +20,8 @@ qx.$$g = {}
 
 qx.$$loader = {
   parts : {"boot":[0]},
-  packages : {"0":{"uris":["__out__:ota.2f47af8f21a3.js","ota:ota/Application.js","__out__:ota.d925167bd455.js","ota:ota/page/Projects.js","__out__:ota.fb68ef51d18f.js","ota:ota/page/ProjectBuilds.js","__out__:ota.6eb4734f7e1d.js","ota:ota/page/BuildDetail.js","__out__:ota.a6035e398140.js"]}},
-  urisBefore : ["./resource/ota/bower_components/momentjs/moment.js","./resource/ota/promiscuous-browser.js"],
+  packages : {"0":{"uris":["__out__:ota.c2f956168523.js","ota:ota/service/BuildService.js","__out__:ota.d14472f049aa.js","ota:ota/Application.js","__out__:ota.29f4187b6e3b.js","ota:ota/page/Projects.js","__out__:ota.fb68ef51d18f.js","ota:ota/page/ProjectBuilds.js","__out__:ota.6eb4734f7e1d.js","ota:ota/page/BuildDetail.js","__out__:ota.a7f45a9ae6ee.js"]}},
+  urisBefore : ["./resource/ota/bower_components/momentjs/min/moment.min.js","./resource/ota/di-lite.min.js","./resource/ota/promiscuous-browser.js"],
   cssBefore : ["../../../qooxdoo//framework/source/resource/qx/mobile/css/flat.css","./resource/ota/css/styles.css"],
   boot : "boot",
   closureParts : {},

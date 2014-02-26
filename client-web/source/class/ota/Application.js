@@ -107,6 +107,7 @@ qx.Class.define("ota.Application",
   members :
   {
     __startPage : null,
+    __buildService : new ota.service.BuildService(),
 
     /**
      * This method contains the initial application code and gets called
@@ -133,6 +134,11 @@ qx.Class.define("ota.Application",
       -------------------------------------------------------------------------
       */
 
+      window.ctx = di.createContext();
+      ctx.register("buildService", this.__buildService);   
+      ctx.initialize();
+
+
       //qx.util.AliasManager.getInstance().add('wbg', 'http://www.westpac.com.au');
 
       // Create a manager in mobile device context >> "false"
@@ -158,8 +164,8 @@ qx.Class.define("ota.Application",
       manager.addDetail(buildDetailPage);
       
       Promise.all([
-        this.__loadTypes(),
-        this.__loadProjects()
+        this.__buildService.loadTypes(),
+        this.__buildService.loadProjects()
       ]).then(function () { 
           console.log('all events finished successfully');
           projectsPage.show(); 

@@ -132,7 +132,8 @@
         { "uri" : "./resource/${APPLICATION_CSS}" }
       ],
       "add-script" : [
-        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/moment.js" },
+        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" },        
+        { "uri" : "./resource/${APPLICATION}/di-lite.min.js" },
         { "uri" : "./resource/${APPLICATION}/promiscuous-browser.js" }
       ]
     },
@@ -146,7 +147,8 @@
         { "uri" : "./resource/${APPLICATION_CSS}" }
       ],
       "add-script" : [
-        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/moment.js" },
+        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" },
+        { "uri" : "./resource/${APPLICATION}/di-lite.min.js" },        
         { "uri" : "./resource/${APPLICATION}/promiscuous-browser.js" }
       ]
     },
@@ -157,7 +159,7 @@
       {
         "files" :
         [
-          "${APPLICATION}/bower_components/momentjs/moment.js",
+          "${APPLICATION}/bower_components/momentjs/min/moment.min.js",
           "${APPLICATION}/*.js", 
           "${APPLICATION}/favicon.*", 
           "${APPLICATION}/*.png" 
