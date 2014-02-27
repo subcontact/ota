@@ -31,12 +31,10 @@ qx.Class.define("ota.page.Projects",
     });
   },
 
-
   events : {
     /** Fired when the user selects a tweet */
     showProjectBuilds : "qx.event.type.Data"
   },
-
 
   properties :
   {
@@ -68,6 +66,9 @@ qx.Class.define("ota.page.Projects",
     _initialize : function()
     {
       this.base(arguments);
+
+      var a = window.oManager.get('buildService');
+      console.log(a);
 
       // Create a new list instance
       var list = this.__list = new qx.ui.mobile.list.List();

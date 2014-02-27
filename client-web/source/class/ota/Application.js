@@ -35,6 +35,10 @@ qx.Class.define("ota.Application",
 {
   extend : qx.application.Mobile,
 
+  statics : {
+
+    BUILD_SERVICE : "BUILD_SERVICE"
+  },
 
   properties :
   {
@@ -134,10 +138,8 @@ qx.Class.define("ota.Application",
       -------------------------------------------------------------------------
       */
 
-      window.ctx = di.createContext();
-      ctx.register("buildService", this.__buildService);   
-      ctx.initialize();
-
+      window.oManager = new ota.OManager();
+      oManager.add(ota.Application.BUILD_SERVICE, this.__buildService);   
 
       //qx.util.AliasManager.getInstance().add('wbg', 'http://www.westpac.com.au');
 
