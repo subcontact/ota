@@ -139,7 +139,7 @@ qx.Class.define("ota.Application",
       */
 
       window.oManager = new ota.OManager();
-      oManager.add(ota.Application.BUILD_SERVICE, this.__buildService);   
+      window.oManager.add(ota.Application.BUILD_SERVICE, this.__buildService);   
 
       //qx.util.AliasManager.getInstance().add('wbg', 'http://www.westpac.com.au');
 
@@ -148,17 +148,17 @@ qx.Class.define("ota.Application",
 
       // Create an instance of the Projects class and establish data bindings
       var projectsPage = this.__startPage = new ota.page.Projects();
-      this.bind("projects", projectsPage, "projects");
+      //this.bind("projects", projectsPage, "projects");
 
       var buildsPage = new ota.page.ProjectBuilds();
-      this.bind("builds", buildsPage, "builds");
-      this.bind("projectId", buildsPage, "projectId");
-      this.bind("buildId", buildsPage, "buildId");
+      //this.bind("builds", buildsPage, "builds");
+      //this.bind("projectId", buildsPage, "projectId");
+      //this.bind("buildId", buildsPage, "buildId");
 
       var buildDetailPage = new ota.page.BuildDetail();
-      this.bind("buildData", buildDetailPage, "buildData");
-      this.bind("projectId", buildDetailPage, "projectId");
-      this.bind("buildId", buildDetailPage, "buildId");
+      //this.bind("buildData", buildDetailPage, "buildData");
+      //this.bind("projectId", buildDetailPage, "projectId");
+      //this.bind("buildId", buildDetailPage, "buildId");
 
       // Add page to manager
       manager.addDetail(projectsPage);
@@ -183,11 +183,11 @@ qx.Class.define("ota.Application",
         this.debug(index);
         this.debug(this.getProjects().getItem(index).get_id());
         */
-        this.setProjectId(this.getProjects().getItem(index).get_id());
-        this.__loadProjectBuilds(this.getProjectId()).then(function() {
-          console.log('showing builds list detail');
-          buildsPage.show();
-        });
+        //this.setProjectId(this.getProjects().getItem(index).get_id());
+        //this.__loadProjectBuilds(this.getProjectId()).then(function() {
+       //   console.log('showing builds list detail');
+       //   buildsPage.show();
+       // });
       }, this);
 
       buildsPage.addListener("showBuild", function(evt) {
@@ -197,11 +197,11 @@ qx.Class.define("ota.Application",
         this.debug(index);
         this.debug(this.getProjectId());
         */
-        this.setBuildId(this.getBuilds().getItem(index).get_id());
-        this.__loadBuild(this.getBuildId()).then(function() {
-          console.log('showing build detail');
-          buildDetailPage.show();
-        });
+        ///this.setBuildId(this.getBuilds().getItem(index).get_id());
+        //this.__loadBuild(this.getBuildId()).then(function() {
+        //  console.log('showing build detail');
+        //  buildDetailPage.show();
+        //});
         
 
         //this.debug(this.getProjects().getItem(index).get_id());

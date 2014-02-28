@@ -7,7 +7,7 @@
  * Object Manager
  *
  * Basic take on DI service. Just an Object directory - no real object
- * life cyle. 
+ * life cyle. Intends to be the only "global" object to pass around other objects.
  * 
  * Looked a few generic options but they were more than what I need (and
  * things never work that well with qx anyway).
@@ -26,7 +26,6 @@ qx.Class.define("ota.OManager",
   construct : function()
   {
     this.base(arguments);
-
     this.__directory = {};
   },
 

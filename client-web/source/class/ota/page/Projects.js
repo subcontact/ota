@@ -61,18 +61,18 @@ qx.Class.define("ota.page.Projects",
   members :
   {
     __list : null,
+    __buildService : null,
 
     // overridden
     _initialize : function()
     {
       this.base(arguments);
-
-      var a = window.oManager.get('buildService');
-      console.log(a);
-
+      this.__buildService = window.oManager.get(ota.Application.BUILD_SERVICE);
+      var types = this.__buildService.getTypes();
+      //this.debug(qx.dev.Debug.debugProperties(types));
       // Create a new list instance
       var list = this.__list = new qx.ui.mobile.list.List();
-      //var dateFormat = new qx.util.format.DateFormat();
+      var dateFormat = new qx.util.format.DateFormat();
       //var types = qx.core.Init.getApplication().getTypes();
       // Use a delegate to configure each single list item
       list.setDelegate({
@@ -81,16 +81,16 @@ qx.Class.define("ota.page.Projects",
           item.setTitle(value.getName());
 //          item.setImage("resource/ota/favicon.png"); 
           //item.setImage("resource/ota/internet.png");        
-          //item.setSubtitle(types.getItem(value.getType()));
+          item.setSubtitle(types.getItem(value.getType()));
           //item.setImage(value.getUser().getProfile_image_url());
           // we have more data to display, show an arrow
-          //item.setShowArrow(true);
+          item.setShowArrow(true);
 //
         }
       });
-      list.addListener("changeSelection", this.__onChangeSelection, this);
+    //  list.addListener("changeSelection", this.__onChangeSelection, this);
       // bind the "tweets" property to the "model" property of the list instance
-      this.bind("projects", list, "model");
+      this.__buildService.bind("projects", list, "model");
       // add the list to the content of the page
       this.getContent().add(list);
     },
