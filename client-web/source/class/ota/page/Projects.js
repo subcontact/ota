@@ -1,24 +1,12 @@
 /* ************************************************************************
 
-   qooxdoo - the new era of web development
-
-   http://qooxdoo.org
-
-   Copyright:
-     2004-2011 1&1 Internet AG, Germany, http://www.1und1.de
-
-   License:
-     LGPL: http://www.gnu.org/licenses/lgpl.html
-     EPL: http://www.eclipse.org/org/documents/epl-v10.php
-     See the LICENSE file in the project's top-level directory for details.
-
-   Authors:
-     * Tino Butz (tbtz)
-
 ************************************************************************ */
 
 /**
- * This page displays all tweets of a user.
+ * 
+ * @ignore(moment)
+ * @ignore(Promise)
+ * @ignore(Promise.all)
  */
 qx.Class.define("ota.page.Projects",
 {
@@ -32,69 +20,41 @@ qx.Class.define("ota.page.Projects",
   },
 
   events : {
-    /** Fired when the user selects a tweet */
-    showProjectBuilds : "qx.event.type.Data"
+    /** Fired when the user selects a Project */
+    projectSelected : "qx.event.type.Data"
   },
 
   properties :
   {
-    /** Holds all projects */
-    projects :
-    {
-      check : "qx.data.Array",
-      nullable : true,
-      init : null,
-      event : "changeProjects"
-    },
-
-    /** currently selected Project */
-    projectId :
-    {
-      check : "String",
-      nullable : true,
-      init : null,
-      event : "changeProjectId"
-    }
   },
-
 
   members :
   {
     __list : null,
     __buildService : null,
+    __app : null,
 
     // overridden
     _initialize : function()
     {
       this.base(arguments);
-      this.__buildService = window.oManager.get(ota.Application.BUILD_SERVICE);
+      this.__app = qx.core.Init.getApplication();
+      this.__buildService = this.__app.getBuildService();      
       var types = this.__buildService.getTypes();
-      //this.debug(qx.dev.Debug.debugProperties(types));
-      // Create a new list instance
-      var list = this.__list = new qx.ui.mobile.list.List();
       var dateFormat = new qx.util.format.DateFormat();
-      //var types = qx.core.Init.getApplication().getTypes();
-      // Use a delegate to configure each single list item
-      list.setDelegate({
+      this.__list = new qx.ui.mobile.list.List();
+      this.__list.setDelegate({
         configureItem : function(item, value, row) {
-          // set the data of the model
           item.setTitle(value.getName());
-//          item.setImage("resource/ota/favicon.png"); 
-          //item.setImage("resource/ota/internet.png");        
+          item.setImage("resource/ota/internet.png");        
           item.setSubtitle(types.getItem(value.getType()));
-          //item.setImage(value.getUser().getProfile_image_url());
-          // we have more data to display, show an arrow
           item.setShowArrow(true);
-//
         }
       });
-    //  list.addListener("changeSelection", this.__onChangeSelection, this);
-      // bind the "tweets" property to the "model" property of the list instance
-      this.__buildService.bind("projects", list, "model");
-      // add the list to the content of the page
-      this.getContent().add(list);
+      this.__buildService.bind("projects", this.__list, "model");
+      this.__list.addListener("changeSelection", this.__onChangeSelection, this);
+      this.getContent().add(this.__list);
     },
-
 
     /**
      * Event handler. Called when the selection of the list is changed.
@@ -104,8 +64,7 @@ qx.Class.define("ota.page.Projects",
     __onChangeSelection : function(evt)
     {
       // retrieve the index of the selected row
-      var index = evt.getData();
-      this.fireDataEvent("showProjectBuilds", index);
+      this.fireDataEvent("projectSelected", this.__buildService.getProjects().getItem(evt.getData()).get_id());
     }
   },
 
@@ -113,5 +72,7 @@ qx.Class.define("ota.page.Projects",
   destruct : function()
   {
     this._disposeObjects("__list");
+    this.__buildService = null;
+    this.__app = null;
   }
 });

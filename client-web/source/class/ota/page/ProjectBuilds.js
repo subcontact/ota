@@ -1,24 +1,12 @@
 /* ************************************************************************
 
-   qooxdoo - the new era of web development
-
-   http://qooxdoo.org
-
-   Copyright:
-     2004-2011 1&1 Internet AG, Germany, http://www.1und1.de
-
-   License:
-     LGPL: http://www.gnu.org/licenses/lgpl.html
-     EPL: http://www.eclipse.org/org/documents/epl-v10.php
-     See the LICENSE file in the project's top-level directory for details.
-
-   Authors:
-     * Tino Butz (tbtz)
-
 ************************************************************************ */
 
 /**
- * This page displays all tweets of a user.
+ * 
+ * @ignore(moment)
+ * @ignore(Promise)
+ * @ignore(Promise.all)
  */
 qx.Class.define("ota.page.ProjectBuilds",
 {
@@ -33,79 +21,43 @@ qx.Class.define("ota.page.ProjectBuilds",
     });
   },
 
-
   events : {
-    /** Fired when the user selects a tweet */
-    showBuild : "qx.event.type.Data"
+    /** Fired when the user selects a build */
+    buildSelected : "qx.event.type.Data"
   },
-
 
   properties :
   {
-    /** Holds all builds */
-    builds :
-    {
-      check : "qx.data.Array",
-      nullable : true,
-      init : null,
-      event : "changeBuilds"
-    },
-
-    /** currently selected Project */
-    projectId :
-    {
-      check : "String",
-      nullable : true,
-      init : null,
-      event : "changeProjectId"
-    },
-
-    /** currently selected Build for the Project */
-    buildId :
-    {
-      check : "String",
-      nullable : true,
-      init : null,
-      event : "changeBuildId"
-    } 
   },
-
 
   members :
   {
     __list : null,
+    __buildService : null,
+    __app : null,
 
     // overridden
     _initialize : function()
     {
       this.base(arguments);
-
-      // Create a new list instance
-      var list = this.__list = new qx.ui.mobile.list.List();
+      this.__app = qx.core.Init.getApplication();
+      this.__buildService = this.__app.getBuildService();      
+      var types = this.__buildService.getTypes();
       var dateFormat = new qx.util.format.DateFormat();
-      var types = qx.core.Init.getApplication().getTypes();
-      // Use a delegate to configure each single list item
-      list.setDelegate({
+      var date, data;
+      this.__list = new qx.ui.mobile.list.List();
+      this.__list.setDelegate({
         configureItem : function(item, value, row) {
-          // set the data of the model
-          var date = moment(value.getInstanceLabel());
-          var data = date.format("ddd, Do MMM YYYY, h:mm:ss a") + " (" + date.fromNow() + ")";
+          date = moment(value.getInstanceLabel());
+          data = date.format("ddd, Do MMM YYYY, h:mm:ss a") + " (" + date.fromNow() + ")";
           item.setTitle(data);
-          //item.setSubtitle(dateFormat.format(new Date(value.getCreated_at())));
-         // item.setImage("resource/ota/internet.png");        
-         // item.setSubtitle(types.getItem(value.getType()));
-
-          // we have more data to display, show an arrow
           item.setShowArrow(true);
         }
       });
-      list.addListener("changeSelection", this.__onChangeSelection, this);
-      // bind the "tweets" property to the "model" property of the list instance
-      this.bind("builds", list, "model");
-      // add the list to the content of the page
-      this.getContent().add(list);
+      this.__buildService.bind("builds", this.__list, "model");
+      this.__list.addListener("changeSelection", this.__onChangeSelection, this);
+      this.getContent().add(this.__list);
     },
-
 
     /**
      * Event handler. Called when the selection of the list is changed.
@@ -115,14 +67,20 @@ qx.Class.define("ota.page.ProjectBuilds",
     __onChangeSelection : function(evt)
     {
       // retrieve the index of the selected row
-      var index = evt.getData();
-      this.fireDataEvent("showBuild", index);
-    }
-  },
+      this.fireDataEvent("buildSelected", this.__buildService.getBuilds().getItem(evt.getData()).get_id());
+    },
 
+     // overridden
+    _back : function()
+    {
+      this.__app.getRouting().back();
+    }    
+  },
 
   destruct : function()
   {
     this._disposeObjects("__list");
+    this.__buildService = null;
+    this.__app = null;  
   }
 });

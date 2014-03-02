@@ -1,3 +1,13 @@
+/* ************************************************************************
+
+************************************************************************ */
+
+/**
+ * 
+ * @ignore(moment)
+ * @ignore(Promise)
+ * @ignore(Promise.all)
+ */
 qx.Class.define("ota.service.BuildService",
 {
   extend :  qx.core.Object,
@@ -16,7 +26,8 @@ qx.Class.define("ota.service.BuildService",
 
   properties :
   {
-    /** Holds all projects */
+
+   /** Holds all projects */
     projects :
     {
       check : "qx.data.Array",
@@ -34,7 +45,6 @@ qx.Class.define("ota.service.BuildService",
       event : "changeBuilds"
     },
 
-
     /** Holds selected build data */
     buildData :
     {
@@ -42,24 +52,6 @@ qx.Class.define("ota.service.BuildService",
       nullable : true,
       init : null,
       event : "changeBuildData"
-    },
-
-    /** currently selected Project */
-    projectId :
-    {
-      check : "String",
-      nullable : true,
-      init : null,
-      event : "changeProjectId"
-    },
-
-    /** currently selected Build for the Project */
-    buildId :
-    {
-      check : "String",
-      nullable : true,
-      init : null,
-      event : "changeBuildId"
     },
 
     types : 
@@ -98,10 +90,10 @@ qx.Class.define("ota.service.BuildService",
     loadProjects : function()
     {
       this.__projectsStore.setUrl(arguments.callee.self.PROJECTS_URI);
-      console.log('Projects store load requested');
+      this.debug('Projects store load requested');
       return new Promise(function (resolve, reject) {
         this.__projectsStore.addListenerOnce('loaded', function(evt) {
-          console.log('Projects store loaded OK');// + evt.getData());
+          this.debug('Projects store loaded OK');// + evt.getData());
           resolve();
         });
         this.__projectsStore.addListenerOnce('error', function(evt) {
@@ -110,13 +102,13 @@ qx.Class.define("ota.service.BuildService",
       }.bind(this));
     },
 
-    loadBuilds : function()
+    loadBuilds : function(projectId)
     {
-      this.__buildsStore.setUrl(arguments.callee.self.PROJECTS_URI + '/' + this.getProjectId());
-      console.log('Project Builds store load requested');
+      this.__buildsStore.setUrl(arguments.callee.self.PROJECTS_URI + '/' + projectId);
+      this.debug('Project Builds store load requested');
       return new Promise(function (resolve, reject) {
         this.__buildsStore.addListenerOnce('loaded', function(evt) {
-          console.log('Project Builds store loaded OK');// + evt.getData());
+          this.debug('Project Builds store loaded OK');// + evt.getData());
           resolve();
         });
         this.__buildsStore.addListenerOnce('error', function(evt) {
@@ -125,13 +117,14 @@ qx.Class.define("ota.service.BuildService",
       }.bind(this));
     },
 
-    loadBuildInstance : function()
+    loadBuildInstance : function(projectId, buildId)
     {
-      var url = arguments.callee.self.PROJECTS_URI + '/' + this.getProjectId() + arguments.callee.self.PROJECTS_URI + '/' + this.getBuildId();
+      var url = arguments.callee.self.PROJECTS_URI + '/' + projectId + arguments.callee.self.BUILDS_URI + '/' + buildId;
       this.__buildInstance.setUrl(url);
+      this.debug('loadBuildInstance store load requested');
       return new Promise(function (resolve, reject) {
         this.__buildInstance.addListenerOnce('loaded', function(evt) {
-          console.log('Build Detail store loaded OK');// + evt.getData());
+          this.debug('Build Detail store loaded OK');// + evt.getData());
           resolve();
         });
         this.__buildInstance.addListenerOnce('error', function(evt) {
@@ -143,10 +136,10 @@ qx.Class.define("ota.service.BuildService",
     loadTypes : function()
     {
       this.__typesStore.setUrl(arguments.callee.self.TYPES_URI);
-      console.log('Types store load requested');
+      this.debug('Types store load requested');
       return new Promise(function (resolve, reject) {
         this.__typesStore.addListenerOnce('loaded', function(evt) {
-          console.log('Types store loaded OK');// + evt.getData());
+          this.debug('Types store loaded OK');// + evt.getData());
           resolve();
         });
         this.__typesStore.addListenerOnce('error', function(evt) {

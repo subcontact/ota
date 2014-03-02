@@ -43,7 +43,7 @@ var otaconsts = function() {
   //const HOST_SVR    = 'http://192.168.0.3:8080';
   const HOST_SVR    = process.argv.length > 3 ? process.argv[3] : 'http://192.168.0.3:8080';
 
-  // must be a better way to export these!
+  // must be a better way to export these! I should just ditch the idea of const
   this.ATTACH_TST           = ATTACH_TST;
   this.BUILD_DIR            = BUILD_DIR;
   this.BUILD_LIST_PATTERN   = BUILD_LIST_PATTERN;

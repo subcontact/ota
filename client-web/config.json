@@ -92,7 +92,7 @@
       {
         "qx.application" : "${APPLICATION}.Application",
         "qx.mobile.emulatetouch" : true,
-        "qx.mobile.nativescroll" : false
+        "qx.mobile.nativescroll" : true
         /* Remove following inline comment if you want to optimize code for webkit browsers.
          Attention: if webkit engine optimization is enabled, mobile app will not be
          usable in Firefox. */
@@ -133,7 +133,6 @@
       ],
       "add-script" : [
         { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" },        
-        { "uri" : "./resource/${APPLICATION}/di-lite.min.js" },
         { "uri" : "./resource/${APPLICATION}/promiscuous-browser.js" }
       ]
     },
@@ -147,8 +146,7 @@
         { "uri" : "./resource/${APPLICATION_CSS}" }
       ],
       "add-script" : [
-        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" },
-        { "uri" : "./resource/${APPLICATION}/di-lite.min.js" },        
+        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" }, 
         { "uri" : "./resource/${APPLICATION}/promiscuous-browser.js" }
       ]
     },
