@@ -105,6 +105,9 @@ qx.Class.define("ota.Application",
             this.debug('all events finished successfully');
             qx.lang.Function.delay(function() {            
               this.__init = true;
+      var elem = document.getElementById("spinner");
+      elem.parentNode.removeChild(elem);
+              
               this.__hideBusy();
               cb();
             }, 3000, this);
