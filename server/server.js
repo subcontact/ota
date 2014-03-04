@@ -66,10 +66,6 @@ var getProjectBuildInstallerRoute = function *(next) {
   var project       = lodash.find(projectList, {_id : this.params.projectId});
   var projectBuilds = yield ota.getProjectBuildListService(project);
   var build         = lodash.find(projectBuilds, {_id : this.params.buildId}); 
-  console.log(this.params.buildId); 
-  console.log(project);    
-  console.log(projectBuilds);  
-  console.log(build); 
   var buildData     = yield ota.getProjectBuildDataService(build);
   var installer     = buildData.installerSource;
   this.body = installer;

@@ -57,6 +57,11 @@ qx.Class.define("ota.Application",
   {
     __busyPopup : null,
     __init      : false,
+    __homePage  : null,
+
+    __showHome : function() {
+      this.__homePage.show({reverse:true});
+    },
 
     /**
      * This method contains the initial application code and gets called
@@ -81,13 +86,16 @@ qx.Class.define("ota.Application",
       this.setBuildService(buildService);
 
       // Create a manager in mobile device context >> "false"
-      var manager = new qx.ui.mobile.page.Manager(false);
+      var manager = new qx.ui.mobile.page.Manager();
 
       // Create an instance of the Projects class and establish data bindings
-      var projectsPage = new ota.page.Projects();
+      var projectsPage = this.__homePage = new ota.page.Projects();
       var buildsPage = new ota.page.ProjectBuilds();
       var buildDetailPage = new ota.page.BuildDetail();
 
+      buildsPage.addListener('action', this.__showHome, this);
+      buildDetailPage.addListener('action', this.__showHome, this);
+      
       // Add page to manager
       manager.addDetail(projectsPage);
       manager.addDetail(buildsPage);
@@ -107,7 +115,7 @@ qx.Class.define("ota.Application",
               this.__init = true;
       var elem = document.getElementById("spinner");
       elem.parentNode.removeChild(elem);
-              
+
               this.__hideBusy();
               cb();
             }, 3000, this);

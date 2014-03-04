@@ -17,7 +17,9 @@ qx.Class.define("ota.page.BuildDetail",
     this.set({
       title : "Details",
       showBackButton : true,
-      backButtonText : "Back"
+      backButtonText : "Back",      
+      showButton : true,
+      buttonText : "Home" 
     });
   },
 

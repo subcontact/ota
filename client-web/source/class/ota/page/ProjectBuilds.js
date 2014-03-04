@@ -17,7 +17,9 @@ qx.Class.define("ota.page.ProjectBuilds",
     this.set({
       title : "Builds",
       showBackButton : true,
-      backButtonText : "Back"      
+      backButtonText : "Back",      
+      showButton : true,
+      buttonText : "Home" 
     });
   },
 
@@ -74,7 +76,7 @@ qx.Class.define("ota.page.ProjectBuilds",
     _back : function()
     {
       this.__app.getRouting().back();
-    }    
+    }
   },
 
   destruct : function()
