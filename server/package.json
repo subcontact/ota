@@ -43,6 +43,11 @@
     "moment": "~2.5.1",
     "glob": "~3.2.8",
     "find": "~0.1.5",
-    "koa-send": "~1.2.3"
+    "koa-send": "~1.2.3",
+    "winston": "~0.7.2",
+    "optimist": "~0.6.1",
+    "minimist": "0.0.8",
+    "memory-cache": "0.0.5",
+    "transparentcache": "~0.4.1"
   }
 }

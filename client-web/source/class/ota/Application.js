@@ -86,7 +86,7 @@ qx.Class.define("ota.Application",
       this.setBuildService(buildService);
 
       // Create a manager in mobile device context >> "false"
-      var manager = new qx.ui.mobile.page.Manager();
+      var manager = new qx.ui.mobile.page.Manager(false);
 
       // Create an instance of the Projects class and establish data bindings
       var projectsPage = this.__homePage = new ota.page.Projects();
@@ -95,7 +95,7 @@ qx.Class.define("ota.Application",
 
       buildsPage.addListener('action', this.__showHome, this);
       buildDetailPage.addListener('action', this.__showHome, this);
-      
+
       // Add page to manager
       manager.addDetail(projectsPage);
       manager.addDetail(buildsPage);

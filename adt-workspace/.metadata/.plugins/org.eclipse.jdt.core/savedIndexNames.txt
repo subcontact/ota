@@ -1,0 +1,5 @@
+INDEX VERSION 1.126+/Users/tyronne/code/adt-workspace/.metadata/.plugins/org.eclipse.jdt.core
+391140172.index
+1916565835.index
+1125840441.index
+190565889.index

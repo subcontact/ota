@@ -18,6 +18,7 @@ var mustache  = require('mustache');
 var moment    = require('moment');
 var otaconsts = require('./ota-consts');
 var find2     = require('find');
+var cache     = require('memory-cache');
 
 var zipReadAsTextAsyncThunk = function(object, entry) {
   return function(done){
@@ -341,6 +342,9 @@ var otafs = function() {
   };
 
   this.getProjectsService = function *() {
+
+    //var result;
+    //if (result = cache.get('') 
     if (buildProjects) {
        return self.clone(buildProjects, ['list']);
     }

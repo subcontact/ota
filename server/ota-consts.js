@@ -1,27 +1,27 @@
 "use strict";
 var otaconsts = function() {
-  var self = this;
-  const ATTACH_TST = /attachment;/i;
-  const BUILD_DIR = "builds";
-  const BUILD_LIST_PATTERN = /^\d{14}$/i;
-  const iOS_FILE  = /\.ipa$/i;
-  const AND_FILE  = /\.apk$/i;
-  const WIN_FILE  = /\.exe$/i;    
-  const WIN_FILE_EXE  = /\.exe$/i;  
-  const WIN_FILE_XAP  = /\.xap$/i;
-  const TYPE_IOS  = 0;
-  const TYPE_AND  = 1;
-  const TYPE_WIN  = 2;
 
-  const TYPE_IPHONE         = 3;
-  const TYPE_IPAD           = 4;
-  const TYPE_ANDROID_PHONE  = 5;
-  const TYPE_ANDROID_TABLET = 6;
-  const TYPE_WINDOWS_PHONE  = 7;
-  const TYPE_WINDOWS_TABLET = 8;
-  const TYPE_UNKNOWN        = 9;
+  this.ATTACH_TST = /attachment;/i;
+  this.BUILD_DIR = "builds";
+  this.BUILD_LIST_PATTERN = /^\d{14}$/i;
+  this.iOS_FILE  = /\.ipa$/i;
+  this.AND_FILE  = /\.apk$/i;
+  this.WIN_FILE  = /\.exe$/i;    
+  this.WIN_FILE_EXE  = /\.exe$/i;  
+  this.WIN_FILE_XAP  = /\.xap$/i;
+  this.TYPE_IOS  = 0;
+  this.TYPE_AND  = 1;
+  this.TYPE_WIN  = 2;
 
-  const TYPE_LABELS = [
+  this.TYPE_IPHONE         = 3;
+  this.TYPE_IPAD           = 4;
+  this.TYPE_ANDROID_PHONE  = 5;
+  this.TYPE_ANDROID_TABLET = 6;
+  this.TYPE_WINDOWS_PHONE  = 7;
+  this.TYPE_WINDOWS_TABLET = 8;
+  this.TYPE_UNKNOWN        = 9;
+
+  this.TYPE_LABELS = [
     "iOS",
     "Android",
     "Windows",
@@ -34,40 +34,13 @@ var otaconsts = function() {
     "Unkown"
   ];
 
-  const IOS_NAME    = 'CFBundleDisplayName';
-  const IOS_VERSION = 'CFBundleVersion';
-  const IOS_ID      = 'CFBundleIdentifier';
-  const IOS_TEAM    = 'TeamName';
-  const IOS_ICON    = 'CFBundleIconFile';
+  this.IOS_NAME    = 'CFBundleDisplayName';
+  this.IOS_VERSION = 'CFBundleVersion';
+  this.IOS_ID      = 'CFBundleIdentifier';
+  this.IOS_TEAM    = 'TeamName';
+  this.IOS_ICON    = 'CFBundleIconFile';
 
-  //const HOST_SVR    = 'http://192.168.0.3:8080';
-  const HOST_SVR    = process.argv.length > 3 ? process.argv[3] : 'http://192.168.0.3:8080';
-
-  // must be a better way to export these! I should just ditch the idea of const
-  this.ATTACH_TST           = ATTACH_TST;
-  this.BUILD_DIR            = BUILD_DIR;
-  this.BUILD_LIST_PATTERN   = BUILD_LIST_PATTERN;
-  this.iOS_FILE             = iOS_FILE;
-  this.AND_FILE             = AND_FILE;
-  this.WIN_FILE             = WIN_FILE;
-  this.WIN_FILE_EXE         = WIN_FILE_EXE;
-  this.WIN_FILE_XAP         = WIN_FILE_XAP;
-  this.TYPE_IOS             = TYPE_IOS;
-  this.TYPE_AND             = TYPE_AND;
-  this.TYPE_WIN             = TYPE_WIN;
-  this.TYPE_IPHONE          = TYPE_IPHONE;
-  this.TYPE_ANDROID_PHONE   = TYPE_ANDROID_PHONE;
-  this.TYPE_ANDROID_TABLET  = TYPE_ANDROID_TABLET;
-  this.TYPE_WINDOWS_PHONE   = TYPE_WINDOWS_PHONE;
-  this.TYPE_WINDOWS_TABLET  = TYPE_WINDOWS_TABLET;
-  this.TYPE_UNKNOWN         = TYPE_UNKNOWN;
-  this.TYPE_LABELS          = TYPE_LABELS;
-  this.IOS_NAME             = IOS_NAME;
-  this.IOS_VERSION          = IOS_VERSION;
-  this.IOS_ID               = IOS_ID;
-  this.IOS_TEAM             = IOS_TEAM;
-  this.IOS_ICON             = IOS_ICON;
-  this.HOST_SVR             = HOST_SVR;
+  this.HOST_SVR    = null;//argv.host ;
 
   this.PARSE_BUILD_DIR = [
     {
