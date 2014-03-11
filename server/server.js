@@ -16,6 +16,7 @@ var bplist  = require('bplist-parser');
 var ota     = require('./ota-fs');
 var otaconsts = require('./ota-consts');
 var cachify = require('transparentcache');
+var cache = require('./mem-cache');
 
 var app = koa();
 var argv;
@@ -24,7 +25,8 @@ var argv;
   var defaults = { 
     debug   : false,
     nocache : false,
-    maxage  : (60 * 60 * 24 * 5),
+    maxage  : (60 * 60 * 24 * 5), // http cache maxage setting in seconds - 432,000 is 5 days (for static assets - should make this far dated in the future)
+    mcache  : (1000 * 60 * 5), // internal memory cache in millseconds - 300,000 is 5 minutes
     builds  : ".",
     port    : 8181,
     host    : "http://localhost"
@@ -32,22 +34,6 @@ var argv;
   defaults.host += ":" + defaults.port;
   argv = parseArgs((process.argv.slice(2)), { default : defaults });
 })();
-
-
-function one (a, b) {
-    console.log( 'one actually invoked' );
-    return '|' + b + '|' + a + '|' + b + '|';
-}
-
-var oneCached = cachify(one, {parameters:[0]});
-
-console.log( oneCached(1, 2) );
-console.log( oneCached(1, 3) );
-console.log( oneCached(1, 4) );
-console.log( oneCached(1, 5) );
-console.log( oneCached(2, 2) );
-console.log( oneCached(2, 999) );
-
 
 console.log(argv);
 ota.setBuildFolderRoot(argv.builds);
@@ -64,9 +50,9 @@ app.use(function *(next){
 if (!argv.nocache) {
   app.use(function *(next) {
       //TODO - add a last modified by adding a timestamp to each service call response
-      this.set('Last-Modified', stats.mtime.toUTCString());
+      //this.set('Last-Modified', stats.mtime.toUTCString());
       yield next;
-      this.set('Cache-Control', 'max-age=' + argv.maxage);
+      //this.set('Cache-Control', 'max-age=' + argv.maxage);
   });
 }
 
@@ -81,11 +67,17 @@ if (!argv.nocache) {
 app.use(router(app));  
 
 var getProjectsRoute = function *(next) {
-  var data = yield ota.getProjectsService();
+  var data = cache.get(otaconsts.GET_PROJECTS);
+  if (data === null) {
+    data = yield ota.getProjectsService();
+    cache.put(otaconsts.GET_PROJECTS, data, argv.mcache);
+    this.set('X-Cache-Hit', false);
+  } else {
+    this.set('X-Cache-Hit', true);
+  }
   this.body = data;
 };
 
-var getProjectsRouteCache = cachify(getProjectsRoute);
 
 var getProjectBuildsRoute = function *(next) {
   var projectList   = yield ota.getProjectsService();
@@ -137,7 +129,7 @@ var getProjectBuildDownloadRoute = function *(next) {
 };
 
 app.get('/',          getProjectsRoute);
-app.get('/projects',  getProjectsRouteCache);
+app.get('/projects',  getProjectsRoute);
 
 app.get('/types', function *(next) {
   this.body = otaconsts.TYPE_LABELS;

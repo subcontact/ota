@@ -18,7 +18,7 @@ var mustache  = require('mustache');
 var moment    = require('moment');
 var otaconsts = require('./ota-consts');
 var find2     = require('find');
-var cache     = require('memory-cache');
+var cache     = require('./mem-cache');
 
 var zipReadAsTextAsyncThunk = function(object, entry) {
   return function(done){
@@ -342,6 +342,16 @@ var otafs = function() {
   };
 
   this.getProjectsService = function *() {
+
+    var data = cache.get(otaconsts.GET_PROJECTS);
+    if (data !== null) {
+      return data;
+      //data = yield ota.getProjectsService();
+      //cache.put(otaconsts.GET_PROJECTS, data, argv.mcache);
+      //this.set('X-Cache-Hit', false);
+    } else {
+      //this.set('X-Cache-Hit', true);
+    }
 
     //var result;
     //if (result = cache.get('') 

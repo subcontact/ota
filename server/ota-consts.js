@@ -39,9 +39,12 @@ var otaconsts = function() {
   this.IOS_ID      = 'CFBundleIdentifier';
   this.IOS_TEAM    = 'TeamName';
   this.IOS_ICON    = 'CFBundleIconFile';
+  this.HOST_SVR    = null;
 
-  this.HOST_SVR    = null;//argv.host ;
-
+  this.CK_GET_PROJECTS = 0;
+  this.CK_GET_PROJECT_BUILDS = 1;
+  this.CK_GET_BUILD_DATA = 2;
+  
   this.PARSE_BUILD_DIR = [
     {
       pattern : /^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$/,
