@@ -79,52 +79,22 @@ var otafs = function() {
     }
   };
 
-  this.getFolders = function *(dirPath, filters) {
-    var stat, nameFilter  = null;
+  this.getFolders = function *(dirPath){
+    var stat, fullFile, files, i;
     var folders = [];
-    var files   = yield fs.readdir(dirPath);
-    if (filters && filters.name) {
-      nameFilter = filters.name;
+    try {
+      files = yield fs.readdir(dirPath);
+    } catch(e) {
+      return [];
     }
-    for (var i=0; i< files.length; i++) {
-      var fullFile = path.normalize(dirPath + '/' + files[i]);
+    for (i=0; i<files.length; i++) {
+      fullFile = path.normalize(dirPath + '/' + files[i]);
       stat = yield fs.lstat(fullFile);
       if (stat.isDirectory()) {
-        if (nameFilter) {
-          if (nameFilter.test(path.basename(fullFile))) {
-            folders.push(fullFile);
-          }
-        }
-        else {
           folders.push(fullFile);
-        }
       }
     }
     return folders;
-  };
-
-  this.getFiles = function *(dirPath, filters) {
-    var stat, nameFilter  = null;
-    var realFiles = [];
-    var files   = yield fs.readdir(dirPath);
-    if (filters && filters.name) {
-      nameFilter = filters.name;
-    }
-    for (var i=0; i< files.length; i++) {
-      var fullFile = path.normalize(dirPath + '/' + files[i]);
-      stat = yield fs.lstat(fullFile);
-      if (stat.isFile()) {
-        if (nameFilter) {
-          if (nameFilter.test(path.basename(fullFile))) {
-            realFiles.push(fullFile);
-          }
-        }
-        else {
-          realFiles.push(fullFile);
-        }
-      }
-    }
-    return realFiles;
   };
 
   // retreives a list of build folders for a build profile
@@ -169,37 +139,6 @@ var otafs = function() {
     return path.basename(folder);
   };
 
-/*
-  this.filterKnownBuildFolderList = function(folders) {
-
-    var list = [];
-    for (i=0; i<folders.length; i++) {
-      for (j=0; j<otaconsts.PARSE_BUILD_DIR.length; j++)
-      {
-        if (otaconsts.PARSE_BUILD_DIR[j].pattern.test(path.basename(folders[i]))) {
-          list.push(folders[i]);
-          break;
-        }
-      }
-    }
-    return list;
-  };
-
-  this.normaliseDateList = function(folders) {
-
-    var list = [];
-    for (i=0; i<folders.length; i++) {
-      for (j=0; j<otaconsts.PARSE_BUILD_DIR.length; j++)
-      {
-        if (otaconsts.PARSE_BUILD_DIR[j].pattern.test(path.basename(folders[i]))) {
-          list.push(moment(path.basename(folders[i]), otaconsts.PARSE_BUILD_DIR[j].format).valueOf());
-          break;
-        }
-      }
-    }
-    return list;
-  };
-*/
   this.parseIPA = function *(file) {
     var fileBuffer  = yield fs.readFile(file);
     var reader      = zip.Reader(fileBuffer);
@@ -350,6 +289,8 @@ var otafs = function() {
       //cache.put(otaconsts.GET_PROJECTS, data, argv.mcache);
       //this.set('X-Cache-Hit', false);
     } else {
+      var bp = yield self.getFolders(buildFolderRoot);
+      cache.put(otaconsts.GET_PROJECTS, data, argv.mcache);
       //this.set('X-Cache-Hit', true);
     }
 

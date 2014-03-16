@@ -48,6 +48,10 @@
     "optimist": "~0.6.1",
     "minimist": "0.0.8",
     "memory-cache": "0.0.5",
-    "transparentcache": "~0.4.1"
+    "transparentcache": "~0.4.1",
+    "assert": "~1.1.1"
+  },
+  "devDependencies": {
+    "co-mocha": "0.0.2"
   }
 }

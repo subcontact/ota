@@ -38,7 +38,7 @@
   {
     "APPLICATION"  : "ota",
     "APPLICATION_CSS" : "${APPLICATION}/css/styles.css",  // resource id of custom css
-    "QOOXDOO_PATH" : "../../qooxdoo/",
+    "QOOXDOO_PATH" : "../../qooxdoo",
     "LOCALES"      : [ "en" ],
     "PLATFORM"     : "flat",  // provide a default
     "CSS_COMB_URI" : "./resource/${APPLICATION}/css/${PLATFORM}-style-min.css",
