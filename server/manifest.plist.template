@@ -13,13 +13,15 @@
                     <key>url</key>
                     <string>{{url}}</string>
                 </dict>
+                <!--
                 <dict>
                     <key>kind</key>
                     <string>display-image</string>
                     <key>url</key>
-                    <!--  icon  -->
-                    <string>http://nybok.de/viewer/apple-adhoc-57.png</string>
+
+                    <string>{{img}}</string>
                 </dict>
+                -->
             </array>
             <key>metadata</key>
             <dict>

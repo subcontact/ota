@@ -9,7 +9,6 @@ var old_fs    = require('fs');
 var path      = require('path');
 var lodash    = require('lodash');
 var util      = require('util');
-var find      = require('findit');
 var bplist    = require('bplist-parser');
 var admZip    = require('adm-zip');
 var zip       = require('zip');
@@ -17,10 +16,12 @@ var util      = require('util');
 var mustache  = require('mustache');
 var moment    = require('moment');
 var otaconsts = require('./ota-consts');
-var find2     = require('find');
+var find     = require('find');
 var cache     = require('./mem-cache');
+var walk      = require('co-walk');
+var unglob    = require('unglob');
 
-var zipReadAsTextAsyncThunk = function(object, entry) {
+function zipReadAsTextAsyncThunk(object, entry) {
   return function(done){
     // for some reason the params are non standard (swapped) meaning I had to thunk this myself.
     object.readAsTextAsync(entry, function(data, err) {
@@ -28,6 +29,13 @@ var zipReadAsTextAsyncThunk = function(object, entry) {
     });
   }
 };
+
+function sleep(ms) {
+  return function (cb) {
+    setTimeout(cb, ms);
+  };
+}
+
 
 var otafs = function() {
   var self = this;
@@ -37,7 +45,7 @@ var otafs = function() {
 
   this.setBuildFolderRoot = function(value) {
     buildFolderRoot   = value;
-    buildFolderRootRE = new RegExp("^" + buildFolderRoot + "(//+)?"); // used to check if a path is already starting at the root for resolveRootPath
+    buildFolderRootRE = new RegExp("^" + buildFolderRoot); // used to check if a path is already starting at the root for resolveRootPath
   };
 
   this.getBuildFolderRoot = function() {
@@ -45,11 +53,11 @@ var otafs = function() {
   };
 
   this.resolveRootPath = function(value) {
-    return buildFolderRootRE.test(value) ? value : path.normalize(buildFolderRoot + '/' + value);
+    return path.resolve(buildFolderRoot, value);
   };
 
   this.removeRootPath = function(value) {
-    return value.replace(buildFolderRootRE, "");
+    return path.normalize(value).replace(buildFolderRootRE, "").replace(new RegExp("^/"),"");
   };
 
   this.clone = function(value, excludeList) {
@@ -190,13 +198,13 @@ var otafs = function() {
     var results = {
       commitHash : "12345A",
     };  
-    results['displayName']     = data[otaconsts.IOS_NAME];
-    results['version']  = data[otaconsts.IOS_VERSION];
-    results[otaconsts.IOS_ID]       = data[otaconsts.IOS_ID];
-    results[otaconsts.IOS_TEAM]     = data[otaconsts.IOS_TEAM];
-    results[otaconsts.IOS_ICON]     = data[otaconsts.IOS_ICON];
-    results['url'] = otaconsts.HOST_SVR + encodeURI(self.removeRootPath(file));
-    results['installerUrl'] = encodeURI(self.removeRootPath(file) + '/installer');
+    results['displayName']       = data[otaconsts.IOS_NAME];
+    results['version']           = data[otaconsts.IOS_VERSION];
+    results[otaconsts.IOS_ID]    = data[otaconsts.IOS_ID];
+    results[otaconsts.IOS_TEAM]  = data[otaconsts.IOS_TEAM];
+    results[otaconsts.IOS_ICON]  = data[otaconsts.IOS_ICON];
+    results['url']               = path.normalize(otaconsts.HOST_SVR + '/' + encodeURI(self.removeRootPath(file)));
+    results['installerUrl']      = path.normalize(encodeURI(self.removeRootPath(file) + '/installer'));
 
     console.log(file);
     console.log(self.removeRootPath(file));
@@ -220,21 +228,23 @@ var otafs = function() {
     };  
   };
 
-  this.findBuildFile = function(dirPath) {
-    return function (done) {
+  this.findBuildFile = function *(dirPath) {
+    var file, stat, files;
+    var found = false;
+    var data = null;
+    try {
+      files = yield walk(dirPath);
+    } catch (e) {return null}
+    var list = unglob.list(['**/*.xap', '**/*.exe', '**/*.ipa', '**/*.apk'], files);
 
-      var found = false;
-      var data = null;
-      var buildData = null;
-      //console.log(dirPath);
-            
-      find2.eachfile(/./, dirPath, function(file, stat) {
-        if (found) { return; }
-        if (otaconsts.iOS_FILE.test(file)) {
+    for (var i=0; i<list.length; i++) {
+       file = list[i];
+       stat = yield fs.stat(self.resolveRootPath(dirPath + '/' + file));
+       if (otaconsts.iOS_FILE.test(file)) {
           data = {
             type : otaconsts.TYPE_IOS,
             buildName : path.basename(file).replace(otaconsts.iOS_FILE, ""),
-            buildFile : self.removeRootPath(file),
+            buildFile : self.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
             timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
@@ -245,7 +255,7 @@ var otafs = function() {
           data = {
             type : otaconsts.TYPE_AND,
             buildName : path.basename(file).replace(otaconsts.AND_FILE, ""),
-            buildFile : self.removeRootPath(file),
+            buildFile : self.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
             timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
@@ -256,7 +266,7 @@ var otafs = function() {
           data = {
             type : otaconsts.TYPE_WIN,
             buildName : path.basename(file).replace(otaconsts.WIN_FILE_EXE, ""),
-            buildFile : self.removeRootPath(file),
+            buildFile : self.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
             timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
@@ -267,53 +277,35 @@ var otafs = function() {
           data = {
             type : otaconsts.TYPE_WIN,
             buildName : path.basename(file).replace(otaconsts.WIN_FILE_XAP, ""),
-            buildFile : self.removeRootPath(file),
+            buildFile : self.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
             timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
           };
           found = true;
         }
-      }).end(function(){
-        done(null,data);
-      });
-    };
+        if (found) {break}
+    }
+    return data;
   };
 
   this.getProjectsService = function *() {
 
-    var data = cache.get(otaconsts.GET_PROJECTS);
-    if (data !== null) {
-      return data;
-      //data = yield ota.getProjectsService();
-      //cache.put(otaconsts.GET_PROJECTS, data, argv.mcache);
-      //this.set('X-Cache-Hit', false);
-    } else {
-      var bp = yield self.getFolders(buildFolderRoot);
-      cache.put(otaconsts.GET_PROJECTS, data, argv.mcache);
-      //this.set('X-Cache-Hit', true);
-    }
-
-    //var result;
-    //if (result = cache.get('') 
-    if (buildProjects) {
-       return self.clone(buildProjects, ['list']);
-    }
-   var bp = yield self.getFolders(buildFolderRoot);
-   buildProjects = []; // shouldn't be needed
+    var p = yield self.getFolders(buildFolderRoot);
+    var projects = []; 
 
     var list, files, dirPath, fullFile, buildInfo, filePath;
     // loop through and get the builds for each project. 
     // We need one to work out the type of project (EG TYPE);
-    for (var i=0; i<bp.length; i++) {
-      filePath = self.removeRootPath(bp[i]);
-      list = yield self.getBuildProjectList(path.normalize(buildFolderRoot + '/' + filePath));
-      console.log(list);
+    for (var i=0; i<p.length; i++) {
+
+      filePath = self.resolveRootPath(p[i]);
+      list = yield self.getBuildProjectList(filePath);
       if (list.length > 0) {
         dirPath = list[0];
         buildInfo = yield self.findBuildFile(dirPath);
         if (buildInfo) {
-          buildProjects.push({
+          projects.push({
             name  : path.basename(filePath),
             _id   : filePath.replace(/[\/\s]/g, '_'),
             path  : filePath,
@@ -321,7 +313,7 @@ var otafs = function() {
             label : otaconsts.TYPE_LABELS[buildInfo.type]
           });
         } else {
-          buildProjects.push({
+          projects.push({
             name  : path.basename(filePath),
             _id   : filePath.replace(/[\/\s]/g, '_'),
             path  : filePath,
@@ -331,54 +323,124 @@ var otafs = function() {
         }
       }
     }
-    return self.clone(buildProjects, ['list']);    
+    return projects;      
   };
 
-  this.getProjectBuildListService = function *(project) {
-    if (project.list) {
-       return self.clone(project.list, ['list']);
+  this.getProjectsServiceCached = function *() {
+
+    var data = cache.get(otaconsts.CK_GET_PROJECTS);
+    if (data !== null) {
+      return {
+        cacheHit : true,
+        ts       : data.ts,
+        data     : data.data
+      };
     }
-    var list, files, dirPath, fullFile, buildMeta, buildData, data;
-    list = yield self.getBuildProjectList(path.normalize(buildFolderRoot + '/' + project.path));
-    project.list = [];
+    data = yield self.getProjectsService();
+    var cacheObj = {
+      ts   : Date.now(),
+      data : data
+    };
+    cache.set(otaconsts.CK_GET_PROJECTS, cacheObj, otaconsts.M_CACHE);
+    return {
+        cacheHit : false,
+        ts       : cacheObj.ts,
+        data     : cacheObj.data
+    };
+  };
+
+  this.getProjectBuildListService = function *(projectPath) {
+
+    if (!projectPath || typeof projectPath !== 'string') {return []}
+
+    var list, files, dirPath, fullFile, buildInfo, buildData, data, filePath;
+    filePath = self.resolveRootPath(projectPath);
+    list = yield self.getBuildProjectList(filePath);
+    var buildList = [];
     for (var i=0; i<list.length; i++) {
       data = self.removeRootPath(list[i]);
-      project.list[i] = {
+      buildList.push({
         instanceName  : path.basename(data),
         instanceLabel : self.normaliseDate(path.basename(data)),
         instanceLabel2: moment(self.normaliseDate(path.basename(data))).fromNow() + " (" + moment(self.normaliseDate(path.basename(data))).toISOString() + ")",
         _id           : data.replace(/[\/\s]/g, '_'),
         instancePath  : data,
-      };
+      });
 
-      buildMeta = yield self.findBuildFile(self.resolveRootPath(list[i]));
-   //   console.log(buildMeta);
-      if (buildMeta) {
-        lodash.extend(project.list[i], buildMeta);
+      buildInfo = yield self.findBuildFile(self.resolveRootPath(list[i]));
+      if (buildInfo) {
+        lodash.extend(buildList[i], buildInfo);
       }
     }
-    return self.clone(project.list, ['list']);  
+    return buildList; 
   };
 
-  this.getProjectBuildDataService = function(projectBuild) {
+  this.getProjectBuildListServiceCached = function *(projectPath) {
 
-    if (projectBuild.buildData) {
-       return projectBuild.buildData;
+    if (!projectPath || typeof projectPath !== 'string') {return []}
+
+    var cacheKey = otaconsts.CK_GET_PROJECT_BUILDS + '_' + projectPath;
+    var data = cache.get(cacheKey);
+    if (data !== null) {
+      return {
+        cacheHit : true,
+        ts       : data.ts,
+        data     : data.data
+      };
     }
-    var buildData;
-    if (projectBuild.type === otaconsts.TYPE_IOS) {
-      buildData = self.getBuildInfoIOS(self.resolveRootPath(projectBuild.buildFile));
-    }
-    else if (projectBuild.type === otaconsts.TYPE_AND) {
-      buildData = self.getBuildInfoAND(self.resolveRootPath(projectBuild.buildFile));
-    }    
-    else if (projectBuild.type === otaconsts.TYPE_WIN) {
-      buildData = self.getBuildInfoWIN(self.resolveRootPath(projectBuild.buildFile));
-    }
-    if (buildData) {
-      projectBuild.buildData = buildData;
-    }
-    return projectBuild.buildData;
+    data = yield self.getProjectBuildListService(projectPath);
+    var cacheObj = {
+      ts   : Date.now(),
+      data : data
+    };
+    cache.set(cacheKey, cacheObj, otaconsts.M_CACHE);
+    return {
+        cacheHit : false,
+        ts       : cacheObj.ts,
+        data     : cacheObj.data
+    };
   };
+
+  this.buildInfoMethods = {};
+  this.buildInfoMethods[otaconsts.TYPE_IOS] = this.getBuildInfoIOS;
+  this.buildInfoMethods[otaconsts.TYPE_AND] = this.getBuildInfoAND;
+  this.buildInfoMethods[otaconsts.TYPE_WIN] = this.getBuildInfoWIN;
+
+  this.getProjectBuildDataService = function* (projectBuild) {
+
+    if (!projectBuild || !util.isObject(projectBuild)) {return null}
+
+    var buildData = null;
+    if (projectBuild.hasOwnProperty('type') && this.buildInfoMethods[projectBuild.type]) {
+      buildData = yield this.buildInfoMethods[projectBuild.type](self.resolveRootPath(projectBuild.buildFile));
+    }
+    return buildData;
+  };
+
+  this.getProjectBuildDataServiceCached = function *(projectBuild) {
+
+    if (!projectBuild || !util.isObject(projectBuild)) {return null}
+
+    var cacheKey = otaconsts.CK_GET_BUILD_DATA + '_' + projectBuild.buildFile;
+    var data = cache.get(cacheKey);
+    if (data !== null) {
+      return {
+        cacheHit : true,
+        ts       : data.ts,
+        data     : data.data
+      };
+    }
+    data = yield self.getProjectBuildDataService(projectBuild);
+    var cacheObj = {
+      ts   : Date.now(),
+      data : data
+    };
+    cache.set(cacheKey, cacheObj, otaconsts.M_CACHE);
+    return {
+        cacheHit : false,
+        ts       : cacheObj.ts,
+        data     : cacheObj.data
+    };
+  };  
 }
 module.exports = new otafs();

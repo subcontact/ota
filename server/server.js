@@ -26,10 +26,11 @@ var argv;
     debug   : false,
     nocache : false,
     maxage  : (60 * 60 * 24 * 5), // http cache maxage setting in seconds - 432,000 is 5 days (for static assets - should make this far dated in the future)
-    mcache  : (1000 * 60 * 5), // internal memory cache in millseconds - 300,000 is 5 minutes
+//    mcache  : (1000 * 60 * 5), // internal memory cache in millseconds - 300,000 is 5 minutes
+    mcache  : (5000), // internal memory cache in millseconds - 1.5 sec
     builds  : ".",
     port    : 8181,
-    host    : "http://localhost"
+    host    : "http://localhost",
   };
   defaults.host += ":" + defaults.port;
   argv = parseArgs((process.argv.slice(2)), { default : defaults });
@@ -38,27 +39,31 @@ var argv;
 console.log(argv);
 ota.setBuildFolderRoot(argv.builds);
 otaconsts.HOST_SVR = argv.host;
+otaconsts.M_CACHE = argv.mcache;
 
 // logger
-app.use(function *(next){
-  var start = new Date();
-  yield next;
-  var ms = new Date() - start;
-  console.log('%s %s - %s', this.method, this.url, ms + ' ms');
-});
+if (argv.debug) {
+  app.use(function *(next){
+    var start = new Date();
+    yield next;
+    var ms = new Date() - start;
+    console.log('%s %s - %s', this.method, this.url, ms + ' ms');
+  });
+}
 
 if (!argv.nocache) {
   app.use(function *(next) {
+
+      yield next;
       //TODO - add a last modified by adding a timestamp to each service call response
       //this.set('Last-Modified', stats.mtime.toUTCString());
-      yield next;
       //this.set('Cache-Control', 'max-age=' + argv.maxage);
   });
 }
 
 (function() { // wrap this up in it's own scope so we can throw away the config variable
   var config = argv.nocache ? null : { maxage : argv.maxage};
-  console.log(config);
+  //console.log(config);
   app.use(serve('.', config));
   app.use(serve('../..', config));
   app.use(serve(ota.getBuildFolderRoot(), config));
@@ -67,65 +72,165 @@ if (!argv.nocache) {
 app.use(router(app));  
 
 var getProjectsRoute = function *(next) {
-  var data = cache.get(otaconsts.GET_PROJECTS);
-  if (data === null) {
-    data = yield ota.getProjectsService();
-    cache.put(otaconsts.GET_PROJECTS, data, argv.mcache);
-    this.set('X-Cache-Hit', false);
-  } else {
-    this.set('X-Cache-Hit', true);
-  }
-  this.body = data;
+
+  var projectList;
+  projectList = yield ota.getProjectsServiceCached();
+  this.set('x-Cache-Hit', projectList.cacheHit);
+  this.set('x-Cache-Time', projectList.ts);
+  this.body = projectList.data;
 };
 
 
 var getProjectBuildsRoute = function *(next) {
-  var projectList   = yield ota.getProjectsService();
-  var projectId     = this.params.projectId;
-  var project       = lodash.find(projectList, {_id : this.params.projectId});
-  var projectBuilds = yield ota.getProjectBuildListService(project);
-  this.body = projectBuilds;
+  
+  var projectId, project, projectList, buildList;
+
+  projectId     = this.params.projectId;
+  if (projectId && typeof projectId === 'string') {
+    projectList = yield ota.getProjectsServiceCached();
+    project     = lodash.find(projectList.data, {_id : projectId});
+    buildList   = yield ota.getProjectBuildListServiceCached(project.path);
+    this.set('x-Cache-Hit', buildList.cacheHit);
+    this.set('x-Cache-Time', buildList.ts);
+    this.body = buildList.data;
+  } else {
+    console.log('getProjectBuildsRoute params error');
+    this.body = null;  }
 };
 
 var getProjectBuildDataRoute = function *(next) {
-  var projectList   = yield ota.getProjectsService();
-  var project       = lodash.find(projectList, {_id : this.params.projectId});
-  var projectBuilds = yield ota.getProjectBuildListService(project);
-  var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
-  var buildData     = yield ota.getProjectBuildDataService(build);
-  this.body = buildData;
+
+  var projectId, project, build, buildList, buildData, buildId, projectList;
+
+  projectId     = this.params.projectId;
+  buildId       = this.params.buildId;
+  if ((projectId  && typeof projectId === 'string') &&
+      (buildId    && typeof buildId   === 'string')
+    ) {
+    try {
+      projectList = yield ota.getProjectsServiceCached();
+      project     = lodash.find(projectList.data, {_id : projectId});
+      buildList   = yield ota.getProjectBuildListServiceCached(project.path);
+      build       = lodash.find(buildList.data, {_id : buildId});
+      buildData   = yield ota.getProjectBuildDataServiceCached(build);
+
+      this.set('x-Cache-Hit',  buildData.cacheHit);
+      this.set('x-Cache-Time', buildData.ts);
+      this.body = buildData.data;
+    } catch(e) {
+      console.log('getProjectBuildDataRoute', e);
+      console.log(buildData);
+      this.body = null;
+    }
+  } else {
+    console.log('getProjectBuildDataRoute params error');
+    this.body = null;
+  }
 };
 
+// iOS only (so far)
 var getProjectBuildInstallerRoute = function *(next) {
-  var projectList   = yield ota.getProjectsService();
-  var project       = lodash.find(projectList, {_id : this.params.projectId});
-  var projectBuilds = yield ota.getProjectBuildListService(project);
-  var build         = lodash.find(projectBuilds, {_id : this.params.buildId}); 
-  var buildData     = yield ota.getProjectBuildDataService(build);
-  var installer     = buildData.installerSource;
-  this.body = installer;
-  this.set('Content-Type', 'application/xml');
+
+  var projectId, project, build, buildList, buildData, buildId, projectList;
+
+  projectId     = this.params.projectId;
+  buildId       = this.params.buildId;
+  if ((projectId  && typeof projectId === 'string') &&
+      (buildId    && typeof buildId   === 'string')
+    ) {
+    try {
+      projectList = yield ota.getProjectsServiceCached();
+      project     = lodash.find(projectList.data, {_id : projectId});
+      buildList   = yield ota.getProjectBuildListServiceCached(project.path);
+      build       = lodash.find(buildList.data, {_id : buildId});
+      buildData   = yield ota.getProjectBuildDataServiceCached(build);
+
+      this.set('x-Cache-Hit',  buildData.cacheHit);
+      this.set('x-Cache-Time', buildData.ts);
+      this.set('Content-Type', 'application/xml');
+      this.body = buildData.data.installerSource;
+
+    } catch(e) {
+      console.log('getProjectBuildInstallerRoute', e);
+      console.log(buildData);
+      this.body = null;
+    }
+  } else {
+    console.log('getProjectBuildInstallerRoute params error');    
+    this.body = null;
+  }
 };
 
 var getProjectBuildFileRoute = function *(next) {
-  var projectList   = yield ota.getProjectsService();
-  var project       = lodash.find(projectList, {_id : this.params.projectId});
-  var projectBuilds = yield ota.getProjectBuildListService(project);
-  var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
-  var buildData     = yield ota.getProjectBuildDataService(build);
-  var installer     = buildData.installerSource;
-  yield send(this, build.buildFile, {root : ota.getBuildFolderRoot()});
+
+  var projectId, project, build, buildList, buildData, buildId, projectList;
+
+  projectId     = this.params.projectId;
+  buildId       = this.params.buildId;
+  if ((projectId  && typeof projectId === 'string') &&
+      (buildId    && typeof buildId   === 'string')
+    ) {
+    try {
+      projectList = yield ota.getProjectsServiceCached();
+      project     = lodash.find(projectList.data, {_id : projectId});
+      buildList   = yield ota.getProjectBuildListServiceCached(project.path);
+      build       = lodash.find(buildList.data, {_id : buildId});
+
+      //this.set('x-Cache-Hit',  buildData.cacheHit);
+      //this.set('x-Cache-Time', buildData.ts);
+      var config = { 
+        root : ota.getBuildFolderRoot(),
+        maxage : argv.nocache ? 0 : argv.maxage
+      };
+      yield send(this, build.buildFile, config);
+
+    } catch(e) {
+      console.log('getProjectBuildFileRoute', e);
+      console.log(buildData);
+      this.body = null;
+    }
+  } else {
+    console.log('getProjectBuildFileRoute params error');       
+    this.body = null;
+  }
 };
 
 var getProjectBuildDownloadRoute = function *(next) {
-  var projectList   = yield ota.getProjectsService();
-  var project       = lodash.find(projectList, {_id : this.params.projectId});
-  var projectBuilds = yield ota.getProjectBuildListService(project);
-  var build         = lodash.find(projectBuilds, {_id : this.params.buildId});  
-  var buildData     = yield ota.getProjectBuildDataService(build);
-  var installer     = buildData.installerSource;
-  yield send(this, build.buildFile, {root : ota.getBuildFolderRoot()});
-  this.response.attachment([path.basename(build.buildFile)]);
+
+  var projectId, project, build, buildList, buildData, buildId, projectList;
+
+  projectId     = this.params.projectId;
+  buildId       = this.params.buildId;
+  if ((projectId  && typeof projectId === 'string') &&
+      (buildId    && typeof buildId   === 'string')
+    ) {
+    try {
+      projectList = yield ota.getProjectsServiceCached();
+      project     = lodash.find(projectList.data, {_id : projectId});
+      buildList   = yield ota.getProjectBuildListServiceCached(project.path);
+      build       = lodash.find(buildList.data, {_id : buildId});
+
+      //this.set('x-Cache-Hit',  buildData.cacheHit);
+      //this.set('x-Cache-Time', buildData.ts);
+      this.response.attachment([path.basename(build.buildFile)]);
+      var config = { 
+        root : ota.getBuildFolderRoot(),
+        maxage : !argv.nocache ? 0 : argv.maxage
+      };
+      console.log(argv.nocache);
+      console.log(argv.maxage);
+      console.log(config);
+      yield send(this, build.buildFile, config);
+
+    } catch(e) {
+      console.log('getProjectBuildDownloadRoute', e);
+      console.log(buildData);
+      this.body = null;
+    }
+  } else {
+    console.log('getProjectBuildDownloadRoute params error');       
+    this.body = null;
+  }
 };
 
 app.get('/',          getProjectsRoute);
@@ -142,6 +247,7 @@ app.get('/projects/:projectId/builds/:buildId', getProjectBuildDataRoute);
 app.get('/projects/:projectId/builds/:buildId/installer', getProjectBuildInstallerRoute);
 
 app.register('/projects/:projectId/builds/:buildId/file', ['get', 'head'], getProjectBuildFileRoute);
+app.register('/projects/:projectId/builds/:buildId/file/:name', ['get', 'head'], getProjectBuildFileRoute);
 app.register('/projects/:projectId/builds/:buildId/download', ['get', 'head'], getProjectBuildDownloadRoute);
 
 app.listen(argv.port);

@@ -1,7 +1,7 @@
 var cache = {}
 function now() { return (new Date).getTime(); }
 
-exports.put = function(key, value, time) {
+exports.set = function(key, value, time) {
 
 	var expire = time + now();
 	var record = {value: value, expire: expire};

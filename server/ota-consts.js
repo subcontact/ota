@@ -40,6 +40,7 @@ var otaconsts = function() {
   this.IOS_TEAM    = 'TeamName';
   this.IOS_ICON    = 'CFBundleIconFile';
   this.HOST_SVR    = null;
+  this.M_CACHE     = null;
 
   this.CK_GET_PROJECTS = 0;
   this.CK_GET_PROJECT_BUILDS = 1;

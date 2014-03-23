@@ -49,7 +49,10 @@
     "minimist": "0.0.8",
     "memory-cache": "0.0.5",
     "transparentcache": "~0.4.1",
-    "assert": "~1.1.1"
+    "assert": "~1.1.1",
+    "co-walk": "0.0.2",
+    "unglob": "^0.1.1",
+    "co-each": "^0.1.0"
   },
   "devDependencies": {
     "co-mocha": "0.0.2"
