@@ -45,6 +45,10 @@ var otaconsts = function() {
   this.CK_GET_PROJECTS = 0;
   this.CK_GET_PROJECT_BUILDS = 1;
   this.CK_GET_BUILD_DATA = 2;
+
+  this.ENV_DEV  = 'dev';
+  this.ENV_TEST = 'test';
+  this.ENV_PROD = 'prod';
   
   this.PARSE_BUILD_DIR = [
     {

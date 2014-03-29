@@ -1,22 +1,15 @@
 "use strict";
-var q       = require('q');
 var koa     = require('koa');
 var router  = require('koa-router');
-var serve   = require('koa-static');
 var send    = require('koa-send');
-var co      = require('co');
-var fs      = require('co-fs');
 var path    = require('path');
 var lodash  = require('lodash');
-var util    = require('util');
-var find    = require('findit');
 var parseArgs = require('minimist');
 var winston = require('winston');
 var bplist  = require('bplist-parser');
 var ota     = require('./ota-fs');
 var otaconsts = require('./ota-consts');
-var cachify = require('transparentcache');
-var cache = require('./mem-cache');
+var serve = require('./koa-static-virtual');
 
 var app = koa();
 var argv;
@@ -31,6 +24,7 @@ var argv;
     builds  : ".",
     port    : 8181,
     host    : "http://localhost",
+    env     : 'prod'
   };
   defaults.host += ":" + defaults.port;
   argv = parseArgs((process.argv.slice(2)), { default : defaults });
@@ -64,9 +58,22 @@ if (!argv.nocache) {
 (function() { // wrap this up in it's own scope so we can throw away the config variable
   var config = argv.nocache ? null : { maxage : argv.maxage};
   //console.log(config);
-  app.use(serve('.', config));
-  app.use(serve('../..', config));
-  app.use(serve(ota.getBuildFolderRoot(), config));
+  //app.use(serve('.', config));
+  //app.use(serve('../..', config));
+  //app.use(serve(ota.getBuildFolderRoot(), config));
+
+  switch (argv.env) {
+    case otaconsts.ENV_DEV :
+      app.use(serve('web-dev','../client-web/source', config));
+      app.use(serve('qooxdoo','../../qooxdoo', config));
+    break;
+    case otaconsts.ENV_PROD :
+    //default :
+    //  app.use(serve('client','../client-web/build', config));
+    break;
+  }
+
+
 })();
 
 app.use(router(app));  
