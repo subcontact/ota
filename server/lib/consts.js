@@ -1,5 +1,5 @@
 "use strict";
-var otaconsts = function() {
+var consts = function() {
 
   this.ATTACH_TST = /attachment;/i;
   this.BUILD_DIR = "builds";
@@ -61,4 +61,4 @@ var otaconsts = function() {
     }
   ];
 }
-module.exports = new otaconsts();
+module.exports = new consts();

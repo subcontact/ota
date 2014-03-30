@@ -1,47 +1,25 @@
 "use strict";
-var q         = require('q');
-var koa       = require('koa');
-var router    = require('koa-router');
-var thunkify  = require('thunkify');
-var co        = require('co');
+
 var fs        = require('co-fs');
-var old_fs    = require('fs');
 var path      = require('path');
 var lodash    = require('lodash');
 var util      = require('util');
 var bplist    = require('bplist-parser');
-var admZip    = require('adm-zip');
 var zip       = require('zip');
 var util      = require('util');
 var mustache  = require('mustache');
 var moment    = require('moment');
-var otaconsts = require('./ota-consts');
-var find     = require('find');
-var cache     = require('./mem-cache');
+var consts    = require('./consts');
+var LRU       = require("lru-cache");
 var walk      = require('co-walk');
 var unglob    = require('unglob');
 
-function zipReadAsTextAsyncThunk(object, entry) {
-  return function(done){
-    // for some reason the params are non standard (swapped) meaning I had to thunk this myself.
-    object.readAsTextAsync(entry, function(data, err) {
-      done(err, data);
-    });
-  }
-};
-
-function sleep(ms) {
-  return function (cb) {
-    setTimeout(cb, ms);
-  };
-}
-
-
-var otafs = function() {
+var service = function() {
   var self = this;
   var buildProjects = null;
   var buildFolderRoot = null;
   var buildFolderRootRE = null;
+  var lruCache = LRU({ max : 200,  maxAge : consts.M_CACHE});
 
   this.setBuildFolderRoot = function(value) {
     buildFolderRoot   = value;
@@ -58,33 +36,6 @@ var otafs = function() {
 
   this.removeRootPath = function(value) {
     return path.normalize(value).replace(buildFolderRootRE, "").replace(new RegExp("^/"),"");
-  };
-
-  this.clone = function(value, excludeList) {
-    var cloned;
-    if (!excludeList) {excludeList = [];}
-    if (lodash.isArray(value)) {
-      cloned = value.map(function(data) {
-        return self.clone(data, excludeList);
-      });
-      return cloned;
-    } else if (lodash.isObject(value)) {
-      var exclude = false;
-      cloned = {};
-      for (var k in value) {
-        exclude = false;
-        for (var i=0; i<excludeList.length; i++) {
-          if (k == excludeList[i]) {exclude = true;}
-        }
-        if (!exclude) {
-          cloned[k] = value[k];
-        }
-      }
-      return cloned;
-    }
-    else {
-      return value;
-    }
   };
 
   this.getFolders = function *(dirPath){
@@ -110,7 +61,7 @@ var otafs = function() {
   this.getBuildProjectList = function *(buildProfilePath) {
     var buildList = [];
     var i,j;
-      var fullFile = path.normalize(buildProfilePath + '/' + otaconsts.BUILD_DIR);
+      var fullFile = path.normalize(buildProfilePath + '/' + consts.BUILD_DIR);
       if (yield fs.exists(fullFile)) {
         var stat = yield fs.stat(fullFile);
         if (stat.isDirectory()) {
@@ -127,9 +78,9 @@ var otafs = function() {
 
   this.filterKnownBuildFolder = function(folder) {
 
-    for (var i=0; i<otaconsts.PARSE_BUILD_DIR.length; i++)
+    for (var i=0; i<consts.PARSE_BUILD_DIR.length; i++)
     {
-      if (otaconsts.PARSE_BUILD_DIR[i].pattern.test(path.basename(folder))) {
+      if (consts.PARSE_BUILD_DIR[i].pattern.test(path.basename(folder))) {
         return true;
       }
     }
@@ -138,10 +89,10 @@ var otafs = function() {
 
   this.normaliseDate = function(folder) {
 
-    for (var i=0; i<otaconsts.PARSE_BUILD_DIR.length; i++)
+    for (var i=0; i<consts.PARSE_BUILD_DIR.length; i++)
     {
-      if (otaconsts.PARSE_BUILD_DIR[i].pattern.test(path.basename(folder))) {
-        return moment(path.basename(folder), otaconsts.PARSE_BUILD_DIR[i].format).valueOf();
+      if (consts.PARSE_BUILD_DIR[i].pattern.test(path.basename(folder))) {
+        return moment(path.basename(folder), consts.PARSE_BUILD_DIR[i].format).valueOf();
       }
     }
     return path.basename(folder);
@@ -198,12 +149,12 @@ var otafs = function() {
     var results = {
       commitHash : "12345A",
     };  
-    results['displayName']       = data[otaconsts.IOS_NAME];
-    results['version']           = data[otaconsts.IOS_VERSION];
-    results[otaconsts.IOS_ID]    = data[otaconsts.IOS_ID];
-    results[otaconsts.IOS_TEAM]  = data[otaconsts.IOS_TEAM];
-    results[otaconsts.IOS_ICON]  = data[otaconsts.IOS_ICON];
-    results['url']               = path.normalize(otaconsts.HOST_SVR + '/' + encodeURI(self.removeRootPath(file)));
+    results['displayName']       = data[consts.IOS_NAME];
+    results['version']           = data[consts.IOS_VERSION];
+    results[consts.IOS_ID]    = data[consts.IOS_ID];
+    results[consts.IOS_TEAM]  = data[consts.IOS_TEAM];
+    results[consts.IOS_ICON]  = data[consts.IOS_ICON];
+    results['url']               = path.normalize(consts.HOST_SVR + '/' + encodeURI(self.removeRootPath(file)));
     results['installerUrl']      = path.normalize(encodeURI(self.removeRootPath(file) + '/installer'));
 
     console.log(file);
@@ -240,10 +191,10 @@ var otafs = function() {
     for (var i=0; i<list.length; i++) {
        file = list[i];
        stat = yield fs.stat(self.resolveRootPath(dirPath + '/' + file));
-       if (otaconsts.iOS_FILE.test(file)) {
+       if (consts.iOS_FILE.test(file)) {
           data = {
-            type : otaconsts.TYPE_IOS,
-            buildName : path.basename(file).replace(otaconsts.iOS_FILE, ""),
+            type : consts.TYPE_IOS,
+            buildName : path.basename(file).replace(consts.iOS_FILE, ""),
             buildFile : self.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
@@ -251,10 +202,10 @@ var otafs = function() {
           };
           found = true;
         }
-        else if (otaconsts.AND_FILE.test(file)) {
+        else if (consts.AND_FILE.test(file)) {
           data = {
-            type : otaconsts.TYPE_AND,
-            buildName : path.basename(file).replace(otaconsts.AND_FILE, ""),
+            type : consts.TYPE_AND,
+            buildName : path.basename(file).replace(consts.AND_FILE, ""),
             buildFile : self.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
@@ -262,10 +213,10 @@ var otafs = function() {
           };
           found = true;
         }
-        else if (otaconsts.WIN_FILE_EXE.test(file)) {
+        else if (consts.WIN_FILE_EXE.test(file)) {
           data = {
-            type : otaconsts.TYPE_WIN,
-            buildName : path.basename(file).replace(otaconsts.WIN_FILE_EXE, ""),
+            type : consts.TYPE_WIN,
+            buildName : path.basename(file).replace(consts.WIN_FILE_EXE, ""),
             buildFile : self.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
@@ -273,10 +224,10 @@ var otafs = function() {
           };
           found = true;
         }
-        else if (otaconsts.WIN_FILE_XAP.test(file)) {
+        else if (consts.WIN_FILE_XAP.test(file)) {
           data = {
-            type : otaconsts.TYPE_WIN,
-            buildName : path.basename(file).replace(otaconsts.WIN_FILE_XAP, ""),
+            type : consts.TYPE_WIN,
+            buildName : path.basename(file).replace(consts.WIN_FILE_XAP, ""),
             buildFile : self.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
@@ -310,15 +261,15 @@ var otafs = function() {
             _id   : filePath.replace(/[\/\s]/g, '_'),
             path  : filePath,
             type  : buildInfo.type,
-            label : otaconsts.TYPE_LABELS[buildInfo.type]
+            label : consts.TYPE_LABELS[buildInfo.type]
           });
         } else {
           projects.push({
             name  : path.basename(filePath),
             _id   : filePath.replace(/[\/\s]/g, '_'),
             path  : filePath,
-            type  : otaconsts.TYPE_UNKNOWN,
-            label : otaconsts.TYPE_LABELS[otaconsts.TYPE_UNKNOWN]
+            type  : consts.TYPE_UNKNOWN,
+            label : consts.TYPE_LABELS[consts.TYPE_UNKNOWN]
           });
         }
       }
@@ -328,8 +279,8 @@ var otafs = function() {
 
   this.getProjectsServiceCached = function *() {
 
-    var data = cache.get(otaconsts.CK_GET_PROJECTS);
-    if (data !== null) {
+    var data = lruCache.get(consts.CK_GET_PROJECTS);
+    if (data != null) {
       return {
         cacheHit : true,
         ts       : data.ts,
@@ -341,7 +292,7 @@ var otafs = function() {
       ts   : Date.now(),
       data : data
     };
-    cache.set(otaconsts.CK_GET_PROJECTS, cacheObj, otaconsts.M_CACHE);
+    lruCache.set(consts.CK_GET_PROJECTS, cacheObj);
     return {
         cacheHit : false,
         ts       : cacheObj.ts,
@@ -379,9 +330,9 @@ var otafs = function() {
 
     if (!projectPath || typeof projectPath !== 'string') {return []}
 
-    var cacheKey = otaconsts.CK_GET_PROJECT_BUILDS + '_' + projectPath;
-    var data = cache.get(cacheKey);
-    if (data !== null) {
+    var cacheKey = consts.CK_GET_PROJECT_BUILDS + '_' + projectPath;
+    var data = lruCache.get(cacheKey);
+    if (data != null) {
       return {
         cacheHit : true,
         ts       : data.ts,
@@ -393,7 +344,7 @@ var otafs = function() {
       ts   : Date.now(),
       data : data
     };
-    cache.set(cacheKey, cacheObj, otaconsts.M_CACHE);
+    lruCache.set(cacheKey, cacheObj);
     return {
         cacheHit : false,
         ts       : cacheObj.ts,
@@ -402,9 +353,9 @@ var otafs = function() {
   };
 
   this.buildInfoMethods = {};
-  this.buildInfoMethods[otaconsts.TYPE_IOS] = this.getBuildInfoIOS;
-  this.buildInfoMethods[otaconsts.TYPE_AND] = this.getBuildInfoAND;
-  this.buildInfoMethods[otaconsts.TYPE_WIN] = this.getBuildInfoWIN;
+  this.buildInfoMethods[consts.TYPE_IOS] = this.getBuildInfoIOS;
+  this.buildInfoMethods[consts.TYPE_AND] = this.getBuildInfoAND;
+  this.buildInfoMethods[consts.TYPE_WIN] = this.getBuildInfoWIN;
 
   this.getProjectBuildDataService = function* (projectBuild) {
 
@@ -421,9 +372,9 @@ var otafs = function() {
 
     if (!projectBuild || !util.isObject(projectBuild)) {return null}
 
-    var cacheKey = otaconsts.CK_GET_BUILD_DATA + '_' + projectBuild.buildFile;
-    var data = cache.get(cacheKey);
-    if (data !== null) {
+    var cacheKey = consts.CK_GET_BUILD_DATA + '_' + projectBuild.buildFile;
+    var data = lruCache.get(cacheKey);
+    if (data !=  null) {
       return {
         cacheHit : true,
         ts       : data.ts,
@@ -435,7 +386,7 @@ var otafs = function() {
       ts   : Date.now(),
       data : data
     };
-    cache.set(cacheKey, cacheObj, otaconsts.M_CACHE);
+    lruCache.set(cacheKey, cacheObj);
     return {
         cacheHit : false,
         ts       : cacheObj.ts,
@@ -443,4 +394,4 @@ var otafs = function() {
     };
   };  
 }
-module.exports = new otafs();
+module.exports = new service();

@@ -1,15 +1,12 @@
 "use strict";
-var koa     = require('koa');
-var router  = require('koa-router');
-var send    = require('koa-send');
-var path    = require('path');
-var lodash  = require('lodash');
+var koa       = require('koa');
+var router    = require('koa-router');
+var send      = require('koa-send');
+var path      = require('path');
+var lodash    = require('lodash');
 var parseArgs = require('minimist');
-var winston = require('winston');
-var bplist  = require('bplist-parser');
-var ota     = require('./ota-fs');
-var otaconsts = require('./ota-consts');
-var serve = require('./koa-static-virtual');
+var consts    = require('./lib/consts');
+var serve     = require('./lib/koa-static-virtual');
 
 var app = koa();
 var argv;
@@ -31,10 +28,13 @@ var argv;
 })();
 
 console.log(argv);
-ota.setBuildFolderRoot(argv.builds);
-otaconsts.HOST_SVR = argv.host;
-otaconsts.M_CACHE = argv.mcache;
+consts.HOST_SVR = argv.host;
+consts.M_CACHE = argv.mcache;
 
+var service   = require('./lib/service-fs');
+service.setBuildFolderRoot(argv.builds);
+
+// ---------------------------------------------------------------------------------------
 // logger
 if (argv.debug) {
   app.use(function *(next){
@@ -60,14 +60,14 @@ if (!argv.nocache) {
   //console.log(config);
   //app.use(serve('.', config));
   //app.use(serve('../..', config));
-  //app.use(serve(ota.getBuildFolderRoot(), config));
+  //app.use(serve(service.getBuildFolderRoot(), config));
 
   switch (argv.env) {
-    case otaconsts.ENV_DEV :
+    case consts.ENV_DEV :
       app.use(serve('web-dev','../client-web/source', config));
       app.use(serve('qooxdoo','../../qooxdoo', config));
     break;
-    case otaconsts.ENV_PROD :
+    case consts.ENV_PROD :
     //default :
     //  app.use(serve('client','../client-web/build', config));
     break;
@@ -81,7 +81,7 @@ app.use(router(app));
 var getProjectsRoute = function *(next) {
 
   var projectList;
-  projectList = yield ota.getProjectsServiceCached();
+  projectList = yield service.getProjectsServiceCached();
   this.set('x-Cache-Hit', projectList.cacheHit);
   this.set('x-Cache-Time', projectList.ts);
   this.body = projectList.data;
@@ -94,9 +94,9 @@ var getProjectBuildsRoute = function *(next) {
 
   projectId     = this.params.projectId;
   if (projectId && typeof projectId === 'string') {
-    projectList = yield ota.getProjectsServiceCached();
+    projectList = yield service.getProjectsServiceCached();
     project     = lodash.find(projectList.data, {_id : projectId});
-    buildList   = yield ota.getProjectBuildListServiceCached(project.path);
+    buildList   = yield service.getProjectBuildListServiceCached(project.path);
     this.set('x-Cache-Hit', buildList.cacheHit);
     this.set('x-Cache-Time', buildList.ts);
     this.body = buildList.data;
@@ -115,11 +115,11 @@ var getProjectBuildDataRoute = function *(next) {
       (buildId    && typeof buildId   === 'string')
     ) {
     try {
-      projectList = yield ota.getProjectsServiceCached();
+      projectList = yield service.getProjectsServiceCached();
       project     = lodash.find(projectList.data, {_id : projectId});
-      buildList   = yield ota.getProjectBuildListServiceCached(project.path);
+      buildList   = yield service.getProjectBuildListServiceCached(project.path);
       build       = lodash.find(buildList.data, {_id : buildId});
-      buildData   = yield ota.getProjectBuildDataServiceCached(build);
+      buildData   = yield service.getProjectBuildDataServiceCached(build);
 
       this.set('x-Cache-Hit',  buildData.cacheHit);
       this.set('x-Cache-Time', buildData.ts);
@@ -146,11 +146,11 @@ var getProjectBuildInstallerRoute = function *(next) {
       (buildId    && typeof buildId   === 'string')
     ) {
     try {
-      projectList = yield ota.getProjectsServiceCached();
+      projectList = yield service.getProjectsServiceCached();
       project     = lodash.find(projectList.data, {_id : projectId});
-      buildList   = yield ota.getProjectBuildListServiceCached(project.path);
+      buildList   = yield service.getProjectBuildListServiceCached(project.path);
       build       = lodash.find(buildList.data, {_id : buildId});
-      buildData   = yield ota.getProjectBuildDataServiceCached(build);
+      buildData   = yield service.getProjectBuildDataServiceCached(build);
 
       this.set('x-Cache-Hit',  buildData.cacheHit);
       this.set('x-Cache-Time', buildData.ts);
@@ -178,15 +178,15 @@ var getProjectBuildFileRoute = function *(next) {
       (buildId    && typeof buildId   === 'string')
     ) {
     try {
-      projectList = yield ota.getProjectsServiceCached();
+      projectList = yield service.getProjectsServiceCached();
       project     = lodash.find(projectList.data, {_id : projectId});
-      buildList   = yield ota.getProjectBuildListServiceCached(project.path);
+      buildList   = yield service.getProjectBuildListServiceCached(project.path);
       build       = lodash.find(buildList.data, {_id : buildId});
 
       //this.set('x-Cache-Hit',  buildData.cacheHit);
       //this.set('x-Cache-Time', buildData.ts);
       var config = { 
-        root : ota.getBuildFolderRoot(),
+        root : service.getBuildFolderRoot(),
         maxage : argv.nocache ? 0 : argv.maxage
       };
       yield send(this, build.buildFile, config);
@@ -212,16 +212,16 @@ var getProjectBuildDownloadRoute = function *(next) {
       (buildId    && typeof buildId   === 'string')
     ) {
     try {
-      projectList = yield ota.getProjectsServiceCached();
+      projectList = yield service.getProjectsServiceCached();
       project     = lodash.find(projectList.data, {_id : projectId});
-      buildList   = yield ota.getProjectBuildListServiceCached(project.path);
+      buildList   = yield service.getProjectBuildListServiceCached(project.path);
       build       = lodash.find(buildList.data, {_id : buildId});
 
       //this.set('x-Cache-Hit',  buildData.cacheHit);
       //this.set('x-Cache-Time', buildData.ts);
       this.response.attachment([path.basename(build.buildFile)]);
       var config = { 
-        root : ota.getBuildFolderRoot(),
+        root : service.getBuildFolderRoot(),
         maxage : !argv.nocache ? 0 : argv.maxage
       };
       console.log(argv.nocache);
@@ -244,7 +244,7 @@ app.get('/',          getProjectsRoute);
 app.get('/projects',  getProjectsRoute);
 
 app.get('/types', function *(next) {
-  this.body = otaconsts.TYPE_LABELS;
+  this.body = consts.TYPE_LABELS;
 });
 
 app.get('/projects/:projectId/builds',  getProjectBuildsRoute);
