@@ -115,30 +115,13 @@ var service = function() {
               continue;
           throw exception;
       }
-/*
-      console.log("!" + entry.getName() + "!");
-      console.log(entry.getName().match(/\/Info\.plist$/));
-      console.log(entry.getName().match(/.*moblieprovision$/));
-*/
-      // !Payload/MultiG.app/embedded.mobileprovision!
-      // !Payload/MultiG.app/MultiMail.momd/VersionInfo.plist!
 
       if (!InfoFound && entry.getName().match(/Info\.plist$/)) {
         InfoFound = true;
         data = entry.getData();
         data = bplist.parseBuffer(data)[0];
       }
-/*
-      if (entry.getName().match(/embedded\.moblieprovision$/)) {
-//      if (!ProvisionFound && entry.getName().match(/dist\.plist/)) {
-        //ProvisionFound = true;
-        //data = entry.getData();
-        //data = bplist.parseBuffer(data)[0];
-        console.log('!!!! mobileprovision !!!!');
-        //console.log(data);
-      }
-      */
-      //if (InfoFound && ProvisionFound) { break; }
+
       if (InfoFound) { break; }
     }
     return data ? data : {}
