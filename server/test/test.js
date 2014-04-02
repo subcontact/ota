@@ -273,13 +273,16 @@ describe('2nd Level Functions', function() {
     assert.strictEqual(data, null, 'must be null');
     //assert.strictEqual(data.buildFile, "Westpac Windows Phone OTP/builds/2014-02-03_09-36-45/archive/AppPackages/Westpac.WP7_Release_ARM.xap");
   });
-/*
-  it('tree test', function* () {
-    // TODO get setup/teardown working
-    service.setBuildFolderRoot(f);
-    var location  = "/Users/tyronne/code/jobs/Westpac Windows Phone OTP/builds/2014-02-03_09-36-45";
-    var data = yield service.findBuildFile(filePath);
-    console.log(data);
+});
+
+describe('file Parser Functions', function() {
+
+  it('parseAPK OK', function *() {
+
+    var file = f + '/Android_WBC_OTP1.0x_PROD_PROD/builds/2013-11-19_12-38-49/archive/Android_WBC_OTP1.0x_PROD_PROD_2013_11_19_12_40.apk';
+    console.log(file);
+    var data = yield service.parseAPK(file);
+    console.log(JSON.stringify(data,null,'\t'));
+
   });
-*/
 });

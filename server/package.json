@@ -19,7 +19,8 @@
     "co-each": "^0.1.0",
     "debug": "^0.7.4",
     "lru-cache": "^2.5.0",
-    "mustache": "^0.8.1"
+    "mustache": "^0.8.1",
+    "thunkify": "0.0.1"
   },
   "devDependencies": {
     "co-mocha": "0.0.2",

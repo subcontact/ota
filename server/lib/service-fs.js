@@ -1,10 +1,12 @@
 "use strict";
 
 var fs        = require('co-fs');
+var thunkify  = require('thunkify');
 var path      = require('path');
 var lodash    = require('lodash');
 var util      = require('util');
 var bplist    = require('bplist-parser');
+var parseAPK  = require('apk-parser');
 var zip       = require('zip');
 var util      = require('util');
 var mustache  = require('mustache');
@@ -13,6 +15,8 @@ var consts    = require('./consts');
 var LRU       = require("lru-cache");
 var walk      = require('co-walk');
 var unglob    = require('unglob');
+
+var apkParser = thunkify(parseAPK);
 
 var service = function() {
   var self = this;
@@ -99,12 +103,13 @@ var service = function() {
   };
 
   this.parseIPA = function *(file) {
-    var fileBuffer  = yield fs.readFile(file);
-    var reader      = zip.Reader(fileBuffer);
-    var InfoFound   = false;
-    var ProvisionFound = false;
-    var iterator    = reader.iterator();
-    var entry, data;
+    var fileBuffer      = yield fs.readFile(file);
+    var reader          = zip.Reader(fileBuffer);
+    var InfoFound       = false;
+    var ProvisionFound  = false;
+    var iterator        = reader.iterator();
+    var entry;
+    var data = {};
     while (true) {
       try {
           entry = iterator.next();
@@ -113,42 +118,48 @@ var service = function() {
               break;
           if (exception === "skip-iteration")
               continue;
-          throw exception;
+          break;
       }
 
-      if (!InfoFound && entry.getName().match(/Info\.plist$/)) {
+      if (entry.getName().match('/CommitHash')) {
+        data.commitHash = entry.getData().toString('utf-8').trim();
+      }
+      if (!InfoFound && entry.getName().match(/Info\.plist$/) && entry.isFile()) {
         InfoFound = true;
-        data = entry.getData();
-        data = bplist.parseBuffer(data)[0];
+        lodash.extend(data,bplist.parseBuffer(entry.getData())[0]);
       }
-
-      if (InfoFound) { break; }
     }
     return data ? data : {}
   };
 
   this.getBuildInfoIOS = function *(file) {
-    var data = yield self.parseIPA(file);
-    var results = {
-      commitHash : "12345A",
-    };  
-    results['displayName']       = data[consts.IOS_NAME];
-    results['version']           = data[consts.IOS_VERSION];
+    var data = yield this.parseIPA(file);
+    //console.log(data);  
+    var results = {};
+    results.commitHash        = data.commitHash;
+    results.displayName       = data[consts.IOS_NAME];
+    results.version           = data[consts.IOS_VERSION];
     results[consts.IOS_ID]    = data[consts.IOS_ID];
     results[consts.IOS_TEAM]  = data[consts.IOS_TEAM];
     results[consts.IOS_ICON]  = data[consts.IOS_ICON];
-    results['url']               = path.normalize(consts.HOST_SVR + '/' + encodeURI(self.removeRootPath(file)));
-    results['installerUrl']      = path.normalize(encodeURI(self.removeRootPath(file) + '/installer'));
-
-    console.log(file);
-    console.log(self.removeRootPath(file));
-
-    var output = mustache.render(yield fs.readFile('manifest.plist.template', 'utf8'), results);
-    results['installerSource'] = output;
+    results.url               = path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file)));
+    results.installerUrl      = path.normalize(encodeURI(this.removeRootPath(file) + '/installer'));
+    //console.log(file);
+    //console.log(self.removeRootPath(file));
+    var output = mustache.render(yield fs.readFile(__dirname + '/manifest.plist.template', 'utf8'), results);
+    results.installerSource = output;
+    //console.log(results);
     return results;
   };
 
-  this.getBuildInfoAND = function(file) {
+  this.parseAPK = function *(file) {
+
+    var data = yield apkParser(file);
+    return data;
+  };
+
+  this.getBuildInfoAND = function *(file) {
+    var data = yield this.parseAPK(file);
     return {
       commitHash : "12345A",
       version    : "1.54",
