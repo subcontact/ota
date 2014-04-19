@@ -63,6 +63,52 @@ qx.Class.define("ota.Application",
       this.__homePage.show({reverse:true});
     },
 
+    __appReadyPromise : null,
+
+    __appReady : function() {
+      if (this.__appReadyPromise) return this.__appReadyPromise;
+
+      this.__appReadyPromise = new Promise(function (resolve, reject) {
+        setTimeout(function() {
+          var elem = document.getElementById("spinner");
+          if (elem) { elem.parentNode.removeChild(elem) }
+          resolve();
+        }.bind(this), 3000);
+      });
+      return this.__appReadyPromise;
+    },
+
+    __appInitDataPromise : null,
+
+    __appInitData : function() {
+      if (this.__appInitDataPromise) return this.__appInitDataPromise;
+
+      this.__appInitDataPromise = new Promise(function (resolve, reject) {
+        this.debug('appInitData running');
+        this.__showBusy();
+        var buildService = this.getBuildService();
+        Promise.all([
+          buildService.loadTypes(),
+          buildService.loadProjects(),
+          this.__appReady()
+        ]).then(function () { 
+            this.debug('all events finished successfully');
+            this.__init = true;
+            this.__hideBusy();
+            this.debug('appInitData finished');
+            resolve();
+          }.bind(this), function(values) {
+            this.error('some or all events failed');
+            this.error(values);
+            this.debug('appInitData finished');
+            reject();
+          }.bind(this));
+      }.bind(this));
+      return this.__appInitDataPromise;
+    },
+
+
+
     /**
      * This method contains the initial application code and gets called
      * during startup of the application
@@ -89,9 +135,11 @@ qx.Class.define("ota.Application",
       var manager = new qx.ui.mobile.page.Manager(false);
 
       // Create an instance of the Projects class and establish data bindings
-      var projectsPage = this.__homePage = new ota.page.Projects();
-      var buildsPage = new ota.page.ProjectBuilds();
-      var buildDetailPage = new ota.page.BuildDetail();
+      var projectsPage = this.__homePage = new ota.page.ProjectList();
+      var buildsPage = new ota.page.BuildList();
+      var buildDetailPage = new ota.page.Build();
+      var buildViewIOS = new ota.page.BuildViewIOS();
+      var buildViewAND = new ota.page.BuildViewAND();
 
       buildsPage.addListener('action', this.__showHome, this);
       buildDetailPage.addListener('action', this.__showHome, this);
@@ -100,22 +148,58 @@ qx.Class.define("ota.Application",
       manager.addDetail(projectsPage);
       manager.addDetail(buildsPage);
       manager.addDetail(buildDetailPage);
+      manager.addDetail(buildViewIOS);
+      manager.addDetail(buildViewAND);
 
       this.__initBusy();
-      
+
+      //this.__appInitData().then(function(value) {
+     //   console.log('done ');
+      // });
+
+
+/*
+
+      this.__initBusy();
+      var h=0;
+      //var initRunning = false;
       // lazy callback - turn this into a promise chain
       var initData = function(cb) {
+        //initRunning = true;
+        /*
+        return new Promise(function (resolve, reject) {
+          setTimeout(function () {
+            if (something)
+              resolve(something);
+            else
+              reject(new Error("nothing"));
+          }, 1000);
+        });
+
+
+*/
+        //console.log(this.__init);
+        //if (initRunning || this.__init) {
+        //  console.log('already initialised');
+       //   cb();
+       //   return;
+       // }
+       /*
+       console.log('running', ++h);
         this.__showBusy();
         Promise.all([
           buildService.loadTypes(),
-          buildService.loadProjects()
+          buildService.loadProjects(),
+          appReady()
         ]).then(function () { 
             this.debug('all events finished successfully');
+            this.__init = true;
             qx.lang.Function.delay(function() {            
-              this.__init = true;
-      var elem = document.getElementById("spinner");
-      elem.parentNode.removeChild(elem);
-
+              
+              // ugly hack
+              console.log('running', ++h);
+              var elem = document.getElementById("spinner");
+              elem.parentNode.removeChild(elem);
               this.__hideBusy();
               cb();
             }, 3000, this);
@@ -124,7 +208,8 @@ qx.Class.define("ota.Application",
             this.error(values);
           }.bind(this));
       }.bind(this);
-            
+           */ 
+
       projectsPage.addListener("projectSelected", function(evt) {
         routing.executeGet("/projects/" + evt.getData());
       }, this);
@@ -134,57 +219,36 @@ qx.Class.define("ota.Application",
       }, this);
 
       routing.onGet("/", function() {
-        if (!this.__init) {
-          initData(function() {
-            routing.executeGet("/projects");
-          });
-        } else {
+        this.__appInitData().then(function(value) {
           routing.executeGet("/projects");
-        }
+        }.bind(this));
       }, this);
       routing.onGet("/projects", function() {
-        if (!this.__init) {
-          initData(function() {
-            projectsPage.show();
-          });
-        } else {
+        this.__appInitData().then(function(value) {
           projectsPage.show();
-        }
+        }.bind(this));
       }, this);
       routing.onGet("/projects/{projectId}", function(data) {
-        if (!this.__init) {
-          initData(function() {
-            this.setProjectId(data.params.projectId);
-            buildService.loadBuilds(this.getProjectId()).then(function() {
-              this.debug('showing builds list detail');
-              buildsPage.show();
-            }.bind(this));
-          }.bind(this));
-        } else {
+        this.__appInitData().then(function(value) {
           this.setProjectId(data.params.projectId);
           buildService.loadBuilds(this.getProjectId()).then(function() {
             this.debug('showing builds list detail');
             buildsPage.show();
           }.bind(this));
-        }
+        }.bind(this));
       }, this);
       routing.onGet("/builds/{buildId}", function(data) {
-        if (!this.__init) {
-          initData(function() {
-            this.setBuildId(data.params.buildId);
-            buildService.loadBuildInstance(this.getProjectId(), this.getBuildId()).then(function() {
-              this.debug('showing build detail');
-              buildDetailPage.show();
-            }.bind(this));
-          }.bind(this));
-        } else {
+        this.__appInitData().then(function(value) {
           this.setBuildId(data.params.buildId);
           buildService.loadBuildInstance(this.getProjectId(), this.getBuildId()).then(function() {
+            console.log(buildService.getBuildData());
             this.debug('showing build detail');
             buildDetailPage.show();
           }.bind(this));
-        }
+        }.bind(this));
       }, this);
+
+      routing.executeGet("/");
       routing.init();
     },
 
@@ -197,7 +261,7 @@ qx.Class.define("ota.Application",
     },
 
     __initBusy : function() {
-      // EXAMPLE WIDGETS
+      // 
       var busyIndicator = new qx.ui.mobile.dialog.BusyIndicator("Please wait...");
       this.__busyPopup = new qx.ui.mobile.dialog.Popup(busyIndicator);
     },

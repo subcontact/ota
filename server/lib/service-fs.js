@@ -69,7 +69,7 @@ var service = function() {
       if (yield fs.exists(fullFile)) {
         var stat = yield fs.stat(fullFile);
         if (stat.isDirectory()) {
-          buildList = yield self.getFolders(fullFile);
+          buildList = yield this.getFolders(fullFile);
         }
       }
       return buildList.sort(function(a,b) {
@@ -133,22 +133,26 @@ var service = function() {
   };
 
   this.getBuildInfoIOS = function *(file) {
+
     var data = yield this.parseIPA(file);
-    //console.log(data);  
-    var results = {};
-    results.commitHash        = data.commitHash;
-    results.displayName       = data[consts.IOS_NAME];
-    results.version           = data[consts.IOS_VERSION];
-    results[consts.IOS_ID]    = data[consts.IOS_ID];
-    results[consts.IOS_TEAM]  = data[consts.IOS_TEAM];
-    results[consts.IOS_ICON]  = data[consts.IOS_ICON];
-    results.url               = path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file)));
-    results.installerUrl      = path.normalize(encodeURI(this.removeRootPath(file) + '/installer'));
-    //console.log(file);
-    //console.log(self.removeRootPath(file));
+
+    console.log(data);
+    var results = {
+
+      'commitHash'            : data.commitHash,
+      'displayName'           : data['CFBundleDisplayName'],
+      'version'               : data['CFBundleVersion'],
+      'id'                    : data['CFBundleName'],
+      'package'               : data['CFBundleIdentifier'],
+      'icon'                  : data['CFBundleIconFile'],
+      'url'                   : path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file))),
+      'installerUrl'          : path.normalize(encodeURI(this.removeRootPath(file) + '/installer')),
+      'installerSource'       : null
+    };
+
     var output = mustache.render(yield fs.readFile(__dirname + '/manifest.plist.template', 'utf8'), results);
     results.installerSource = output;
-    //console.log(results);
+
     return results;
   };
 
@@ -160,17 +164,37 @@ var service = function() {
 
   this.getBuildInfoAND = function *(file) {
     var data = yield this.parseAPK(file);
-    return {
-      commitHash : "12345A",
-      version    : "1.54",
-    };  
+
+    var results = {
+
+      'commitHash'            : null,
+      'displayName'           : data.manifest[0].application[0]['@android:name'],
+      'version'               : data.manifest[0]['@android:versionName'],
+      'id'                    : null,
+      'package'               : data.manifest[0]['@package'],
+      'icon'                  : data.manifest[0].application[0]['@android:icon'],
+      'url'                   : path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file))),
+      'installerUrl'          : path.normalize(encodeURI(this.removeRootPath(file) + '/installer')),
+      'installerSource'       : null
+    };
+    return results;
   };
 
   this.getBuildInfoWIN = function(file) {
-    return {
-      commitHash : "12345A",
-      version    : "1.54",
-    };  
+
+    var results = {
+
+      'commitHash'            : null,
+      'displayName'           : null,
+      'version'               : null,
+      'id'                    : null,
+      'package'               : null,
+      'icon'                  : null,
+      'url'                   : path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file))),
+      'installerUrl'          : path.normalize(encodeURI(this.removeRootPath(file) + '/installer')),
+      'installerSource'       : null
+    };
+    return results;
   };
 
   this.findBuildFile = function *(dirPath) {
@@ -184,12 +208,12 @@ var service = function() {
 
     for (var i=0; i<list.length; i++) {
        file = list[i];
-       stat = yield fs.stat(self.resolveRootPath(dirPath + '/' + file));
+       stat = yield fs.stat(this.resolveRootPath(dirPath + '/' + file));
        if (consts.iOS_FILE.test(file)) {
           data = {
             type : consts.TYPE_IOS,
             buildName : path.basename(file).replace(consts.iOS_FILE, ""),
-            buildFile : self.removeRootPath(dirPath + '/' + file),
+            buildFile : this.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
             timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
@@ -200,7 +224,7 @@ var service = function() {
           data = {
             type : consts.TYPE_AND,
             buildName : path.basename(file).replace(consts.AND_FILE, ""),
-            buildFile : self.removeRootPath(dirPath + '/' + file),
+            buildFile : this.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
             timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
@@ -211,7 +235,7 @@ var service = function() {
           data = {
             type : consts.TYPE_WIN,
             buildName : path.basename(file).replace(consts.WIN_FILE_EXE, ""),
-            buildFile : self.removeRootPath(dirPath + '/' + file),
+            buildFile : this.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
             timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
@@ -222,7 +246,7 @@ var service = function() {
           data = {
             type : consts.TYPE_WIN,
             buildName : path.basename(file).replace(consts.WIN_FILE_XAP, ""),
-            buildFile : self.removeRootPath(dirPath + '/' + file),
+            buildFile : this.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
             timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
@@ -236,7 +260,7 @@ var service = function() {
 
   this.getProjectsService = function *() {
 
-    var p = yield self.getFolders(buildFolderRoot);
+    var p = yield this.getFolders(buildFolderRoot);
     var projects = []; 
 
     var list, files, dirPath, fullFile, buildInfo, filePath;
@@ -244,11 +268,11 @@ var service = function() {
     // We need one to work out the type of project (EG TYPE);
     for (var i=0; i<p.length; i++) {
 
-      filePath = self.resolveRootPath(p[i]);
-      list = yield self.getBuildProjectList(filePath);
+      filePath = this.resolveRootPath(p[i]);
+      list = yield this.getBuildProjectList(filePath);
       if (list.length > 0) {
         dirPath = list[0];
-        buildInfo = yield self.findBuildFile(dirPath);
+        buildInfo = yield this.findBuildFile(dirPath);
         if (buildInfo) {
           projects.push({
             name  : path.basename(filePath),
@@ -281,7 +305,7 @@ var service = function() {
         data     : data.data
       };
     }
-    data = yield self.getProjectsService();
+    data = yield this.getProjectsService();
     var cacheObj = {
       ts   : Date.now(),
       data : data
@@ -299,20 +323,20 @@ var service = function() {
     if (!projectPath || typeof projectPath !== 'string') {return []}
 
     var list, files, dirPath, fullFile, buildInfo, buildData, data, filePath;
-    filePath = self.resolveRootPath(projectPath);
-    list = yield self.getBuildProjectList(filePath);
+    filePath = this.resolveRootPath(projectPath);
+    list = yield this.getBuildProjectList(filePath);
     var buildList = [];
     for (var i=0; i<list.length; i++) {
-      data = self.removeRootPath(list[i]);
+      data = this.removeRootPath(list[i]);
       buildList.push({
         instanceName  : path.basename(data),
-        instanceLabel : self.normaliseDate(path.basename(data)),
-        instanceLabel2: moment(self.normaliseDate(path.basename(data))).fromNow() + " (" + moment(self.normaliseDate(path.basename(data))).toISOString() + ")",
+        instanceLabel : this.normaliseDate(path.basename(data)),
+        instanceLabel2: moment(this.normaliseDate(path.basename(data))).fromNow() + " (" + moment(this.normaliseDate(path.basename(data))).toISOString() + ")",
         _id           : data.replace(/[\/\s]/g, '_'),
         instancePath  : data,
       });
 
-      buildInfo = yield self.findBuildFile(self.resolveRootPath(list[i]));
+      buildInfo = yield this.findBuildFile(this.resolveRootPath(list[i]));
       if (buildInfo) {
         lodash.extend(buildList[i], buildInfo);
       }
@@ -333,7 +357,7 @@ var service = function() {
         data     : data.data
       };
     }
-    data = yield self.getProjectBuildListService(projectPath);
+    data = yield this.getProjectBuildListService(projectPath);
     var cacheObj = {
       ts   : Date.now(),
       data : data
@@ -357,7 +381,7 @@ var service = function() {
 
     var buildData = null;
     if (projectBuild.hasOwnProperty('type') && this.buildInfoMethods[projectBuild.type]) {
-      buildData = yield this.buildInfoMethods[projectBuild.type](self.resolveRootPath(projectBuild.buildFile));
+      buildData = yield this.buildInfoMethods[projectBuild.type].call(this, this.resolveRootPath(projectBuild.buildFile));
     }
     return buildData;
   };
@@ -375,7 +399,7 @@ var service = function() {
         data     : data.data
       };
     }
-    data = yield self.getProjectBuildDataService(projectBuild);
+    data = yield this.getProjectBuildDataService(projectBuild);
     var cacheObj = {
       ts   : Date.now(),
       data : data
