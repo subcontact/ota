@@ -23,7 +23,31 @@ qx.Class.define("ota.page.Build",
     });
     this.addListener("start", function() {
       this.debug('build start called');
-      this.debug(this.__buildService.getBuildData().getVersion());
+      //this.debug(this.__buildService.getBuildData().getVersion());
+     // this.debug(qx.dev.Debug.debugProperties(this.__buildService.getTypes()));      
+     // this.debug(qx.dev.Debug.debugObjectToString(this.__buildService.getTypes()));
+      this.debug(this.__buildService.findBuildById(this.__app.getBuildId()).item.getType());
+      var platformType = this.__buildService.findBuildById(this.__app.getBuildId()).item.getType();
+
+      switch (platformType) {
+        case this.__app.platforms.IOS :
+          console.log(" it's IOS!");
+          break;
+        case this.__app.platforms.AND :
+          console.log(" it's AND!");
+          break;
+        case this.__app.platforms.WIN :
+          console.log(" it's WIN!");
+          break;
+        default :
+          console.log(" I don't Know!!");
+      }
+
+      //this.debug(this.__app.getBuildId());
+      //this.debug(this.__buildService.getBuilds());
+      //try { 
+       // this.debug(qx.dev.Debug.debugProperties(this.__buildService.findBuildById(this.__app.getBuildId()).item));
+   // } catch (e) {qx.log.Logger.error(arguments.callee.displayName + ' : ' + e)}
     }, this);
   },
 

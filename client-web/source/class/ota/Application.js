@@ -27,7 +27,7 @@ qx.Class.define("ota.Application",
     },
     // TODO
     // These Id's represent state for the application and dont really belong here.
-    // Rather not pass around any more global objects... I haven't figured out a decent way to use DI in qx.
+    // Rather not pass around any more global objects... I haven't seen a decent way to use DI in qx.
     // Quick and simple app like this shouldn't need to over complicate it.
      /** currently selected Project */
     projectId :
@@ -58,6 +58,18 @@ qx.Class.define("ota.Application",
     __busyPopup : null,
     __init      : false,
     __homePage  : null,
+    platforms :  {
+      IOS             : 0,
+      AND             : 1,
+      WIN             : 2,
+      IPHONE          : 3,
+      IPAD            : 4,
+      ANDROID_PHONE   : 5,
+      ANDROID_TABLET  : 6,
+      WINDOWS_PHONE   : 7,
+      WINDOWS_TABLET  : 8,
+      UNKNOWN         : 9
+    },
 
     __showHome : function() {
       this.__homePage.show({reverse:true});
@@ -73,7 +85,7 @@ qx.Class.define("ota.Application",
           var elem = document.getElementById("spinner");
           if (elem) { elem.parentNode.removeChild(elem) }
           resolve();
-        }.bind(this), 3000);
+        }.bind(this), 900);
       });
       return this.__appReadyPromise;
     },
@@ -138,8 +150,8 @@ qx.Class.define("ota.Application",
       var projectsPage = this.__homePage = new ota.page.ProjectList();
       var buildsPage = new ota.page.BuildList();
       var buildDetailPage = new ota.page.Build();
-      var buildViewIOS = new ota.page.BuildViewIOS();
-      var buildViewAND = new ota.page.BuildViewAND();
+      //var buildViewIOS = new ota.page.BuildViewIOS();
+      //var buildViewAND = new ota.page.BuildViewAND();
 
       buildsPage.addListener('action', this.__showHome, this);
       buildDetailPage.addListener('action', this.__showHome, this);
@@ -148,8 +160,8 @@ qx.Class.define("ota.Application",
       manager.addDetail(projectsPage);
       manager.addDetail(buildsPage);
       manager.addDetail(buildDetailPage);
-      manager.addDetail(buildViewIOS);
-      manager.addDetail(buildViewAND);
+      //manager.addDetail(buildViewIOS);
+      //manager.addDetail(buildViewAND);
 
       this.__initBusy();
 
@@ -241,7 +253,7 @@ qx.Class.define("ota.Application",
         this.__appInitData().then(function(value) {
           this.setBuildId(data.params.buildId);
           buildService.loadBuildInstance(this.getProjectId(), this.getBuildId()).then(function() {
-            console.log(buildService.getBuildData());
+            //console.log(buildService.getBuildData());
             this.debug('showing build detail');
             buildDetailPage.show();
           }.bind(this));

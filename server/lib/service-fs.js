@@ -135,8 +135,6 @@ var service = function() {
   this.getBuildInfoIOS = function *(file) {
 
     var data = yield this.parseIPA(file);
-
-    console.log(data);
     var results = {
 
       'commitHash'            : data.commitHash,

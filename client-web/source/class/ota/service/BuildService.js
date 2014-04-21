@@ -86,6 +86,34 @@ qx.Class.define("ota.service.BuildService",
     __buildInstance : new qx.data.store.Json(),
     __typesStore    : new qx.data.store.Json(),
 
+    __findItemById : function(list, id)
+    {
+        //console.log('looking for id', id);
+        //console.log('list', list);
+        try
+        {
+            var length = list.getLength();
+            for (var i=0; i<length; i++)
+            {
+                //console.log('index', i);
+                //console.log('id', list.getItem(i).get_id());
+                if (list.getItem(i).get_id() === id) { return {item : list.getItem(i), index : i} }
+            }
+            return null;
+        }
+        catch(e) {qx.log.Logger.error(arguments.callee.displayName + ' : ' + e)}
+        return null;
+    },
+
+    findProjectById : function(id) {
+
+      return this.__findItemById(this.getProjects(), id);
+    },
+
+    findBuildById : function(id) {
+
+      return this.__findItemById(this.getBuilds(), id);
+    },
 
     loadProjects : function()
     {
