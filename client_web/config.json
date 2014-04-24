@@ -129,8 +129,8 @@
       ],
       "add-script" : [
         { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" },          
-        { "uri" : "./resource/${APPLICATION}/bower_components/lodash/dist/lodash.min.js" },        
-        { "uri" : "./resource/${APPLICATION}/promiscuous-browser.js" }
+        //{ "uri" : "./resource/${APPLICATION}/bower_components/lodash/dist/lodash.min.js" },        
+        { "uri" : "./resource/${APPLICATION}/bower_components/promiscuous/dist/promiscuous-browser.js" }
       ]
     },
 
@@ -143,14 +143,14 @@
       ],
       "add-script" : [
         { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" },          
-        { "uri" : "./resource/${APPLICATION}/bower_components/lodash/dist/lodash.min.js" },        
-        { "uri" : "./resource/${APPLICATION}/promiscuous-browser.js" }
+        //{ "uri" : "./resource/${APPLICATION}/bower_components/lodash/dist/lodash.min.js" },        
+        { "uri" : "./resource/${APPLICATION}/bower_components/promiscuous/dist/promiscuous-browser.js" }
       ]
     },
-
+//"build-files-custom",
     "build" :
     {
-      "=run" : ["build-resources", "build-files", "build-files-custom", "build-script", "minify-css"]
+      "=run" : ["build-resources", "build-files", "build-script", "minify-css"]
     },
 
     "build-script" :
@@ -162,8 +162,8 @@
       ],
       "add-script" : [
         { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" }, 
-       { "uri" : "./resource/${APPLICATION}/bower_components/lodash/dist/lodash.min.js" },        
-        { "uri" : "./resource/${APPLICATION}/promiscuous-browser.js" }
+        //{ "uri" : "./resource/${APPLICATION}/bower_components/lodash/dist/lodash.min.js" },        
+        { "uri" : "./resource/${APPLICATION}/bower_components/promiscuous/dist/promiscuous-browser.js" }
       ]
     },
 
