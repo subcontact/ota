@@ -64,16 +64,18 @@ if (!argv.nocache) {
 
   switch (argv.env) {
     case consts.ENV_DEV :
-      app.use(serve('web-dev','../client-web/source', config));
+      console.log('configuring dev version of web client');
+//      app.use(serve('web-dev','../client-web/source', config));
+      app.use(serve('web-dev','../client_web/source', config));
       app.use(serve('qooxdoo','../../qooxdoo', config));
     break;
     case consts.ENV_PROD :
-    //default :
-    //  app.use(serve('client','../client-web/build', config));
+    default :
+      console.log('configuring prod version of web client');
+//      app.use(serve('client','../client-web/build', config));
+      app.use(serve('client','../client_web/build', config));
     break;
   }
-
-
 })();
 
 app.use(router(app));  

@@ -47,7 +47,7 @@
     "APPLICATION"  : "client_web",
     "APPLICATION_PATH" : "client_web",
     "APPLICATION_CSS" : "${APPLICATION_PATH}/css/styles.css",  // resource id of custom css
-    "QOOXDOO_PATH" : "../../qooxdoo",
+    "QOOXDOO_PATH" : "../../qooxdoo-master",
     "LOCALES"      : [ "en" ],
     "CACHE"        : "${TMPDIR}/qx${QOOXDOO_VERSION}/cache",
     "MOBILE_THEME" : "custom",
@@ -128,7 +128,8 @@
         { "uri" : "./resource/${APPLICATION_CSS}" }
       ],
       "add-script" : [
-        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" }, 
+        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" },          
+        { "uri" : "./resource/${APPLICATION}/bower_components/lodash/dist/lodash.min.js" },        
         { "uri" : "./resource/${APPLICATION}/promiscuous-browser.js" }
       ]
     },
@@ -141,14 +142,15 @@
         { "uri" : "./resource/${APPLICATION_CSS}" }
       ],
       "add-script" : [
-        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" },        
+        { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" },          
+        { "uri" : "./resource/${APPLICATION}/bower_components/lodash/dist/lodash.min.js" },        
         { "uri" : "./resource/${APPLICATION}/promiscuous-browser.js" }
       ]
     },
 
     "build" :
     {
-      "=run" : ["build-resources", "build-files", "build-script", "minify-css"]
+      "=run" : ["build-resources", "build-files", "build-files-custom", "build-script", "minify-css"]
     },
 
     "build-script" :
@@ -160,6 +162,7 @@
       ],
       "add-script" : [
         { "uri" : "./resource/${APPLICATION}/bower_components/momentjs/min/moment.min.js" }, 
+       { "uri" : "./resource/${APPLICATION}/bower_components/lodash/dist/lodash.min.js" },        
         { "uri" : "./resource/${APPLICATION}/promiscuous-browser.js" }
       ]
     },
@@ -180,6 +183,24 @@
         { "uri" : "./resource/${MOBILE_THEME_PATH}" },
         { "uri" : "./resource/${APPLICATION_CSS}" }
       ]
+    },
+
+    "build-files-custom" :
+    {
+      "copy-files" :
+      {
+        "files" :
+        [
+          "${APPLICATION}/bower_components/momentjs/min/moment.min.js",
+          "${APPLICATION}/bower_components/lodash/dist/lodash.min.js",
+          "${APPLICATION}/*.js", 
+          "${APPLICATION}/favicon.*", 
+          "${APPLICATION}/*.png" 
+        ],
+
+        "source" : "${ROOT}/source/resource",
+        "target" : "${BUILD_PATH}/resource"
+      }
     },
 
     "minify-combine-css" :
@@ -220,30 +241,7 @@
       }
     },
 
-
     "watch-scss" :
-    {
-      "desc"   : "Watch and compile custom.scss",
-      "extend" : ["cache"],
-       "let" :
-      {
-        "MOBILE_THEME_PATH" : "${QOOXDOO_PATH}/framework/source/resource/qx/mobile/scss",
-        "SHARED_THEME_PATH" : "${QOOXDOO_PATH}/framework/source/resource/qx/scss"
-      },
-      "watch-files" :
-      {
-        "paths"    : ["source/resource/${APPLICATION_PATH}/scss"],
-        "command" :
-        {
-          "line"  : "${PYTHON_CMD} ${QOOXDOO_PATH}/tool/bin/scss.py source/resource/${APPLICATION_PATH}/scss/custom.scss -o source/resource/${APPLICATION_PATH}/css/custom.css --load-path=source/resource/${APPLICATION_PATH}/scss,${MOBILE_THEME_PATH},${SHARED_THEME_PATH}",
-          "exec-on-startup" : true,
-          "per-file" : false
-        }
-      }
-    }
-
-
-    /*"watch-scss" :
     {
       "desc"   : "Watch and compile the theme scss",
       "extend" : ["cache"],
@@ -257,6 +255,6 @@
       {
         "command" : "sass -C -t compressed -I ${MOBILE_THEME_PATH}/scss -I ${QX_MOBILE_THEME_PATH}/scss -I ${QX_SHARED_THEME_PATH} --watch ${MOBILE_THEME_PATH}/scss:${MOBILE_THEME_PATH}/css"
       }
-    }*/
+    }
   }
 }
