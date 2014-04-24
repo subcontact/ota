@@ -21,23 +21,45 @@ qx.Class.define("ota.page.Build",
       showButton : true,
       buttonText : "Home" 
     });
+    
     this.addListener("start", function() {
+
       this.debug('build start called');
       //this.debug(this.__buildService.getBuildData().getVersion());
-     // this.debug(qx.dev.Debug.debugProperties(this.__buildService.getTypes()));      
-     // this.debug(qx.dev.Debug.debugObjectToString(this.__buildService.getTypes()));
-      this.debug(this.__buildService.findBuildById(this.__app.getBuildId()).item.getType());
-      var platformType = this.__buildService.findBuildById(this.__app.getBuildId()).item.getType();
+      // this.debug(qx.dev.Debug.debugProperties(this.__buildService.getTypes()));      
+      // this.debug(qx.dev.Debug.debugObjectToString(this.__buildService.getTypes()));
+      //var project  = this.__buildService.findProjectById(this.__app.getProjectId()).item;
+      //var build    = this.__buildService.findBuildById(this.__app.getBuildId()).item;
+
+      var project = this.__app.getProject();
+      var build = this.__app.getBuild();
+
+      console.log('project ', qx.dev.Debug.debugProperties(project));
+      console.log('build ', qx.dev.Debug.debugProperties(build));
+
+      //this.debug(this.__buildService.findBuildById(this.__app.getBuildId()).item.getType());
+      var platformType = build.getType();
+
+      //this.setTitle(project.getName());
 
       switch (platformType) {
         case this.__app.platforms.IOS :
           console.log(" it's IOS!");
+          this.__installerButton.setVisibility("visible");
+          this.__fileButton.setVisibility("excluded");
+          this.__downloadButton.setVisibility("excluded");                    
           break;
         case this.__app.platforms.AND :
           console.log(" it's AND!");
+          this.__installerButton.setVisibility("excluded");
+          this.__fileButton.setVisibility("visible");
+          this.__downloadButton.setVisibility("excluded");                    
           break;
         case this.__app.platforms.WIN :
           console.log(" it's WIN!");
+          this.__installerButton.setVisibility("excluded");
+          this.__fileButton.setVisibility("visible");
+          this.__downloadButton.setVisibility("excluded");                    
           break;
         default :
           console.log(" I don't Know!!");
@@ -49,6 +71,7 @@ qx.Class.define("ota.page.Build",
        // this.debug(qx.dev.Debug.debugProperties(this.__buildService.findBuildById(this.__app.getBuildId()).item));
    // } catch (e) {qx.log.Logger.error(arguments.callee.displayName + ' : ' + e)}
     }, this);
+
   },
 
   properties:
@@ -172,7 +195,19 @@ qx.Class.define("ota.page.Build",
     __createForm : function()
     {
       var form = new qx.ui.mobile.form.Form();
-      form.addGroupHeader("Info");
+      //form.addGroupHeader("Info");
+
+      this.__project = new qx.ui.mobile.form.TextField();
+      //this.__project = new qx.ui.mobile.basic.Label();
+      this.__project.setReadOnly(true);
+      this.__app.getProject().bind("name", this.__project, "value");
+      form.add(this.__project, "Project");
+
+      this.__build = new qx.ui.mobile.form.TextField();
+      this.__build.setReadOnly(true);
+      this.__app.getBuild().bind("instanceName", this.__build, "value");
+      form.add(this.__build, "Build");
+
 
       this.__name = new qx.ui.mobile.form.TextField();
       this.__name.setReadOnly(true);

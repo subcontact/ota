@@ -97,7 +97,7 @@ qx.Class.define("ota.service.BuildService",
             {
                 //console.log('index', i);
                 //console.log('id', list.getItem(i).get_id());
-                if (list.getItem(i).get_id() === id) { return {item : list.getItem(i), index : i} }
+                if (list.getItem(i).get_id() === id) { return list.getItem(i); }
             }
             return null;
         }

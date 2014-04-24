@@ -35,7 +35,8 @@ qx.Class.define("ota.Application",
       check : "String",
       nullable : true,
       init : null,
-      event : "changeProjectId"
+      event : "changeProjectId",
+      apply : "_applyProjectId"
     },
 
     /** currently selected Build for the Project */
@@ -44,7 +45,24 @@ qx.Class.define("ota.Application",
       check : "String",
       nullable : true,
       init : null,
-      event : "changeBuildId"
+      event : "changeBuildId",
+      apply : "_applyBuildId"
+    },
+
+    project :
+    {
+      check : "Object",
+      nullable : true,
+      init : null,
+      event : "changeProject"
+    },
+
+    build :
+    {
+      check : "Object",
+      nullable : true,
+      init : null,
+      event : "changeBuild"
     }
   },
 
@@ -69,6 +87,28 @@ qx.Class.define("ota.Application",
       WINDOWS_PHONE   : 7,
       WINDOWS_TABLET  : 8,
       UNKNOWN         : 9
+    },
+
+    // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
+    _fileSizeIEC : function(a) {
+      return (b=Math,c=b.log,d=1024,e=c(a)/c(d)|0,a/b.pow(d,e)).toFixed(2)+' '+(e?'KMGTPEZY'[--e]+'iB':'Bytes')
+    },
+    
+    _applyProjectId : function(value, old) {
+      //console.log('_applyProjectId ', value);
+      //console.log('_applyProjectId ', this.getProjectId());
+      var project = this.getBuildService().findProjectById(value);
+      this.setProject(project);
+      //console.log('_applyProjectId ', qx.dev.Debug.debugProperties(project));
+      //console.log(this.getProject().getName());
+    },
+
+    _applyBuildId : function(value, old) {
+      //console.log('_applyBuildId ', value);
+      //console.log('_applyBuildId ', this.getBuildId());      
+      //this.setBuild(this.getBuildService().findBuildById(value).item);
+      var build = this.getBuildService().findBuildById(value);
+      this.setBuild(build);
     },
 
     __showHome : function() {
