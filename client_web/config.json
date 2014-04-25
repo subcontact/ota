@@ -50,7 +50,7 @@
     "QOOXDOO_PATH" : "../../qooxdoo-master",
     "LOCALES"      : [ "en" ],
     "CACHE"        : "${TMPDIR}/qx${QOOXDOO_VERSION}/cache",
-    "MOBILE_THEME" : "flat", // "custom",
+    "MOBILE_THEME" : "custom",
     "MOBILE_THEME_PATH" : "${APPLICATION_PATH}/css/${MOBILE_THEME}.css",
     "CSS_COMB_URI" : "./resource/${APPLICATION_PATH}/css/${MOBILE_THEME}-style-min.css",
     "CSS_COMBINED" : "${BUILD_PATH}/${CSS_COMB_URI}",

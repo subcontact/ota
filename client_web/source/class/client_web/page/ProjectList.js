@@ -46,7 +46,7 @@ qx.Class.define("client_web.page.ProjectList",
       this.__list.setDelegate({
         configureItem : function(item, value, row) {
           item.setTitle(value.getName());
-          item.setImage("resource/client_web/internet.png");        
+          //item.setImage("resource/client_web/internet.png");        
           item.setSubtitle(types.getItem(value.getType()));
           item.setShowArrow(true);
         }

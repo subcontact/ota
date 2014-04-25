@@ -34,8 +34,8 @@ qx.Class.define("client_web.page.Build",
       var project = this.__app.getProject();
       var build = this.__app.getBuild();
 
-      console.log('project ', qx.dev.Debug.debugProperties(project));
-      console.log('build ', qx.dev.Debug.debugProperties(build));
+      //console.log('project ', qx.dev.Debug.debugProperties(project));
+      //console.log('build ', qx.dev.Debug.debugProperties(build));
 
       //this.debug(this.__buildService.findBuildById(this.__app.getBuildId()).item.getType());
       var platformType = build.getType();
