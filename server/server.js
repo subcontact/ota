@@ -19,8 +19,9 @@ var argv;
 //    mcache  : (1000 * 60 * 5), // internal memory cache in millseconds - 300,000 is 5 minutes
     mcache  : (5000), // internal memory cache in millseconds - 1.5 sec
     builds  : ".",
-    port    : 8181,
-    host    : "http://localhost",
+    port    : 8080,
+    host    : "localhost",
+    protocol: "http",
     env     : 'prod'
   };
   defaults.host += ":" + defaults.port;
@@ -28,7 +29,7 @@ var argv;
 })();
 
 console.log(argv);
-consts.HOST_SVR = argv.host;
+consts.HOST_SVR = argv.protocol + '://' + argv.host + ':' + argv.port;
 consts.M_CACHE = argv.mcache;
 
 var service   = require('./lib/service-fs');
@@ -259,4 +260,4 @@ app.register('/projects/:projectId/builds/:buildId/file', ['get', 'head'], getPr
 app.register('/projects/:projectId/builds/:buildId/file/:name', ['get', 'head'], getProjectBuildFileRoute);
 app.register('/projects/:projectId/builds/:buildId/download', ['get', 'head'], getProjectBuildDownloadRoute);
 
-app.listen(argv.port);
+app.listen(argv.port, argv.host);

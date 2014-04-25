@@ -47,7 +47,7 @@ qx.Class.define("client_web.page.Build",
           console.log(" it's IOS!");
           this.__installerButton.setVisibility("visible");
           this.__fileButton.setVisibility("excluded");
-          this.__downloadButton.setVisibility("excluded");                    
+          this.__downloadButton.setVisibility("visible");                    
           break;
         case this.__app.platforms.AND :
           console.log(" it's AND!");
@@ -82,6 +82,11 @@ qx.Class.define("client_web.page.Build",
   {
 
    __form : null,
+   __fileSize : null,
+   __project : null,
+   __timeStamp : null,
+   __commitHash : null,
+   __build : null,
    __version : null,
    __name : null,
    __installerButton : null,
@@ -89,7 +94,12 @@ qx.Class.define("client_web.page.Build",
    __downloadButton : null,
    __buildService : null,
    __app : null,
-
+   __contentTypes : {
+      "application/octet-stream"                : true, // binary stream - used for .ipa
+      "application/vnd.android.package-archive" : true, // android .apk
+      "application/x-silverlight-app"           : true, // windows .xap
+      "application/x-msdownload"                : true  // windows .msi
+   },
    ATTACH_TST : /attachment;/i,
 
     // checking that the url is valid first before throwing it in front of document.location
@@ -101,13 +111,7 @@ qx.Class.define("client_web.page.Build",
       return new Promise(function (resolve, reject) {
         req.addListener("success", function(e) {
           var req = e.getTarget();
-          var contentTypes = {
-            "application/octet-stream"                : true,
-            "application/vnd.android.package-archive" : true,
-            "application/x-silverlight-app"           : true,
-            "application/x-msdownload"                : true
-          };
-          if ((contentTypes.hasOwnProperty(req.getResponseContentType())) && 
+          if ((this.__contentTypes.hasOwnProperty(req.getResponseContentType())) && 
               (this.ATTACH_TST.test(req.getResponseHeader('Content-Disposition'))))
           {
             resolve(url);
@@ -130,7 +134,7 @@ qx.Class.define("client_web.page.Build",
       return new Promise(function (resolve, reject) {
         req.addListener("success", function(e) {
           var req = e.getTarget();
-          if (req.getResponseContentType() === "application/octet-stream") 
+          if (this.__contentTypes.hasOwnProperty(req.getResponseContentType()))
           {
             resolve(url);
           } else {
@@ -158,7 +162,12 @@ qx.Class.define("client_web.page.Build",
         var url = "itms-services://?action=download-manifest&url=" + window.location.protocol + "//" + window.location.hostname + ":" + 
           window.location.port + "/projects/" + this.__app.getProjectId() + '/builds/' + this.__app.getBuildId() + '/installer';
         this.debug(url);
-        document.location = url;
+        this.__isFileReachable(url).then(function() {
+          this.debug('file is reachable');
+          document.location = url;
+        }.bind(this), function() {
+          this.debug('file not reachable');
+        }.bind(this));
       }, this);
       this.getContent().add(this.__installerButton);
 
@@ -195,10 +204,8 @@ qx.Class.define("client_web.page.Build",
     __createForm : function()
     {
       var form = new qx.ui.mobile.form.Form();
-      //form.addGroupHeader("Info");
 
       this.__project = new qx.ui.mobile.form.TextField();
-      //this.__project = new qx.ui.mobile.basic.Label();
       this.__project.setReadOnly(true);
       this.__app.getProject().bind("name", this.__project, "value");
       form.add(this.__project, "Project");
@@ -215,9 +222,24 @@ qx.Class.define("client_web.page.Build",
       form.add(this.__name, "Name");
 
       this.__version = new qx.ui.mobile.form.TextField();
-      this.__name.setReadOnly(true);
+      this.__version.setReadOnly(true);
       this.__buildService.bind("buildData.version", this.__version, "value");
       form.add(this.__version, "Version");
+
+      this.__timeStamp = new qx.ui.mobile.form.TextField();
+      this.__timeStamp.setReadOnly(true);
+      this.__app.getBuild().bind("labels.timeStamp4", this.__timeStamp, "value");
+      form.add(this.__timeStamp, "Date");
+
+      this.__fileSize = new qx.ui.mobile.form.TextField();
+      this.__fileSize.setReadOnly(true);
+      this.__app.getBuild().bind("labels.size", this.__fileSize, "value");
+      form.add(this.__fileSize, "Size");
+
+      this.__commitHash = new qx.ui.mobile.form.TextField();
+      this.__commitHash.setReadOnly(true);
+      this.__buildService.bind("buildData.commitHash", this.__commitHash, "value");
+      form.add(this.__commitHash, "Hash");
 
       return form;
     },

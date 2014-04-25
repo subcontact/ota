@@ -50,9 +50,9 @@ qx.Class.define("client_web.page.BuildList",
       this.__list = new qx.ui.mobile.list.List();
       this.__list.setDelegate({
         configureItem : function(item, value, row) {
-          date = moment(value.getInstanceLabel());
-          data = date.format("ddd, Do MMM YYYY, h:mm:ss a") + " (" + date.fromNow() + ")";
-          item.setTitle(data);
+          //date = moment(value.getInstanceLabel());
+          //data = date.format("ddd, Do MMM YYYY, h:mm:ss a") + " (" + date.fromNow() + ")";
+          item.setTitle(value.getLabels().getInstance5() + ", " + value.getLabels().getInstance3());
           item.setShowArrow(true);
         }
       });

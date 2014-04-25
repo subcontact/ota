@@ -25,6 +25,11 @@ var service = function() {
   var buildFolderRootRE = null;
   var lruCache = LRU({ max : 200,  maxAge : consts.M_CACHE});
 
+    // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
+  this.fileSizeIEC = function(a,b,c,d,e) {
+    return (b=Math,c=b.log,d=1024,e=c(a)/c(d)|0,a/b.pow(d,e)).toFixed(2)+' '+(e?'KMGTPEZY'[--e]+'iB':'Bytes')
+  };
+
   this.setBuildFolderRoot = function(value) {
     buildFolderRoot   = value;
     buildFolderRootRE = new RegExp("^" + buildFolderRoot); // used to check if a path is already starting at the root for resolveRootPath
@@ -126,7 +131,7 @@ var service = function() {
       }
       if (!InfoFound && entry.getName().match(/Info\.plist$/) && entry.isFile()) {
         InfoFound = true;
-        lodash.extend(data,bplist.parseBuffer(entry.getData())[0]);
+        lodash.merge(data,bplist.parseBuffer(entry.getData())[0]);
       }
     }
     return data ? data : {}
@@ -214,7 +219,13 @@ var service = function() {
             buildFile : this.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
-            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+            labels    : {
+              timeStamp1 : moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+              timeStamp2 : moment(stat.mtime.getTime()).fromNow(),
+              timeStamp3 : moment(stat.mtime.getTime()).toISOString(),
+              timeStamp4 : moment(stat.mtime.getTime()).format("DD MMM YYYY HH:mm"),
+              size       : this.fileSizeIEC(stat.size)
+            }
           };
           found = true;
         }
@@ -225,7 +236,13 @@ var service = function() {
             buildFile : this.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
-            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+            labels    : {
+              timeStamp1 : moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+              timeStamp2 : moment(stat.mtime.getTime()).fromNow(),
+              timeStamp3 : moment(stat.mtime.getTime()).toISOString(),
+              timeStamp4 : moment(stat.mtime.getTime()).format("DD MMM YYYY HH:mm"),
+              size       : this.fileSizeIEC(stat.size)
+            }
           };
           found = true;
         }
@@ -236,7 +253,13 @@ var service = function() {
             buildFile : this.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
-            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+            labels    : {
+              timeStamp1 : moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+              timeStamp2 : moment(stat.mtime.getTime()).fromNow(),
+              timeStamp3 : moment(stat.mtime.getTime()).toISOString(),
+              timeStamp4 : moment(stat.mtime.getTime()).format("DD MMM YYYY HH:mm"),
+              size       : this.fileSizeIEC(stat.size)
+            }
           };
           found = true;
         }
@@ -247,7 +270,13 @@ var service = function() {
             buildFile : this.removeRootPath(dirPath + '/' + file),
             size      : stat.size,
             timeStamp : stat.mtime.getTime(),
-            timeStamp2: moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+            labels    : {
+              timeStamp1 : moment(stat.mtime.getTime()).fromNow() + " (" + moment(stat.mtime.getTime()).toISOString() + ")",
+              timeStamp2 : moment(stat.mtime.getTime()).fromNow(),
+              timeStamp3 : moment(stat.mtime.getTime()).toISOString(),
+              timeStamp4 : moment(stat.mtime.getTime()).format("DD MMM YYYY HH:mm"),
+              size       : this.fileSizeIEC(stat.size)
+            }
           };
           found = true;
         }
@@ -325,18 +354,23 @@ var service = function() {
     list = yield this.getBuildProjectList(filePath);
     var buildList = [];
     for (var i=0; i<list.length; i++) {
-      data = this.removeRootPath(list[i]);
-      buildList.push({
-        instanceName  : path.basename(data),
-        instanceLabel : this.normaliseDate(path.basename(data)),
-        instanceLabel2: moment(this.normaliseDate(path.basename(data))).fromNow() + " (" + moment(this.normaliseDate(path.basename(data))).toISOString() + ")",
-        _id           : data.replace(/[\/\s]/g, '_'),
-        instancePath  : data,
-      });
-
       buildInfo = yield this.findBuildFile(this.resolveRootPath(list[i]));
+      // don't include build directories that didn't contain an actual build file
       if (buildInfo) {
-        lodash.extend(buildList[i], buildInfo);
+        data = this.removeRootPath(list[i]);
+        buildList.push({
+          instanceName  : path.basename(data),
+          _id           : data.replace(/[\/\s]/g, '_'),
+          instancePath  : data,
+          labels        : {
+            instance1 : this.normaliseDate(path.basename(data)),
+            instance2 : moment(this.normaliseDate(path.basename(data))).fromNow() + " (" + moment(this.normaliseDate(path.basename(data))).toISOString() + ")",
+            instance3 : moment(this.normaliseDate(path.basename(data))).fromNow(),
+            instance4 : moment(this.normaliseDate(path.basename(data))).toISOString(),
+            instance5 : moment(this.normaliseDate(path.basename(data))).format("DD MMM YYYY HH:mm")
+          }
+        });
+        lodash.merge(buildList[i], buildInfo);
       }
     }
     return buildList; 
