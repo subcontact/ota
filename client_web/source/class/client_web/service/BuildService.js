@@ -117,7 +117,11 @@ qx.Class.define("client_web.service.BuildService",
 
     loadProjects : function()
     {
-      this.__projectsStore.setUrl(arguments.callee.self.PROJECTS_URI);
+      if (this.__projectsStore.getUrl() === arguments.callee.self.PROJECTS_URI) {
+        this.__projectsStore.reload();
+      } else {
+        this.__projectsStore.setUrl(arguments.callee.self.PROJECTS_URI);
+      }
       this.debug('Projects store load requested');
       return new Promise(function (resolve, reject) {
         this.__projectsStore.addListenerOnce('loaded', function(evt) {
@@ -132,7 +136,11 @@ qx.Class.define("client_web.service.BuildService",
 
     loadBuilds : function(projectId)
     {
-      this.__buildsStore.setUrl(arguments.callee.self.PROJECTS_URI + '/' + projectId);
+      if (this.__buildsStore.getUrl() === arguments.callee.self.PROJECTS_URI + '/' + projectId) {
+        this.__buildsStore.reload();
+      } else {
+        this.__buildsStore.setUrl(arguments.callee.self.PROJECTS_URI + '/' + projectId);
+      }
       this.debug('Project Builds store load requested');
       return new Promise(function (resolve, reject) {
         this.__buildsStore.addListenerOnce('loaded', function(evt) {
@@ -148,7 +156,11 @@ qx.Class.define("client_web.service.BuildService",
     loadBuildInstance : function(projectId, buildId)
     {
       var url = arguments.callee.self.PROJECTS_URI + '/' + projectId + arguments.callee.self.BUILDS_URI + '/' + buildId;
-      this.__buildInstance.setUrl(url);
+      if (this.__buildInstance.getUrl() === url) {
+        this.__buildInstance.reload();
+      } else {
+        this.__buildInstance.setUrl(url);
+      }
       this.debug('loadBuildInstance store load requested');
       return new Promise(function (resolve, reject) {
         this.__buildInstance.addListenerOnce('loaded', function(evt) {

@@ -21,6 +21,17 @@ qx.Class.define("client_web.page.BuildList",
       showButton : true,
       buttonText : "Home" 
     });
+
+    this.addListener("start", function() {
+
+      this.debug('buildList start called');
+      this.debug('list length ', this.__list.getModel().getLength());
+      if (this.__list.getModel().getLength() === 0) {
+        this.debug('list is empty');
+        qx.ui.mobile.dialog.Manager.getInstance().error("No Builds", "<p>No valid builds found</p>", this._back, this, ["OK"]);
+        this.debug('list is empty 2');
+      }
+    }, this);
   },
 
   events : {

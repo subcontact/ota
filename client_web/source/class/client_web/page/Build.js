@@ -25,22 +25,9 @@ qx.Class.define("client_web.page.Build",
     this.addListener("start", function() {
 
       this.debug('build start called');
-      //this.debug(this.__buildService.getBuildData().getVersion());
-      // this.debug(qx.dev.Debug.debugProperties(this.__buildService.getTypes()));      
-      // this.debug(qx.dev.Debug.debugObjectToString(this.__buildService.getTypes()));
-      //var project  = this.__buildService.findProjectById(this.__app.getProjectId()).item;
-      //var build    = this.__buildService.findBuildById(this.__app.getBuildId()).item;
-
-      var project = this.__app.getProject();
-      var build = this.__app.getBuild();
-
-      //console.log('project ', qx.dev.Debug.debugProperties(project));
-      //console.log('build ', qx.dev.Debug.debugProperties(build));
-
-      //this.debug(this.__buildService.findBuildById(this.__app.getBuildId()).item.getType());
-      var platformType = build.getType();
-
-      //this.setTitle(project.getName());
+      var project       = this.__app.getProject();
+      var build         = this.__app.getBuild();
+      var platformType  = build.getType();
 
       switch (platformType) {
         case this.__app.platforms.IOS :
@@ -64,12 +51,6 @@ qx.Class.define("client_web.page.Build",
         default :
           console.log(" I don't Know!!");
       }
-
-      //this.debug(this.__app.getBuildId());
-      //this.debug(this.__buildService.getBuilds());
-      //try { 
-       // this.debug(qx.dev.Debug.debugProperties(this.__buildService.findBuildById(this.__app.getBuildId()).item));
-   // } catch (e) {qx.log.Logger.error(arguments.callee.displayName + ' : ' + e)}
     }, this);
 
   },
@@ -120,7 +101,7 @@ qx.Class.define("client_web.page.Build",
           }
         }, this);
         req.addListener("fail", function(e) {
-          reject(new Error('network error'));
+          reject(new Error('request failed'));
         }, this);
         req.send();
       }.bind(this));
@@ -142,7 +123,13 @@ qx.Class.define("client_web.page.Build",
           }
         }, this);
         req.addListener("fail", function(e) {
-          reject(new Error('network error'));
+          /*
+          console.log('getResponse     ', e.getTarget().getResponse());
+          console.log('getResponseText ', e.getTarget().getResponseText());
+          console.log('getStatus       ', e.getTarget().getStatus());          
+          console.log('getStatusText   ', e.getTarget().getStatusText());
+          */
+          reject(new Error('request failed'));
         }, this);
         req.send();
       }.bind(this));
@@ -165,8 +152,9 @@ qx.Class.define("client_web.page.Build",
         this.__isFileReachable(url).then(function() {
           this.debug('file is reachable');
           document.location = url;
-        }.bind(this), function() {
+        }.bind(this), function(err) {
           this.debug('file not reachable');
+          qx.ui.mobile.dialog.Manager.getInstance().error("Ooops", "<p>Unable to install</p>" + err, function() {}, this, ["OK"]);
         }.bind(this));
       }, this);
       this.getContent().add(this.__installerButton);
@@ -179,13 +167,15 @@ qx.Class.define("client_web.page.Build",
           document.location = url;
         }.bind(this), function() {
           this.debug('file not downloadable');
+          qx.ui.mobile.dialog.Manager.getInstance().error("Ooops", "<p>Unable to download</p>" + err, function() {}, this, ["OK"]);
         }.bind(this));
       }, this);
       this.getContent().add(this.__downloadButton);
 
       this.__fileButton = new qx.ui.mobile.form.Button("File");
       this.__fileButton.addListener("tap", function() {
-        var url = "/projects/" + this.__app.getProjectId() + '/builds/' + this.__app.getBuildId() + '/file';
+        var fileName = this.__app.getBuild().getInstanceName();
+        var url = "/projects/" + this.__app.getProjectId() + '/builds/' + this.__app.getBuildId() + '/file/' + fileName;
         this.__isFileReachable(url).then(function() {
           this.debug('file is reachable');
           document.location = url;

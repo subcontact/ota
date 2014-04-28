@@ -88,6 +88,8 @@ qx.Class.define("client_web.Application",
       WINDOWS_TABLET  : 8,
       UNKNOWN         : 9
     },
+    __appReadyPromise : null,
+    __appInitDataPromise : null,
 
     // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
     _fileSizeIEC : function(a,b,c,d,e) {
@@ -95,18 +97,11 @@ qx.Class.define("client_web.Application",
     },
     
     _applyProjectId : function(value, old) {
-      //console.log('_applyProjectId ', value);
-      //console.log('_applyProjectId ', this.getProjectId());
       var project = this.getBuildService().findProjectById(value);
       this.setProject(project);
-      //console.log('_applyProjectId ', qx.dev.Debug.debugProperties(project));
-      //console.log(this.getProject().getName());
     },
 
     _applyBuildId : function(value, old) {
-      //console.log('_applyBuildId ', value);
-      //console.log('_applyBuildId ', this.getBuildId());      
-      //this.setBuild(this.getBuildService().findBuildById(value).item);
       var build = this.getBuildService().findBuildById(value);
       this.setBuild(build);
     },
@@ -114,8 +109,6 @@ qx.Class.define("client_web.Application",
     __showHome : function() {
       this.__homePage.show({reverse:true});
     },
-
-    __appReadyPromise : null,
 
     __appReady : function() {
       if (this.__appReadyPromise) return this.__appReadyPromise;
@@ -129,8 +122,6 @@ qx.Class.define("client_web.Application",
       });
       return this.__appReadyPromise;
     },
-
-    __appInitDataPromise : null,
 
     __appInitData : function() {
       if (this.__appInitDataPromise) return this.__appInitDataPromise;
@@ -158,8 +149,6 @@ qx.Class.define("client_web.Application",
       }.bind(this));
       return this.__appInitDataPromise;
     },
-
-
 
     /**
      * This method contains the initial application code and gets called
@@ -190,8 +179,6 @@ qx.Class.define("client_web.Application",
       var projectsPage = this.__homePage = new client_web.page.ProjectList();
       var buildsPage = new client_web.page.BuildList();
       var buildDetailPage = new client_web.page.Build();
-      //var buildViewIOS = new client_web.page.BuildViewIOS();
-      //var buildViewAND = new client_web.page.BuildViewAND();
 
       buildsPage.addListener('action', this.__showHome, this);
       buildDetailPage.addListener('action', this.__showHome, this);
@@ -200,67 +187,8 @@ qx.Class.define("client_web.Application",
       manager.addDetail(projectsPage);
       manager.addDetail(buildsPage);
       manager.addDetail(buildDetailPage);
-      //manager.addDetail(buildViewIOS);
-      //manager.addDetail(buildViewAND);
 
       this.__initBusy();
-
-      //this.__appInitData().then(function(value) {
-     //   console.log('done ');
-      // });
-
-
-/*
-
-      this.__initBusy();
-      var h=0;
-      //var initRunning = false;
-      // lazy callback - turn this into a promise chain
-      var initData = function(cb) {
-        //initRunning = true;
-        /*
-        return new Promise(function (resolve, reject) {
-          setTimeout(function () {
-            if (something)
-              resolve(something);
-            else
-              reject(new Error("nothing"));
-          }, 1000);
-        });
-
-
-*/
-        //console.log(this.__init);
-        //if (initRunning || this.__init) {
-        //  console.log('already initialised');
-       //   cb();
-       //   return;
-       // }
-       /*
-       console.log('running', ++h);
-        this.__showBusy();
-        Promise.all([
-          buildService.loadTypes(),
-          buildService.loadProjects(),
-          appReady()
-        ]).then(function () { 
-            this.debug('all events finished successfully');
-            this.__init = true;
-            qx.lang.Function.delay(function() {            
-              
-              // ugly hack
-              console.log('running', ++h);
-              var elem = document.getElementById("spinner");
-              elem.parentNode.removeChild(elem);
-              this.__hideBusy();
-              cb();
-            }, 3000, this);
-          }.bind(this), function(values) {
-            this.error('some or all events failed');
-            this.error(values);
-          }.bind(this));
-      }.bind(this);
-           */ 
 
       projectsPage.addListener("projectSelected", function(evt) {
         routing.executeGet("/projects/" + evt.getData());
@@ -273,30 +201,57 @@ qx.Class.define("client_web.Application",
       routing.onGet("/", function() {
         this.__appInitData().then(function(value) {
           routing.executeGet("/projects");
+        }.bind(this), function() {
+          this.debug('__appInitData failed');
+          this.__hideBusy();
+          qx.ui.mobile.dialog.Manager.getInstance().error("Ooops", "<p>__appInitData failed</p>", function() {}, this, ["OK"]);
         }.bind(this));
       }, this);
       routing.onGet("/projects", function() {
         this.__appInitData().then(function(value) {
           projectsPage.show();
+        }.bind(this), function() {
+          this.debug('__appInitData failed');
+          this.__hideBusy();
+          qx.ui.mobile.dialog.Manager.getInstance().error("Ooops", "<p>__appInitData failed</p>", function() {}, this, ["OK"]);
         }.bind(this));
       }, this);
       routing.onGet("/projects/{projectId}", function(data) {
         this.__appInitData().then(function(value) {
           this.setProjectId(data.params.projectId);
+          this.__showBusy();
           buildService.loadBuilds(this.getProjectId()).then(function() {
             this.debug('showing builds list detail');
             buildsPage.show();
+            this.__hideBusy();
+          }.bind(this), function(err) {
+            this.debug('buildService.loadBuilds failed');
+            this.__hideBusy();
+            qx.ui.mobile.dialog.Manager.getInstance().error("Ooops", "<p>buildService.loadBuilds failed</p>" + err, function() {}, this, ["OK"]);
           }.bind(this));
+        }.bind(this), function() {
+          this.debug('__appInitData failed');
+          this.__hideBusy();
+          qx.ui.mobile.dialog.Manager.getInstance().error("Ooops", "<p>__appInitData failed</p>", function() {}, this, ["OK"]);
         }.bind(this));
       }, this);
       routing.onGet("/builds/{buildId}", function(data) {
         this.__appInitData().then(function(value) {
           this.setBuildId(data.params.buildId);
+          this.__showBusy();
           buildService.loadBuildInstance(this.getProjectId(), this.getBuildId()).then(function() {
-            //console.log(buildService.getBuildData());
             this.debug('showing build detail');
             buildDetailPage.show();
+            this.__hideBusy();
+          }.bind(this), function(err) {
+            this.debug('buildService.loadBuildInstance failed');
+            this.__hideBusy();
+            qx.ui.mobile.dialog.Manager.getInstance().error("Ooops", "<p>buildService.loadBuildInstance failed</p>" + err, function() {}, this, ["OK"]);
           }.bind(this));
+        }.bind(this), function() {
+          this.debug('__appInitData failed');
+          this.__hideBusy();
+          qx.ui.mobile.dialog.Manager.getInstance().error("Ooops", "<p>__appInitData failed</p>", function() {}, this, ["OK"]);
         }.bind(this));
       }, this);
 
