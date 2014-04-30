@@ -1,4 +1,7 @@
 "use strict";
+var https     = require('https');
+var http      = require('http');
+var fs        = require('fs');
 var koa       = require('koa');
 var router    = require('koa-router');
 var send      = require('koa-send');
@@ -20,18 +23,20 @@ var argv;
     mcache  : (5000), // internal memory cache in millseconds - 1.5 sec
     builds  : ".",
     port    : 8080,
+    sport   : 8443,
     host    : "localhost",
     protocol: "http",
     env     : 'prod'
   };
-  defaults.host += ":" + defaults.port;
+  //defaults.host += ":" + (default) defaults.port;
   argv = parseArgs((process.argv.slice(2)), { default : defaults });
+  //argv.host += ":" + (argv.protocol === 'http' ? argv.port : argv.sport);
 })();
 
 console.log(argv);
-consts.HOST_SVR = argv.protocol + '://' + argv.host + ':' + argv.port;
+consts.HOST_SVR = argv.protocol + '://' + argv.host + ':' + (argv.protocol === 'http' ? argv.port : argv.sport);//argv.port;
 consts.M_CACHE = argv.mcache;
-
+console.log(consts.HOST_SVR);
 var service   = require('./lib/service-fs');
 service.setBuildFolderRoot(argv.builds);
 
@@ -260,4 +265,23 @@ app.register('/projects/:projectId/builds/:buildId/file', ['get', 'head'], getPr
 app.register('/projects/:projectId/builds/:buildId/file/:name', ['get', 'head'], getProjectBuildFileRoute);
 app.register('/projects/:projectId/builds/:buildId/download', ['get', 'head'], getProjectBuildDownloadRoute);
 
-app.listen(argv.port, argv.host);
+//app.listen(argv.port, argv.host);
+var options = {
+  key: fs.readFileSync('mad-ota.key'),
+  cert: fs.readFileSync('mad-ota.crt')
+};
+
+https.createServer(options, app.callback()).listen(argv.sport, argv.host);
+
+var landingApp = koa();
+landingApp.use(router(landingApp));  
+
+landingApp.get('/mad-ca.crt', function *(next) {
+  yield send(this, 'mad-ca.crt', {root : '.'});
+});
+
+landingApp.get('*', function *(next) {
+  yield send(this, 'index.html', {root : '.'});
+});
+
+http.createServer(landingApp.callback()).listen(argv.port, argv.host);

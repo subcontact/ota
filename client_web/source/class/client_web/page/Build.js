@@ -34,19 +34,19 @@ qx.Class.define("client_web.page.Build",
           console.log(" it's IOS!");
           this.__installerButton.setVisibility("visible");
           this.__fileButton.setVisibility("excluded");
-          this.__downloadButton.setVisibility("visible");                    
+          this.__downloadButton.setVisibility("excluded");                    
           break;
         case this.__app.platforms.AND :
           console.log(" it's AND!");
           this.__installerButton.setVisibility("excluded");
-          this.__fileButton.setVisibility("visible");
-          this.__downloadButton.setVisibility("excluded");                    
+          this.__fileButton.setVisibility("excluded");
+          this.__downloadButton.setVisibility("visible");                    
           break;
         case this.__app.platforms.WIN :
           console.log(" it's WIN!");
           this.__installerButton.setVisibility("excluded");
-          this.__fileButton.setVisibility("visible");
-          this.__downloadButton.setVisibility("excluded");                    
+          this.__fileButton.setVisibility("excluded");
+          this.__downloadButton.setVisibility("visible");                    
           break;
         default :
           console.log(" I don't Know!!");
@@ -172,7 +172,7 @@ qx.Class.define("client_web.page.Build",
       }, this);
       this.getContent().add(this.__downloadButton);
 
-      this.__fileButton = new qx.ui.mobile.form.Button("File");
+      this.__fileButton = new qx.ui.mobile.form.Button("Download");
       this.__fileButton.addListener("tap", function() {
         var fileName = this.__app.getBuild().getInstanceName();
         var url = "/projects/" + this.__app.getProjectId() + '/builds/' + this.__app.getBuildId() + '/file/' + fileName;

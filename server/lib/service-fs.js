@@ -152,6 +152,18 @@ var service = function() {
       'installerUrl'          : path.normalize(encodeURI(this.removeRootPath(file) + '/installer')),
       'installerSource'       : null
     };
+console.log(1, path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file))));
+console.log(2, consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file)));
+console.log(3, encodeURI(this.removeRootPath(file)));
+console.log(4, this.removeRootPath(file));
+console.log(5, path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file))));
+console.log(6, path.normalize(encodeURI(this.removeRootPath(file) + '/installer')));
+console.log(7, encodeURI(this.removeRootPath(file) + '/installer'));
+console.log(8, this.removeRootPath(file) + '/installer');
+console.log(9, file);
+
+var a = file.replace(/[\/\s]/g, '_');
+console.log(10,a);
 
     var output = mustache.render(yield fs.readFile(__dirname + '/manifest.plist.template', 'utf8'), results);
     results.installerSource = output;
