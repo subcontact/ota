@@ -137,9 +137,11 @@ var service = function() {
     return data ? data : {}
   };
 
-  this.getBuildInfoIOS = function *(file) {
+  this.getBuildInfoIOS = function *(file, projectBuild) {
 
     var data = yield this.parseIPA(file);
+    var url = '/projects/' + projectBuild._projectId + '/builds/' + projectBuild._id + '/file/' + path.basename(file);
+    var installerUrl = '/projects/' + projectBuild._projectId + '/builds/' + projectBuild._id + '/installer';
     var results = {
 
       'commitHash'            : data.commitHash,
@@ -148,23 +150,10 @@ var service = function() {
       'id'                    : data['CFBundleName'],
       'package'               : data['CFBundleIdentifier'],
       'icon'                  : data['CFBundleIconFile'],
-      'url'                   : path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file))),
-      'installerUrl'          : path.normalize(encodeURI(this.removeRootPath(file) + '/installer')),
+      'url'                   : consts.HOST_SVR + url,
+      'installerUrl'          : installerUrl,
       'installerSource'       : null
     };
-console.log(1, path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file))));
-console.log(2, consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file)));
-console.log(3, encodeURI(this.removeRootPath(file)));
-console.log(4, this.removeRootPath(file));
-console.log(5, path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file))));
-console.log(6, path.normalize(encodeURI(this.removeRootPath(file) + '/installer')));
-console.log(7, encodeURI(this.removeRootPath(file) + '/installer'));
-console.log(8, this.removeRootPath(file) + '/installer');
-console.log(9, file);
-
-var a = file.replace(/[\/\s]/g, '_');
-console.log(10,a);
-
     var output = mustache.render(yield fs.readFile(__dirname + '/manifest.plist.template', 'utf8'), results);
     results.installerSource = output;
 
@@ -177,9 +166,10 @@ console.log(10,a);
     return data;
   };
 
-  this.getBuildInfoAND = function *(file) {
+  this.getBuildInfoAND = function *(file, projectBuild) {
     var data = yield this.parseAPK(file);
-
+    var url = '/projects/' + projectBuild._projectId + '/builds/' + projectBuild._id + '/file/' + path.basename(file);
+    var installerUrl = '/projects/' + projectBuild._projectId + '/builds/' + projectBuild._id + '/installer';
     var results = {
 
       'commitHash'            : null,
@@ -188,15 +178,16 @@ console.log(10,a);
       'id'                    : null,
       'package'               : data.manifest[0]['@package'],
       'icon'                  : data.manifest[0].application[0]['@android:icon'],
-      'url'                   : path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file))),
-      'installerUrl'          : path.normalize(encodeURI(this.removeRootPath(file) + '/installer')),
+      'url'                   : consts.HOST_SVR + url,
+      'installerUrl'          : installerUrl,
       'installerSource'       : null
     };
     return results;
   };
 
-  this.getBuildInfoWIN = function(file) {
-
+  this.getBuildInfoWIN = function(file, projectBuild) {
+    var url = '/projects/' + projectBuild._projectId + '/builds/' + projectBuild._id + '/file/' + path.basename(file);
+    var installerUrl = '/projects/' + projectBuild._projectId + '/builds/' + projectBuild._id + '/installer';    
     var results = {
 
       'commitHash'            : null,
@@ -205,8 +196,8 @@ console.log(10,a);
       'id'                    : null,
       'package'               : null,
       'icon'                  : null,
-      'url'                   : path.normalize(consts.HOST_SVR + '/' + encodeURI(this.removeRootPath(file))),
-      'installerUrl'          : path.normalize(encodeURI(this.removeRootPath(file) + '/installer')),
+      'url'                   : consts.HOST_SVR + url,
+      'installerUrl'          : installerUrl,
       'installerSource'       : null
     };
     return results;
@@ -312,6 +303,7 @@ console.log(10,a);
       if (list.length > 0) {
         dirPath = list[0];
         buildInfo = yield this.findBuildFile(dirPath);
+        filePath = this.removeRootPath(filePath);
         if (buildInfo) {
           projects.push({
             name  : path.basename(filePath),
@@ -372,6 +364,7 @@ console.log(10,a);
         data = this.removeRootPath(list[i]);
         buildList.push({
           instanceName  : path.basename(data),
+          _projectId    : projectPath.replace(/[\/\s]/g, '_'),
           _id           : data.replace(/[\/\s]/g, '_'),
           instancePath  : data,
           labels        : {
@@ -425,7 +418,7 @@ console.log(10,a);
 
     var buildData = null;
     if (projectBuild.hasOwnProperty('type') && this.buildInfoMethods[projectBuild.type]) {
-      buildData = yield this.buildInfoMethods[projectBuild.type].call(this, this.resolveRootPath(projectBuild.buildFile));
+      buildData = yield this.buildInfoMethods[projectBuild.type].call(this, this.resolveRootPath(projectBuild.buildFile), projectBuild);
     }
     return buildData;
   };

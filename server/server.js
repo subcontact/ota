@@ -5,6 +5,7 @@ var fs        = require('fs');
 var koa       = require('koa');
 var router    = require('koa-router');
 var send      = require('koa-send');
+var views     = require('co-views');
 var path      = require('path');
 var lodash    = require('lodash');
 var parseArgs = require('minimist');
@@ -280,8 +281,12 @@ landingApp.get('/mad-ca.crt', function *(next) {
   yield send(this, 'mad-ca.crt', {root : '.'});
 });
 
+//Specifying Swig view engine
+var render= views(__dirname, { map: { html: 'swig' }});
+
 landingApp.get('*', function *(next) {
-  yield send(this, 'index.html', {root : '.'});
+  this.body = yield render('index.html', { link: consts.HOST_SVR + "/client-web/" });
+  //yield send(this, 'index.html', {root : '.'});
 });
 
 http.createServer(landingApp.callback()).listen(argv.port, argv.host);
