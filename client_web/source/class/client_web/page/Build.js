@@ -197,12 +197,12 @@ qx.Class.define("client_web.page.Build",
 
       this.__project = new qx.ui.mobile.form.TextField();
       this.__project.setReadOnly(true);
-      this.__app.getProject().bind("name", this.__project, "value");
+      this.__app.bind("project.name", this.__project, "value");
       form.add(this.__project, "Project");
 
       this.__build = new qx.ui.mobile.form.TextField();
       this.__build.setReadOnly(true);
-      this.__app.getBuild().bind("instanceName", this.__build, "value");
+      this.__app.bind("build.instanceName", this.__build, "value");
       form.add(this.__build, "Build");
 
 
@@ -237,7 +237,7 @@ qx.Class.define("client_web.page.Build",
      // overridden
     _back : function()
     {
-      this.__app.getRouting().back();
+      this.__app.getRouting().back(null,{reverse:true});
     }    
   }
 });
