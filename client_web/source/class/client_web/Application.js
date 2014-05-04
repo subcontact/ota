@@ -195,7 +195,7 @@ qx.Class.define("client_web.Application",
       }, this);
 
       buildsPage.addListener("buildSelected", function(evt) {
-        routing.executeGet("/builds/" + evt.getData());
+        routing.executeGet("/projects/" + this.getProjectId() + "/builds/" + evt.getData());
       }, this);
 
       routing.onGet("/", function() {
@@ -235,7 +235,7 @@ qx.Class.define("client_web.Application",
           qx.ui.mobile.dialog.Manager.getInstance().error("Ooops", "<p>__appInitData failed</p>", function() {}, this, ["OK"]);
         }.bind(this));
       }, this);
-      routing.onGet("/builds/{buildId}", function(data) {
+      routing.onGet("/projects/{projectId}/builds/{buildId}", function(data) {
         this.__appInitData().then(function(value) {
           this.setBuildId(data.params.buildId);
           this.__showBusy();
@@ -255,7 +255,7 @@ qx.Class.define("client_web.Application",
         }.bind(this));
       }, this);
 
-      routing.executeGet("/");
+      //routing.executeGet("/");
       routing.init();
     },
 
